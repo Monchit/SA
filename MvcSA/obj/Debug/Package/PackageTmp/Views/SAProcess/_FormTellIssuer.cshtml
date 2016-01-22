@@ -1,0 +1,25 @@
+﻿
+<script src="~/Scripts/jqValidate.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#formTell").submit(function () {
+            if (!$.validate({ form: "formTell" })) {
+                return false;
+            }
+        });
+    });
+</script>
+
+<form id="formTell" name="formTell" action="@Url.Action("AddTellIssuer")" method="post">
+    <table class="table table-striped table-condensed">
+        <tr>
+            <td>Tell Issuer :</td>
+            <td><textarea rows="4" id="txaComment" name="txaComment" data-validate="required"></textarea></td>
+        </tr>
+        <tr>
+            <td><input type="hidden" id="hdID" name="hdID" value="@ViewBag.SAID" /></td>
+            <td style="text-align:right;"><button class="btn btn-primary" type="submit">Submit</button></td>
+        </tr>
+    </table>
+</form>
+

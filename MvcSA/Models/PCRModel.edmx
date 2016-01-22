@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PCRModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="PCRModelStoreContainer">
+          <EntitySet Name="PCR_Consider_Master" EntityType="PCRModel.Store.PCR_Consider_Master" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PCR_GCode" EntityType="PCRModel.Store.PCR_GCode" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PCR_GroupType" EntityType="PCRModel.Store.PCR_GroupType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PCR_Impact" EntityType="PCRModel.Store.PCR_Impact" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PCR_OperateUser" EntityType="PCRModel.Store.PCR_OperateUser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PCR_SubGroup" EntityType="PCRModel.Store.PCR_SubGroup" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_PCR_Consider_Master_PCR_GroupType" Association="PCRModel.Store.FK_PCR_Consider_Master_PCR_GroupType">
+            <End Role="PCR_GroupType" EntitySet="PCR_GroupType" />
+            <End Role="PCR_Consider_Master" EntitySet="PCR_Consider_Master" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PCR_SubGroup_PCR_GroupType" Association="PCRModel.Store.FK_PCR_SubGroup_PCR_GroupType">
+            <End Role="PCR_GroupType" EntitySet="PCR_GroupType" />
+            <End Role="PCR_SubGroup" EntitySet="PCR_SubGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PCR_SubGroup_PCR_Impact" Association="PCRModel.Store.FK_PCR_SubGroup_PCR_Impact">
+            <End Role="PCR_Impact" EntitySet="PCR_Impact" />
+            <End Role="PCR_SubGroup" EntitySet="PCR_SubGroup" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="PCR_Consider_Master">
+          <Key>
+            <PropertyRef Name="group_type_id" />
+            <PropertyRef Name="con_group_id" />
+          </Key>
+          <Property Name="group_type_id" Type="int" Nullable="false" />
+          <Property Name="con_group_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PCR_GCode">
+          <Key>
+            <PropertyRef Name="g_id" />
+          </Key>
+          <Property Name="g_id" Type="int" Nullable="false" />
+          <Property Name="g_code" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PCR_GroupType">
+          <Key>
+            <PropertyRef Name="group_type_id" />
+          </Key>
+          <Property Name="group_type_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="group_type" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PCR_Impact">
+          <Key>
+            <PropertyRef Name="imp_id" />
+          </Key>
+          <Property Name="imp_id" Type="tinyint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="imp_name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PCR_OperateUser">
+          <Key>
+            <PropertyRef Name="emp_code" />
+            <PropertyRef Name="pcr_group_id" />
+          </Key>
+          <Property Name="emp_code" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="pcr_group_id" Type="int" Nullable="false" />
+          <Property Name="utype_id" Type="int" />
+          <Property Name="dept_id" Type="int" />
+        </EntityType>
+        <EntityType Name="PCR_SubGroup">
+          <Key>
+            <PropertyRef Name="pcr_group_id" />
+            <PropertyRef Name="pcr_group_name" />
+          </Key>
+          <Property Name="pcr_group_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="pcr_group_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="group_type_id" Type="int" Nullable="false" />
+          <Property Name="imp_id" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PCR_Consider_Master_PCR_GroupType">
+          <End Role="PCR_GroupType" Type="PCRModel.Store.PCR_GroupType" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PCR_Consider_Master" Type="PCRModel.Store.PCR_Consider_Master" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PCR_GroupType">
+              <PropertyRef Name="group_type_id" />
+            </Principal>
+            <Dependent Role="PCR_Consider_Master">
+              <PropertyRef Name="group_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PCR_SubGroup_PCR_GroupType">
+          <End Role="PCR_GroupType" Type="PCRModel.Store.PCR_GroupType" Multiplicity="1" />
+          <End Role="PCR_SubGroup" Type="PCRModel.Store.PCR_SubGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PCR_GroupType">
+              <PropertyRef Name="group_type_id" />
+            </Principal>
+            <Dependent Role="PCR_SubGroup">
+              <PropertyRef Name="group_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PCR_SubGroup_PCR_Impact">
+          <End Role="PCR_Impact" Type="PCRModel.Store.PCR_Impact" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PCR_SubGroup" Type="PCRModel.Store.PCR_SubGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PCR_Impact">
+              <PropertyRef Name="imp_id" />
+            </Principal>
+            <Dependent Role="PCR_SubGroup">
+              <PropertyRef Name="imp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PCRModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="PCREntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="PCR_Consider_Master" EntityType="PCRModel.PCR_Consider_Master" />
+          <EntitySet Name="PCR_GCode" EntityType="PCRModel.PCR_GCode" />
+          <EntitySet Name="PCR_GroupType" EntityType="PCRModel.PCR_GroupType" />
+          <EntitySet Name="PCR_Impact" EntityType="PCRModel.PCR_Impact" />
+          <EntitySet Name="PCR_OperateUser" EntityType="PCRModel.PCR_OperateUser" />
+          <EntitySet Name="PCR_SubGroup" EntityType="PCRModel.PCR_SubGroup" />
+          <AssociationSet Name="FK_PCR_Consider_Master_PCR_GroupType" Association="PCRModel.FK_PCR_Consider_Master_PCR_GroupType">
+            <End Role="PCR_GroupType" EntitySet="PCR_GroupType" />
+            <End Role="PCR_Consider_Master" EntitySet="PCR_Consider_Master" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PCR_SubGroup_PCR_GroupType" Association="PCRModel.FK_PCR_SubGroup_PCR_GroupType">
+            <End Role="PCR_GroupType" EntitySet="PCR_GroupType" />
+            <End Role="PCR_SubGroup" EntitySet="PCR_SubGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PCR_SubGroup_PCR_Impact" Association="PCRModel.FK_PCR_SubGroup_PCR_Impact">
+            <End Role="PCR_Impact" EntitySet="PCR_Impact" />
+            <End Role="PCR_SubGroup" EntitySet="PCR_SubGroup" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="PCR_Consider_Master">
+          <Key>
+            <PropertyRef Name="group_type_id" />
+            <PropertyRef Name="con_group_id" />
+          </Key>
+          <Property Name="group_type_id" Type="Int32" Nullable="false" />
+          <Property Name="con_group_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PCR_GroupType" Relationship="PCRModel.FK_PCR_Consider_Master_PCR_GroupType" FromRole="PCR_Consider_Master" ToRole="PCR_GroupType" />
+        </EntityType>
+        <EntityType Name="PCR_GCode">
+          <Key>
+            <PropertyRef Name="g_id" />
+          </Key>
+          <Property Name="g_id" Type="Int32" Nullable="false" />
+          <Property Name="g_code" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="PCR_GroupType">
+          <Key>
+            <PropertyRef Name="group_type_id" />
+          </Key>
+          <Property Name="group_type_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="group_type" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="PCR_Consider_Master" Relationship="PCRModel.FK_PCR_Consider_Master_PCR_GroupType" FromRole="PCR_GroupType" ToRole="PCR_Consider_Master" />
+          <NavigationProperty Name="PCR_SubGroup" Relationship="PCRModel.FK_PCR_SubGroup_PCR_GroupType" FromRole="PCR_GroupType" ToRole="PCR_SubGroup" />
+        </EntityType>
+        <EntityType Name="PCR_Impact">
+          <Key>
+            <PropertyRef Name="imp_id" />
+          </Key>
+          <Property Name="imp_id" Type="Byte" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="imp_name" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="PCR_SubGroup" Relationship="PCRModel.FK_PCR_SubGroup_PCR_Impact" FromRole="PCR_Impact" ToRole="PCR_SubGroup" />
+        </EntityType>
+        <EntityType Name="PCR_OperateUser">
+          <Key>
+            <PropertyRef Name="emp_code" />
+            <PropertyRef Name="pcr_group_id" />
+          </Key>
+          <Property Name="emp_code" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="pcr_group_id" Type="Int32" Nullable="false" />
+          <Property Name="utype_id" Type="Int32" />
+          <Property Name="dept_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="PCR_SubGroup">
+          <Key>
+            <PropertyRef Name="pcr_group_id" />
+            <PropertyRef Name="pcr_group_name" />
+          </Key>
+          <Property Name="pcr_group_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="pcr_group_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="group_type_id" Type="Int32" Nullable="false" />
+          <Property Name="imp_id" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="PCR_GroupType" Relationship="PCRModel.FK_PCR_SubGroup_PCR_GroupType" FromRole="PCR_SubGroup" ToRole="PCR_GroupType" />
+          <NavigationProperty Name="PCR_Impact" Relationship="PCRModel.FK_PCR_SubGroup_PCR_Impact" FromRole="PCR_SubGroup" ToRole="PCR_Impact" />
+        </EntityType>
+        <Association Name="FK_PCR_Consider_Master_PCR_GroupType">
+          <End Role="PCR_GroupType" Type="PCRModel.PCR_GroupType" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PCR_Consider_Master" Type="PCRModel.PCR_Consider_Master" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PCR_GroupType">
+              <PropertyRef Name="group_type_id" />
+            </Principal>
+            <Dependent Role="PCR_Consider_Master">
+              <PropertyRef Name="group_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PCR_SubGroup_PCR_GroupType">
+          <End Role="PCR_GroupType" Type="PCRModel.PCR_GroupType" Multiplicity="1" />
+          <End Role="PCR_SubGroup" Type="PCRModel.PCR_SubGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PCR_GroupType">
+              <PropertyRef Name="group_type_id" />
+            </Principal>
+            <Dependent Role="PCR_SubGroup">
+              <PropertyRef Name="group_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PCR_SubGroup_PCR_Impact">
+          <End Role="PCR_Impact" Type="PCRModel.PCR_Impact" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PCR_SubGroup" Type="PCRModel.PCR_SubGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PCR_Impact">
+              <PropertyRef Name="imp_id" />
+            </Principal>
+            <Dependent Role="PCR_SubGroup">
+              <PropertyRef Name="imp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PCRModelStoreContainer" CdmEntityContainer="PCREntities">
+          <EntitySetMapping Name="PCR_Consider_Master">
+            <EntityTypeMapping TypeName="PCRModel.PCR_Consider_Master">
+              <MappingFragment StoreEntitySet="PCR_Consider_Master">
+                <ScalarProperty Name="group_type_id" ColumnName="group_type_id" />
+                <ScalarProperty Name="con_group_id" ColumnName="con_group_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PCR_GCode">
+            <EntityTypeMapping TypeName="PCRModel.PCR_GCode">
+              <MappingFragment StoreEntitySet="PCR_GCode">
+                <ScalarProperty Name="g_id" ColumnName="g_id" />
+                <ScalarProperty Name="g_code" ColumnName="g_code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PCR_GroupType">
+            <EntityTypeMapping TypeName="PCRModel.PCR_GroupType">
+              <MappingFragment StoreEntitySet="PCR_GroupType">
+                <ScalarProperty Name="group_type_id" ColumnName="group_type_id" />
+                <ScalarProperty Name="group_type" ColumnName="group_type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PCR_Impact">
+            <EntityTypeMapping TypeName="PCRModel.PCR_Impact">
+              <MappingFragment StoreEntitySet="PCR_Impact">
+                <ScalarProperty Name="imp_id" ColumnName="imp_id" />
+                <ScalarProperty Name="imp_name" ColumnName="imp_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PCR_OperateUser">
+            <EntityTypeMapping TypeName="PCRModel.PCR_OperateUser">
+              <MappingFragment StoreEntitySet="PCR_OperateUser">
+                <ScalarProperty Name="emp_code" ColumnName="emp_code" />
+                <ScalarProperty Name="pcr_group_id" ColumnName="pcr_group_id" />
+                <ScalarProperty Name="utype_id" ColumnName="utype_id" />
+                <ScalarProperty Name="dept_id" ColumnName="dept_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PCR_SubGroup">
+            <EntityTypeMapping TypeName="PCRModel.PCR_SubGroup">
+              <MappingFragment StoreEntitySet="PCR_SubGroup">
+                <ScalarProperty Name="pcr_group_id" ColumnName="pcr_group_id" />
+                <ScalarProperty Name="pcr_group_name" ColumnName="pcr_group_name" />
+                <ScalarProperty Name="group_type_id" ColumnName="group_type_id" />
+                <ScalarProperty Name="imp_id" ColumnName="imp_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

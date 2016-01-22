@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SpecialAcceptanceModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="SpecialAcceptanceEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="TD_Main" EntityType="SpecialAcceptanceModel.TD_Main" />
+    <EntitySet Name="TD_Transaction" EntityType="SpecialAcceptanceModel.TD_Transaction" />
+    <EntitySet Name="TM_Level" EntityType="SpecialAcceptanceModel.TM_Level" />
+    <EntitySet Name="TM_Status" EntityType="SpecialAcceptanceModel.TM_Status" />
+    <AssociationSet Name="FK_TD_Transaction_TD_Main" Association="SpecialAcceptanceModel.FK_TD_Transaction_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_TM_Level" Association="SpecialAcceptanceModel.FK_TD_Transaction_TM_Level">
+      <End Role="TM_Level" EntitySet="TM_Level" />
+      <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_TM_Status" Association="SpecialAcceptanceModel.FK_TD_Transaction_TM_Status">
+      <End Role="TM_Status" EntitySet="TM_Status" />
+      <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+    </AssociationSet>
+    <EntitySet Name="TM_SysUser" EntityType="SpecialAcceptanceModel.TM_SysUser" />
+  </EntityContainer>
+  <EntityType Name="TD_Main">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="control_no" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="issue_dt" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="issue_by" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+    <Property Name="title" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="item_code" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="customer" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="material" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="batch_no" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="job_no" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="defective_qty" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="reason" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="expect_date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Sys_Plant_id" Type="Byte" Nullable="false" />
+    <Property Name="effective_dt" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="preventive" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="TD_Transaction" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TD_Main" FromRole="TD_Main" ToRole="TD_Transaction" />
+  </EntityType>
+  <EntityType Name="TD_Transaction">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="status_id" />
+      <PropertyRef Name="lv_id" />
+      <PropertyRef Name="org_id" />
+      <PropertyRef Name="Sys_Plant_id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="status_id" Type="Byte" Nullable="false" />
+    <Property Name="lv_id" Type="Byte" Nullable="false" />
+    <Property Name="org_id" Type="Int32" Nullable="false" />
+    <Property Name="Sys_Plant_id" Type="Byte" Nullable="false" />
+    <Property Name="act_id" Type="Byte" />
+    <Property Name="actor" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+    <Property Name="act_dt" Type="DateTime" Precision="3" />
+    <Property Name="comment" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="active" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="TD_Main" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TD_Main" FromRole="TD_Transaction" ToRole="TD_Main" />
+    <NavigationProperty Name="TM_Level" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TM_Level" FromRole="TD_Transaction" ToRole="TM_Level" />
+    <NavigationProperty Name="TM_Status" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TM_Status" FromRole="TD_Transaction" ToRole="TM_Status" />
+  </EntityType>
+  <EntityType Name="TM_Level">
+    <Key>
+      <PropertyRef Name="lv_id" />
+    </Key>
+    <Property Name="lv_id" Type="Byte" Nullable="false" />
+    <Property Name="lv_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="position_min" Type="Byte" Nullable="false" />
+    <Property Name="position_max" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="TD_Transaction" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TM_Level" FromRole="TM_Level" ToRole="TD_Transaction" />
+  </EntityType>
+  <EntityType Name="TM_Status">
+    <Key>
+      <PropertyRef Name="status_id" />
+    </Key>
+    <Property Name="status_id" Type="Byte" Nullable="false" />
+    <Property Name="status_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="lv_min" Type="Byte" Nullable="false" />
+    <Property Name="lv_max" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="TD_Transaction" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TM_Status" FromRole="TM_Status" ToRole="TD_Transaction" />
+  </EntityType>
+  <Association Name="FK_TD_Transaction_TD_Main">
+    <End Role="TD_Main" Type="SpecialAcceptanceModel.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction" Type="SpecialAcceptanceModel.TD_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_Transaction">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_TM_Level">
+    <End Role="TM_Level" Type="SpecialAcceptanceModel.TM_Level" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction" Type="SpecialAcceptanceModel.TD_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Level">
+        <PropertyRef Name="lv_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction">
+        <PropertyRef Name="lv_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_TM_Status">
+    <End Role="TM_Status" Type="SpecialAcceptanceModel.TM_Status" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction" Type="SpecialAcceptanceModel.TD_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Status">
+        <PropertyRef Name="status_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction">
+        <PropertyRef Name="status_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="TM_SysUser">
+    <Key>
+      <PropertyRef Name="Sys_Plant_id" />
+      <PropertyRef Name="Sys_GroupType_id" />
+      <PropertyRef Name="Sys_User_id" />
+    </Key>
+    <Property Type="Byte" Name="Sys_Plant_id" Nullable="false" />
+    <Property Type="Byte" Name="Sys_GroupType_id" Nullable="false" />
+    <Property Type="String" Name="Sys_User_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Byte" Name="lv_id" Nullable="false" />
+    <Property Type="Boolean" Name="user_active" Nullable="false" />
+  </EntityType>
+</Schema>

@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TNC_ADMINModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="TNC_ADMINEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="V_Employee_Info" EntityType="TNC_ADMINModel.V_Employee_Info" />
+    <EntitySet Name="tnc_user" EntityType="TNC_ADMINModel.tnc_user" />
+  </EntityContainer>
+  <EntityType Name="V_Employee_Info">
+    <Key>
+      <PropertyRef Name="emp_code" />
+    </Key>
+    <Property Name="emp_code" Type="String" Nullable="false" MaxLength="25" Unicode="true" FixedLength="false" />
+    <Property Name="username" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="password" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="emp_fname" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="emp_lname" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="emp_position" Type="Byte" />
+    <Property Name="position_name" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="email" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="plant_id" Type="Int32" />
+    <Property Name="plant_name" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="dept_id" Type="Int32" />
+    <Property Name="dept_name" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="group_id" Type="Int32" />
+    <Property Name="group_name" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="sub_group_id" Type="Int32" />
+    <Property Name="sub_group" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="emp_status" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <Property Name="LeafOrganize" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="LeafOrgGroupId" Type="Int32" />
+    <Property Name="LeafOrgGroup" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+    <Property Name="position_level" Type="Byte" />
+  </EntityType>
+  <EntityType Name="tnc_user">
+    <Key>
+      <PropertyRef Name="emp_code" />
+    </Key>
+    <Property Type="String" Name="emp_code" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_title" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_fname" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_lname" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_sex" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="Byte" Name="emp_position" />
+    <Property Type="Byte" Name="emp_group" />
+    <Property Type="Byte" Name="emp_depart" />
+    <Property Type="Byte" Name="emp_plant" />
+    <Property Type="DateTime" Name="emp_joindate" Precision="0" />
+    <Property Type="String" Name="emp_status" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Type="String" Name="username" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="password" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="email" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="img_path" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="Byte" Name="admin_role" />
+    <Property Type="String" Name="createby" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="createdate" Precision="0" />
+    <Property Type="DateTime" Name="lastupdate" Precision="0" />
+    <Property Type="Int32" Name="ext" />
+    <Property Type="Byte" Name="emp_subgroup" />
+    <Property Type="String" Name="windows_user" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="ip" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="transfer_permission" MaxLength="60" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="ad_user" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

@@ -1,0 +1,79 @@
+﻿
+<style type="text/css">
+    /* fix the size of the pager */
+    /*input.ui-pg-input { width: auto; padding: 0px; margin: 0px; line-height: normal; }
+    select.ui-pg-selbox { width: auto; padding: 0px; margin: 0px; line-height: normal }
+    .ui-jqgrid .ui-state-highlight { background: #7AC0DA; }
+    .ui-jqgrid tr.jqgrow td { white-space: normal !important; }*/
+
+    /*fix jTable*/
+    span.jtable-goto-page select, span.jtable-page-size-change select {
+        height: 25px;
+        width: 60px;
+        padding: 2px 2px;
+        margin-bottom:auto;
+    }
+    div.jtable-main-container table.jtable thead th {
+        text-align: center;
+    }
+    div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td {
+        text-align: center;
+    }
+    div.accordion-heading {
+        font-weight:600;
+    }
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+    }
+    .ui-dialog-title {
+        color:white;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#jTableUser').jtable({
+            title: 'User Master',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            selecting: true, //Enable selecting
+            defaultSorting: 'Sys_User_id', //Set default sorting
+            actions: {
+                listAction: '@Url.Action("UserList1","PowerUser")',
+                deleteAction: '@Url.Action("DeleteUser1","PowerUser")',
+                @*updateAction: '@Url.Action("UpdateUser1","PowerUser")',*@
+                createAction: '@Url.Action("CreateUser1","PowerUser")'
+            },
+            fields: {
+                Sys_User_id: { title: 'Name', key: true, create: true, edit: false, options: '@Url.Action("GetTNCUserList","PowerUser")' },
+                Sys_Plant_id: { title: 'Group', create: true, edit: false, options: '@Url.Action("GetGroupList","PowerUser")' }
+                @*gcode: { title: 'Group', key: true, create: true, edit: false, options: '@Url.Action("GetGroupList","PowerUser")' }
+                DeleteIcon: {
+                    title: '',
+                    width: '1%',
+                    create: false,
+                    edit: false,
+                    display: function(data){
+                        var $img = $('<img src="/Scripts/jtable/themes/metro/delete.png" title="Delete Record"/>');
+                        $img.click(function(){
+                            $('#jTableUser').jtable('deleteRecord', {
+                                key: data.record.Sys_Plant_id,
+                                url: '@Url.Action("DeleteUser1", "PowerUser")?user=' + data.record.Sys_User_id + '&gtype=' + data.record.Sys_GroupType_id + '&plant=' + data.record.Sys_Plant_id
+                            });
+                        });
+                        return $img;
+                    }
+                }*@
+            }
+        });
+        //Load student list from server
+        $('#jTableUser').jtable('load');
+
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div id="jTableUser"></div>

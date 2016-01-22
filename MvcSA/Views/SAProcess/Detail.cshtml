@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Detail";
+}
+
+
+<h2>Detail</h2>
+
+@Html.Action("_ShowDetail", new { id = ViewBag.Id })
+
+<h2>Attach Files</h2>
+
+@Html.Action("_ShowFiles", new { id = ViewBag.Id })

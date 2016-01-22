@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SpecialAcceptanceModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="SpecialAcceptanceModelStoreContainer">
+          <EntitySet Name="TD_Main" EntityType="SpecialAcceptanceModel.Store.TD_Main" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TD_Transaction" EntityType="SpecialAcceptanceModel.Store.TD_Transaction" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TM_Level" EntityType="SpecialAcceptanceModel.Store.TM_Level" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TM_Status" EntityType="SpecialAcceptanceModel.Store.TM_Status" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TM_SysUser" EntityType="SpecialAcceptanceModel.Store.TM_SysUser" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_TD_Transaction_TD_Main" Association="SpecialAcceptanceModel.Store.FK_TD_Transaction_TD_Main">
+            <End Role="TD_Main" EntitySet="TD_Main" />
+            <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TD_Transaction_TM_Level" Association="SpecialAcceptanceModel.Store.FK_TD_Transaction_TM_Level">
+            <End Role="TM_Level" EntitySet="TM_Level" />
+            <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TD_Transaction_TM_Status" Association="SpecialAcceptanceModel.Store.FK_TD_Transaction_TM_Status">
+            <End Role="TM_Status" EntitySet="TM_Status" />
+            <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="TD_Main">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="control_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="issue_dt" Type="datetime" Nullable="false" />
+          <Property Name="issue_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="item_code" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="customer" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="material" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="batch_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="job_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="defective_qty" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="reason" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="expect_date" Type="date" Nullable="false" />
+          <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
+          <Property Name="effective_dt" Type="date" Nullable="false" />
+          <Property Name="preventive" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TD_Transaction">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="status_id" />
+            <PropertyRef Name="lv_id" />
+            <PropertyRef Name="org_id" />
+            <PropertyRef Name="Sys_Plant_id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="status_id" Type="tinyint" Nullable="false" />
+          <Property Name="lv_id" Type="tinyint" Nullable="false" />
+          <Property Name="org_id" Type="int" Nullable="false" />
+          <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
+          <Property Name="act_id" Type="tinyint" />
+          <Property Name="actor" Type="nvarchar" MaxLength="25" />
+          <Property Name="act_dt" Type="datetime" />
+          <Property Name="comment" Type="nvarchar(max)" />
+          <Property Name="active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TM_Level">
+          <Key>
+            <PropertyRef Name="lv_id" />
+          </Key>
+          <Property Name="lv_id" Type="tinyint" Nullable="false" />
+          <Property Name="lv_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="position_min" Type="tinyint" Nullable="false" />
+          <Property Name="position_max" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TM_Status">
+          <Key>
+            <PropertyRef Name="status_id" />
+          </Key>
+          <Property Name="status_id" Type="tinyint" Nullable="false" />
+          <Property Name="status_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="lv_min" Type="tinyint" Nullable="false" />
+          <Property Name="lv_max" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TM_SysUser">
+          <Key>
+            <PropertyRef Name="Sys_Plant_id" />
+            <PropertyRef Name="Sys_GroupType_id" />
+            <PropertyRef Name="Sys_User_id" />
+          </Key>
+          <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
+          <Property Name="Sys_GroupType_id" Type="tinyint" Nullable="false" />
+          <Property Name="Sys_User_id" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="lv_id" Type="tinyint" Nullable="false" />
+          <Property Name="user_active" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_TD_Transaction_TD_Main">
+          <End Role="TD_Main" Type="SpecialAcceptanceModel.Store.TD_Main" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TD_Transaction" Type="SpecialAcceptanceModel.Store.TD_Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TD_Main">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TD_Transaction">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TD_Transaction_TM_Level">
+          <End Role="TM_Level" Type="SpecialAcceptanceModel.Store.TM_Level" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TD_Transaction" Type="SpecialAcceptanceModel.Store.TD_Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TM_Level">
+              <PropertyRef Name="lv_id" />
+            </Principal>
+            <Dependent Role="TD_Transaction">
+              <PropertyRef Name="lv_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TD_Transaction_TM_Status">
+          <End Role="TM_Status" Type="SpecialAcceptanceModel.Store.TM_Status" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TD_Transaction" Type="SpecialAcceptanceModel.Store.TD_Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TM_Status">
+              <PropertyRef Name="status_id" />
+            </Principal>
+            <Dependent Role="TD_Transaction">
+              <PropertyRef Name="status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SpecialAcceptanceModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="SpecialAcceptanceEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="TD_Main" EntityType="SpecialAcceptanceModel.TD_Main" />
+          <EntitySet Name="TD_Transaction" EntityType="SpecialAcceptanceModel.TD_Transaction" />
+          <EntitySet Name="TM_Level" EntityType="SpecialAcceptanceModel.TM_Level" />
+          <EntitySet Name="TM_Status" EntityType="SpecialAcceptanceModel.TM_Status" />
+          <AssociationSet Name="FK_TD_Transaction_TD_Main" Association="SpecialAcceptanceModel.FK_TD_Transaction_TD_Main">
+            <End Role="TD_Main" EntitySet="TD_Main" />
+            <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TD_Transaction_TM_Level" Association="SpecialAcceptanceModel.FK_TD_Transaction_TM_Level">
+            <End Role="TM_Level" EntitySet="TM_Level" />
+            <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TD_Transaction_TM_Status" Association="SpecialAcceptanceModel.FK_TD_Transaction_TM_Status">
+            <End Role="TM_Status" EntitySet="TM_Status" />
+            <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+          </AssociationSet>
+          <EntitySet Name="TM_SysUser" EntityType="SpecialAcceptanceModel.TM_SysUser" />
+        </EntityContainer>
+        <EntityType Name="TD_Main">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="control_no" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="issue_dt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="issue_by" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="title" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="item_code" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="customer" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="material" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="batch_no" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="job_no" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="defective_qty" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="reason" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="expect_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Sys_Plant_id" Type="Byte" Nullable="false" />
+          <Property Name="effective_dt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="preventive" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="TD_Transaction" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TD_Main" FromRole="TD_Main" ToRole="TD_Transaction" />
+        </EntityType>
+        <EntityType Name="TD_Transaction">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="status_id" />
+            <PropertyRef Name="lv_id" />
+            <PropertyRef Name="org_id" />
+            <PropertyRef Name="Sys_Plant_id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="status_id" Type="Byte" Nullable="false" />
+          <Property Name="lv_id" Type="Byte" Nullable="false" />
+          <Property Name="org_id" Type="Int32" Nullable="false" />
+          <Property Name="Sys_Plant_id" Type="Byte" Nullable="false" />
+          <Property Name="act_id" Type="Byte" />
+          <Property Name="actor" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <Property Name="act_dt" Type="DateTime" Precision="3" />
+          <Property Name="comment" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="TD_Main" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TD_Main" FromRole="TD_Transaction" ToRole="TD_Main" />
+          <NavigationProperty Name="TM_Level" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TM_Level" FromRole="TD_Transaction" ToRole="TM_Level" />
+          <NavigationProperty Name="TM_Status" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TM_Status" FromRole="TD_Transaction" ToRole="TM_Status" />
+        </EntityType>
+        <EntityType Name="TM_Level">
+          <Key>
+            <PropertyRef Name="lv_id" />
+          </Key>
+          <Property Name="lv_id" Type="Byte" Nullable="false" />
+          <Property Name="lv_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="position_min" Type="Byte" Nullable="false" />
+          <Property Name="position_max" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="TD_Transaction" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TM_Level" FromRole="TM_Level" ToRole="TD_Transaction" />
+        </EntityType>
+        <EntityType Name="TM_Status">
+          <Key>
+            <PropertyRef Name="status_id" />
+          </Key>
+          <Property Name="status_id" Type="Byte" Nullable="false" />
+          <Property Name="status_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="lv_min" Type="Byte" Nullable="false" />
+          <Property Name="lv_max" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="TD_Transaction" Relationship="SpecialAcceptanceModel.FK_TD_Transaction_TM_Status" FromRole="TM_Status" ToRole="TD_Transaction" />
+        </EntityType>
+        <Association Name="FK_TD_Transaction_TD_Main">
+          <End Role="TD_Main" Type="SpecialAcceptanceModel.TD_Main" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TD_Transaction" Type="SpecialAcceptanceModel.TD_Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TD_Main">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TD_Transaction">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TD_Transaction_TM_Level">
+          <End Role="TM_Level" Type="SpecialAcceptanceModel.TM_Level" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TD_Transaction" Type="SpecialAcceptanceModel.TD_Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TM_Level">
+              <PropertyRef Name="lv_id" />
+            </Principal>
+            <Dependent Role="TD_Transaction">
+              <PropertyRef Name="lv_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TD_Transaction_TM_Status">
+          <End Role="TM_Status" Type="SpecialAcceptanceModel.TM_Status" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TD_Transaction" Type="SpecialAcceptanceModel.TD_Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TM_Status">
+              <PropertyRef Name="status_id" />
+            </Principal>
+            <Dependent Role="TD_Transaction">
+              <PropertyRef Name="status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TM_SysUser">
+          <Key>
+            <PropertyRef Name="Sys_Plant_id" />
+            <PropertyRef Name="Sys_GroupType_id" />
+            <PropertyRef Name="Sys_User_id" />
+          </Key>
+          <Property Type="Byte" Name="Sys_Plant_id" Nullable="false" />
+          <Property Type="Byte" Name="Sys_GroupType_id" Nullable="false" />
+          <Property Type="String" Name="Sys_User_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Byte" Name="lv_id" Nullable="false" />
+          <Property Type="Boolean" Name="user_active" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SpecialAcceptanceModelStoreContainer" CdmEntityContainer="SpecialAcceptanceEntities">
+          <EntitySetMapping Name="TD_Main">
+            <EntityTypeMapping TypeName="SpecialAcceptanceModel.TD_Main">
+              <MappingFragment StoreEntitySet="TD_Main">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="control_no" ColumnName="control_no" />
+                <ScalarProperty Name="issue_dt" ColumnName="issue_dt" />
+                <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="item_code" ColumnName="item_code" />
+                <ScalarProperty Name="customer" ColumnName="customer" />
+                <ScalarProperty Name="material" ColumnName="material" />
+                <ScalarProperty Name="batch_no" ColumnName="batch_no" />
+                <ScalarProperty Name="job_no" ColumnName="job_no" />
+                <ScalarProperty Name="defective_qty" ColumnName="defective_qty" />
+                <ScalarProperty Name="reason" ColumnName="reason" />
+                <ScalarProperty Name="expect_date" ColumnName="expect_date" />
+                <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+                <ScalarProperty Name="effective_dt" ColumnName="effective_dt" />
+                <ScalarProperty Name="preventive" ColumnName="preventive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TD_Transaction">
+            <EntityTypeMapping TypeName="SpecialAcceptanceModel.TD_Transaction">
+              <MappingFragment StoreEntitySet="TD_Transaction">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
+                <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+                <ScalarProperty Name="org_id" ColumnName="org_id" />
+                <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+                <ScalarProperty Name="act_id" ColumnName="act_id" />
+                <ScalarProperty Name="actor" ColumnName="actor" />
+                <ScalarProperty Name="act_dt" ColumnName="act_dt" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TM_Level">
+            <EntityTypeMapping TypeName="SpecialAcceptanceModel.TM_Level">
+              <MappingFragment StoreEntitySet="TM_Level">
+                <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+                <ScalarProperty Name="lv_name" ColumnName="lv_name" />
+                <ScalarProperty Name="position_min" ColumnName="position_min" />
+                <ScalarProperty Name="position_max" ColumnName="position_max" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TM_Status">
+            <EntityTypeMapping TypeName="SpecialAcceptanceModel.TM_Status">
+              <MappingFragment StoreEntitySet="TM_Status">
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
+                <ScalarProperty Name="status_name" ColumnName="status_name" />
+                <ScalarProperty Name="lv_min" ColumnName="lv_min" />
+                <ScalarProperty Name="lv_max" ColumnName="lv_max" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TM_SysUser">
+            <EntityTypeMapping TypeName="SpecialAcceptanceModel.TM_SysUser">
+              <MappingFragment StoreEntitySet="TM_SysUser">
+                <ScalarProperty Name="user_active" ColumnName="user_active" />
+                <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+                <ScalarProperty Name="Sys_User_id" ColumnName="Sys_User_id" />
+                <ScalarProperty Name="Sys_GroupType_id" ColumnName="Sys_GroupType_id" />
+                <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

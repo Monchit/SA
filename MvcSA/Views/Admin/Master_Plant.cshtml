@@ -1,0 +1,58 @@
+﻿
+<style type="text/css">
+    /* fix the size of the pager */
+    input.ui-pg-input { width: auto; padding: 0px; margin: 0px; line-height: normal; }
+    select.ui-pg-selbox { width: auto; padding: 0px; margin: 0px; line-height: normal }
+    .ui-jqgrid .ui-state-highlight { background: #7AC0DA; }
+    .ui-jqgrid tr.jqgrow td { white-space: normal !important; }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        jQuery("#grid_plant").jqGrid({
+            url: "@Url.Action("GridPlantMaster","Admin")",
+            datatype: 'json',
+            mtype: 'POST',
+            colNames: ['Plant ID', 'Plant Name'],
+            colModel: [
+              { name: 'Sys_Plant_id', index: 'Sys_Plant_id', key: true, align: 'center', width: 25, editable: true, editrules: { edithidden: false } },
+              { name: 'Sys_Plant_name', index: 'Sys_Plant_name', align: 'center', sortable: true, editable: true, edittype: 'text', editrules: { required: true } }
+            ],
+            pager: jQuery('#pager_plant'),
+            rowNum: 10,
+            rowList: [5, 10, 20, 50],
+            //autowidth: true,
+            width: 500,
+            height: 'auto',
+            sortname: 'Sys_Plant_id',
+            sortorder: "asc",
+            viewrecords: true,
+            caption: 'Master Plant',
+            ajaxSelectOptions: { cache: false },
+            //loadonce: false,
+            scrollOffset: 0
+
+        });
+
+        jQuery("#grid_plant").jqGrid('navGrid', '#pager_plant',
+            { edit: true, add: true, del: true, search: false },
+            { url: "@Url.Action("EditPlant","Admin")", closeAfterEdit: true, width: 450, beforeShowForm: function (formid) { $("#tr_Sys_Plant_id", formid).hide(); } },
+            { url: "@Url.Action("AddPlant","Admin")", closeAfterAdd: true, width: 450, beforeShowForm: function (formid) { $("#tr_Sys_Plant_id", formid).hide(); } },
+            {
+                url: "@Url.Action("DelPlant","Admin")", width: 400,
+                beforeShowForm: function (formid) {
+                    var selRowId = $(this).jqGrid('getGridParam', 'selrow');
+                    $("td.delmsg", formid[0]).html("Do you really want delete <br /><b>Plant : " +
+                         $(this).jqGrid('getCell', selRowId, 'Sys_Plant_name') + "</b>?");
+                }
+            }, {}, {});
+    });
+</script>
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<table id="grid_plant">
+</table>
+<div id="pager_plant"></div>

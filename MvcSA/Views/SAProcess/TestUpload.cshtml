@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "TestUpload";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnAddFile").click(function () {
+            $('#divAttach').last().after($('<div><input type="file" name="files" class="file" /> <button type="button" class="lnkDel btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></button></div>'));
+        });
+        $(document).on("click", ".lnkDel", function () {
+            $(this).parent().remove();
+            return false;
+        });
+    });
+</script>
+<h2>TestUpload</h2>
+
+@using (Html.BeginForm("Upload", "SAProcess", FormMethod.Post, new { enctype = "multipart/form-data" })){
+    <text>
+    File Attachments &nbsp;<button id="btnAddFile" type="button" class="btn btn-info"><i class="icon-plus icon-white"></i> Add File</button>
+    <div id="divAttach"><input type="file" name="files" class="file" /></div>
+    <button type="submit" id="btnSubmit" class="btn btn-primary" style="width:120px;">Submit</button>
+    </text>
+}

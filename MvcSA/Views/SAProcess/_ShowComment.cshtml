@@ -1,0 +1,134 @@
+﻿@*@model IEnumerable<MvcSA.Models.TD_Transaction>*@
+@using MvcSA.ViewModels
+@model IEnumerable<VM_Comment>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //$(".btshowcomment").tooltip();
+
+        $('#divDialog').dialog({
+            autoOpen: false,
+            width: 600,
+            height: 'auto',
+            modal: true
+        });
+
+        $(document).on("click", "#btnApprove", function (event) {
+            var id = $(this).attr('data-id');
+            var remote = "@Url.Action("_FormApprove")?id=" + id;
+            $.get(remote, function (data) {
+                $("#divDialog").html(data);
+                $("#divDialog").dialog("option", "title", "Form Approve / Comment");
+                $("#divDialog").dialog("open");
+            });
+        });
+
+        $(document).on("click", "#btnApproveS1", function (event) {
+            var id = $(this).attr('data-id');
+            var remote = "@Url.Action("_FormApproveS1")?id=" + id;
+            $.get(remote, function (data) {
+                $("#divDialog").html(data);
+                $("#divDialog").dialog("option", "title", "Form Approve");
+                $("#divDialog").dialog("open");
+            });
+        });
+
+        $(document).on("click", "#btnPcr", function (event) {
+            var id = $(this).attr('data-id');
+            var remote = "@Url.Action("_FormCarPar")?id=" + id;
+            $.get(remote, function (data) {
+                $("#divDialog").html(data);
+                $("#divDialog").dialog("option", "title", "Form CAR/PAR");
+                $("#divDialog").dialog("open");
+            });
+        });
+
+        $(document).on("click", "#btnTell", function (event) {
+            var id = $(this).attr('data-id');
+            var remote = "@Url.Action("_FormTellIssuer")?id=" + id;
+            $.get(remote, function (data) {
+                $("#divDialog").html(data);
+                $("#divDialog").dialog("option", "title", "Form Tell Issuer");
+                $("#divDialog").dialog("open");
+            });
+        });
+    });
+</script>
+
+<style type="text/css">
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+    }
+    .text-small {
+        font-size: .9em;
+    }
+</style>
+
+@if(ViewBag.ShowForm != null){
+    <div class="row-fluid">
+    @if (ViewBag.ShowForm == 1)//Form Comment for Engineer
+    {
+        <button type="button" class="btn btn-info" id="btnApprove" name="btnApprove" data-id="@ViewBag.SAID">Comment</button>
+        if (ViewBag.CarPar != null && ViewBag.CarPar == false)
+        {
+            <button type="button" class="btn btn-inverse" id="btnPcr" name="btnPcr" data-id="@ViewBag.SAID">CAR/PAR</button>
+        }
+        <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
+    }
+    else if (ViewBag.ShowForm < 5)//Form Approve for Mgr. Up
+    {
+        <button type="button" class="btn btn-info" id="btnApprove" name="btnApprove" data-id="@ViewBag.SAID">Approve</button>
+        if (ViewBag.CarPar != null && ViewBag.CarPar == false)
+        {
+            <button type="button" class="btn btn-inverse" id="btnPcr" name="btnPcr" data-id="@ViewBag.SAID">CAR/PAR</button>
+        }
+        <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
+    }
+    else if (ViewBag.ShowForm == 11)//Form Issuer
+    {
+        <a href="@Url.Action("EditSA", "SAProcess", new { id = ViewBag.SAID })" class="btn btn-warning">Edit SA</a>
+    }
+    else if (ViewBag.ShowForm == 12)//Form QA
+    {
+        <button type="button" class="btn btn-info" id="btnApproveS1" name="btnApproveS1" data-id="@ViewBag.SAID">Approve</button>
+        <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
+    }
+    else if (ViewBag.ShowForm == 13)//Form Issue SA Cust/NOK
+    {
+        <button type="button" class="btn btn-info" id="btnIssueSA" name="btnIssueSA" data-id="@ViewBag.SAID">Approve</button>
+        <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
+    }
+    </div><br />
+}
+
+<table class="table table-bordered table-striped table-condensed">
+    <thead>
+        <tr>
+            <th class="text-small">Name</th>
+            <th class="text-small">Level</th>
+            <th class="text-small">Organize</th>
+            <th class="text-small">Plant</th>
+            <th class="text-small">Judgement</th>
+            <th class="text-small">Date-Time</th>
+            <th class="text-small">Comment</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-small">@item.actor</td>
+                <td class="text-small">@item.lv_name</td>
+                <td class="text-small">@item.org_name</td>
+                <td class="text-small">@item.plant</td>
+                <td class="text-small">@item.act_name</td>
+                <td class="text-small">@item.act_dt</td>
+                <td class="text-small">@item.comment</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="divDialog"></div>

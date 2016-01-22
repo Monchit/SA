@@ -1,0 +1,193 @@
+﻿@model MvcSA.Models.TD_Main
+
+<style type="text/css">
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        $(document).on("click", "#tab-btn button", function (event) {
+            var id = $(this).attr('data-id');
+            var status = $(this).attr('data-stid');
+            var url = "@Url.Action("_ShowComment")?id=" + id + "&status_id=" + status;
+            $.get(url, function (data) {
+                $("#tab-content").html(data);
+            });
+        });
+
+        $.get("@Url.Action("RenderStatus")", "id=@ViewBag.SAID", function (data) {
+            $("#tab-btn").empty();
+            $("#tab-btn").append(data);
+        });
+
+        $('#showCarPar').dialog({
+            autoOpen: false,
+            width: 600,//'auto',
+            height: 'auto',
+            modal: true
+        });
+        
+        $(document).on("click", "#btnShowPC", function (event) {
+            var id = $(this).attr('data-id');
+            var remote = "@Url.Action("_ShowCarPar")?id=" + id;
+            $.get(remote, function (data) {
+                $("#showCarPar").html(data);
+                $("#showCarPar").dialog("open");
+            });
+        });
+
+        $('#showIssueSA').dialog({
+            autoOpen: false,
+            width: 750,//'auto',
+            height: 'auto',
+            modal: true
+        });
+
+        $(document).on("click", "#btnShowSA", function (event) {
+            var id = $(this).attr('data-id');
+            var remote = "@Url.Action("_ShowSA")?id=" + id;
+            $.get(remote, function (data) {
+                $("#showIssueSA").html(data);
+                $("#showIssueSA").dialog("open");
+            });
+        });
+
+        $('#showConcern').dialog({
+            autoOpen: false,
+            width: 750,//'auto',
+            height: 'auto',
+            modal: true
+        });
+
+        $(document).on("click", "#btnShowConcern", function (event) {
+            var id = $(this).attr('data-id');
+            var remote = "@Url.Action("_ShowConcern")?id=" + id;
+            $.get(remote, function (data) {
+                $("#showConcern").html(data);
+                $("#showConcern").dialog("open");
+            });
+        });
+
+        $(document).on("click", "#btnSRej", function (event) {
+            var id = $(this).attr('data-id');
+            var remote = "@Url.Action("SpecialReject")";
+            $.post(remote, id, function (data) {
+                $("#showConcern").html(data);
+                $("#showConcern").dialog("open");
+            });
+        });
+    });
+</script>
+<table class="table table-bordered table-striped table-condensed">
+    <tr>
+        <td class="td_title" style="width:125px;">Control No.</td>
+        <td style="width:250px;">@Html.DisplayFor(m => m.control_no)
+        @if (ViewBag.SPEdit != null && ViewBag.SPEdit == true)
+        {
+            <br /><a href="@Url.Action("SpecialEdit", "SAProcess", new { id = ViewBag.SAID })" class="btn btn-warning">Special Edit</a>
+            <button id="btnSRej" name="btnSRej" class="btn btn-danger" data-id="@ViewBag.SAID">Special Reject</button>
+        }
+        </td>
+        <td class="td_title" style="width:175px;">Type of Nonconformities</td>
+        <td>@Html.DisplayFor(m => m.title)</td>
+    </tr>
+    <tr>
+        <td class="td_title">Item Code</td>
+        <td>@Html.DisplayFor(m => m.item_code)</td>
+        <td class="td_title">Customer</td>
+        <td>@Html.DisplayFor(m => m.customer)</td>
+    </tr>
+    <tr>
+        <td class="td_title">Material</td>
+        <td>@Html.DisplayFor(m => m.material)</td>
+        <td class="td_title">Job No. / Lot No.</td>
+        <td>@Html.DisplayFor(m => m.job_no)</td>
+    </tr>
+    <tr>
+        <td class="td_title">Batch No.</td>
+        <td>@Html.DisplayFor(m => m.batch_no)</td>
+        <td class="td_title">Defective Qty</td>
+        <td>@Html.DisplayFor(m => m.defective_qty)</td>
+    </tr>
+    <tr>
+        <td class="td_title">Plant</td>
+        <td>@Html.DisplayFor(m => m.TM_SysPlant.Sys_Plant_name)</td>
+        <td class="td_title">Expect Date of Answer</td>
+        <td>@Model.expect_date.ToString("dd/MM/yyyy")</td>
+    </tr>
+    <tr>
+        <td class="td_title">Issued Date</td>
+        <td>@Model.issue_dt.ToString("dd/MM/yyyy")</td>
+        <td class="td_title">Effective Date</td>
+        <td>@Model.effective_dt.ToString("dd/MM/yyyy")</td>
+    </tr>
+    <tr>
+        <td class="td_title">Problem</td>
+        <td>@foreach (var item in Model.TD_Problem)
+            {
+                @item.TM_Problem.prob_name
+                if (item.TM_Problem.text_flag)
+                {
+                    <text> : </text>@item.prob_text
+                }
+                <br />
+            }
+        </td>
+        <td class="td_title">Disposition of Defectives</td>
+        <td>@foreach (var item in Model.TD_Disposition)
+            {
+                @item.TM_Disposition.dispos_name
+                if(item.TM_Disposition.text_flag){
+                    <text> : </text>@item.dispos_text
+                }
+                <br />
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="td_title">Root Cause</td>
+        <td>@Html.DisplayFor(m => m.reason)</td>
+        <td class="td_title">Preventive action</td>
+        <td>@Html.DisplayFor(m => m.preventive)</td>
+    </tr>
+    <tr>
+        <td class="td_title">CAR/PAR Detail</td>
+        <td>@if (ViewBag.ShowCarPar != null && ViewBag.ShowCarPar == true)
+        {
+             <p><button type="button" class="btn btn-info" id="btnShowPC" name="btnShowPC" data-id="@ViewBag.SAID">Show CAR/PAR</button></p>
+        }</td>
+        <td class="td_title">Issue SA Cust/NOK</td>
+        <td>@if (ViewBag.ShowIssueSA == true)
+            {
+            <button type="button" class="btn btn-info" id="btnShowSA" name="btnShowSA" data-id="@ViewBag.SAID">Show Issue SA</button>
+            }
+
+            @if (ViewBag.IssueSA == 1)
+            {
+            <a href="@Url.Action("IssueSA", "SAProcess", new { sid = ViewBag.SAID })" class="btn btn-warning">Issue SA Cust/NOK</a>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="td_title">Print Report</td>
+        <td><i class="icon-print"></i> @Html.ActionLink("Print", "PrintPDF1", new { said = ViewBag.SAID }, new { target = "_blank" })</td>
+        <td class="td_title">Concern Section</td>
+        <td>@if (ViewBag.ShowConcern == true)
+            {
+            <button type="button" class="btn btn-info" id="btnShowConcern" name="btnShowConcern" data-id="@ViewBag.SAID">Show Concern</button>
+            }
+        </td>
+    </tr>
+</table>
+
+<div id="tab-btn"></div>
+
+<br />
+<div id="tab-content"></div>
+<div id="showCarPar" title="CAR/PAR Detail"></div>
+<div id="showIssueSA" title="Issue SA Detail"></div>
+<div id="showConcern" title="Concern Section"></div>

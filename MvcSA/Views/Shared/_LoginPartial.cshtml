@@ -1,0 +1,24 @@
+﻿@if (Session["SA_Auth"] == null)
+{
+    <text>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $.validationSetup({
+                    validateOnBlur: false
+                });
+            });
+        </script>
+        <form id="formLogin" class="navbar-form pull-right" action="@Url.Action("Login", "Home")" method="post">
+            <input id="Username" name="Username" class="input-small" type="text" placeholder="Username" data-validation="required">
+            <input id="Password" name="Password" class="input-small" type="password" placeholder="Password" data-validation="required">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </text>
+} else {
+    <text>
+        <form class="navbar-form pull-right" action="@Url.Action("Logout", "Home")" method="post">
+            Logged in as <b>@Session["SA_Name"].ToString() </b>
+            <button type="submit" class="btn btn-primary">Log out</button>
+        </form>
+  </text>
+}

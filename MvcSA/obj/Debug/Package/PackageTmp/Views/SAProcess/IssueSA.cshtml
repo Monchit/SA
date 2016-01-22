@@ -1,0 +1,265 @@
+﻿@section Head{
+    <meta http-equiv="x-ua-compatible" content="IE=8" />
+}
+<style type="text/css">
+    /*fix jTable*/
+    span.jtable-goto-page select, span.jtable-page-size-change select {
+        height: 25px;
+        width: 60px;
+        padding: 2px 2px;
+        margin-bottom:auto;
+    }
+    div.jtable-main-container table.jtable thead th {
+        text-align: center;
+    }
+    div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td {
+        text-align: center;
+    }
+    div.accordion-heading {
+        font-weight:600;
+    }
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+    }
+    .ui-dialog-title {
+        color:white;
+    }
+    .tdHead {
+        font-weight: bold;
+        background-color: dodgerblue;
+        color:white;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#jTableIssueSA').jtable({
+            title: 'Issue SA List',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            selecting: true, //Enable selecting
+            defaultSorting: 'issue_date DESC', //Set default sorting
+            defaultDateFormat: 'dd-mm-yy',//Set default date format
+            actions: {
+                listAction: '@Url.Action("IssueSAList", "SAProcess", new { said = ViewBag.SAID })',
+            },
+            fields: {
+                id: {
+                    title: 'ID',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                sa_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                sa_no: {
+                    title: 'SA No.',
+                    width: '15%'
+                },
+                cust_name: {
+                    title: 'Customer Name',
+                    width: '15%'
+                },
+                result: {
+                    title: 'Result',
+                    options: '@Url.Action("GetResultList","SAProcess")',
+                    width: '10%'
+                },
+                issue_date: {
+                    title: 'Issue Date',
+                    type: 'date',
+                    width: '10%',
+                    displayFormat: 'dd-mm-yy'
+                },
+                file_evidence: {
+                    title: 'File Evidence',
+                    list: true,
+                    create: true,
+                    edit: true,
+                    display: function (data) {
+                        if (data.record.file_evidence != "") {
+                            return $(data.record.file_evidence);
+                        }
+                        else {
+                            return '';
+                        }
+                    },
+                    input: function (data) {
+                        return '<input type="file" name="file_evidence" />';
+                    }
+                },
+                reason: {
+                    title: 'Reason',
+                    type: 'textarea'
+                },
+                edit: {
+                    title: 'Edit',
+                    width: '6%',
+                    display: function (data) {
+                        return $('<button type="button" class="btn btn-mini saEdit" data-sa_id="' + data.record.sa_id + '"><i class="icon-edit"></i> Edit</a>');
+                    }
+                }
+            },
+            toolbar: {
+                items: [{
+                    //icon: '/Image/excel.png',
+                    text: 'Add Issue SA',
+                    click: function () {
+                        $("#dialogAdd").dialog("open");
+                    }
+                }]
+            },
+            //Initialize validation logic when a form is created
+            formCreated: function (event, data) {
+                data.form.attr('enctype','multipart/form-data');
+            },
+            //Validate form when it is being submitted
+            formSubmitting: function (event, data) {
+                //return data.form.validationEngine('validate');
+            },
+        });
+
+        //Load student list from server
+        $('#jTableIssueSA').jtable('load');
+
+        $("#formIssueSA").submit(function () {
+            if (!$.validate({ form: "formIssueSA" })) {
+                return false;
+            }
+        });
+
+        $("#formEditSA").submit(function () {
+            if (!$.validate({ form: "formEditSA" })) {
+                return false;
+            }
+        });
+
+        $(".datepicker").datepicker({
+            //beforeShowDay: nonWorkingDates,
+            dateFormat: 'dd-mm-yy',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            showButtonPanel: true
+        });
+
+        $('.divdialog').dialog({
+            autoOpen: false,
+            width: 300,
+            height: 'auto',
+            modal: true
+        });
+
+        $('#selResult').change(function () {
+            if ($(this).val() == 3) {
+                $("#showReason").css("display", "inline");
+                $("#txaReason").attr("data-validate", "required");
+            } else {
+                $("#showReason").css("display", "none");
+                $("#txaReason").removeAttr("data-validate");
+            }
+        });
+
+        $('#selResult_e').change(function () {
+            if ($(this).val() == 3) {
+                $("#showReason_e").css("display", "inline");
+                $("#txaReason_e").attr("data-validate", "required");
+            } else {
+                $("#showReason_e").css("display", "none");
+                $("#txaReason_e").removeAttr("data-validate");
+            }
+        });
+
+        $(document).on("click", ".saEdit", function (event) {
+            var sa_id = $(this).attr("data-sa_id");
+            $.get("@Url.Action("GetIssueSA")", "sa_id=" + sa_id, function (data) {
+                $("#txtSANo_e").val(data.sa_no);
+                $("#txtCust_e").val(data.cust_name);
+                $("#selResult_e").val(data.result);
+                $("#dtpIssueDate_e").val(data.issue_date);
+                $("#txaReason_e").val(data.reason);
+                $("#hdId").val(sa_id);
+                if (data.result == 3) {
+                    $("#showReason").css("display", "inline");
+                    $("#txaReason").attr("data-validate", "required");
+                }
+                $("#dialogEdit").dialog("open");
+                
+            });
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div id="dialogAdd" class="divdialog" title="Add SA">
+    <form id="formIssueSA" name="formIssueSA" action="@Url.Action("AddIssueSA", "SAProcess", new { sid = Request.QueryString["sid"] })" method="post" enctype="multipart/form-data">
+        <label>SA No.</label><input type="text" id="txtSANo" name="txtSANo" data-validate="required" />
+        <label>Customer Name</label><input type="text" id="txtCust" name="txtCust" data-validate="required" />
+        <label>Result</label>
+        <select id="selResult" name="selResult" data-validate="required">
+            <option value="0">--Select Result--</option>
+        @foreach (var item in ViewBag.Result)
+        {
+            <option value="@item.result_id">@item.result_name</option>
+        }
+        </select>
+        <label>Issue Date</label>
+        <input type="text" id="dtpIssueDate" name="dtpIssueDate" readonly="true" class="datepicker input-medium" data-validation="date" data-validation-format="dd-mm-yyyy" data-validate="required" />
+        <label>File Evidence</label>
+        <input type="file" name="files" class="file" accept="application/pdf" />
+        <div id="showReason" style="display:none;">
+            <label>Reason</label>
+            <textarea id="txaReason" name="txaReason" rows="4"></textarea>
+        </div>
+        <div class="form-actions">
+            <button type="reset" class="btn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+<div id="dialogEdit" class="divdialog" title="Edit SA">
+    <form id="formEditSA" name="formEditSA" action="@Url.Action("UpdateIssueSA","SAProcess", new { sid = Request.QueryString["sid"] })" method="post" enctype="multipart/form-data">
+        <input type="hidden" id="hdId" name="hdId" value="0" />
+        <label>SA No.</label><input type="text" id="txtSANo_e" name="txtSANo_e" data-validate="required" />
+        <label>Customer Name</label><input type="text" id="txtCust_e" name="txtCust_e" data-validate="required" />
+        <label>Result</label>
+        <select id="selResult_e" name="selResult_e" data-validate="required">
+            <option value="0">--Select Result--</option>
+        @foreach (var item in ViewBag.Result)
+        {
+            <option value="@item.result_id">@item.result_name</option>
+        }
+        </select>
+        <label>Issue Date</label>
+        <input type="text" id="dtpIssueDate_e" name="dtpIssueDate_e" readonly="true" class="datepicker input-medium" data-validation="date" data-validation-format="dd-mm-yyyy" data-validate="required" />
+        <label>File Evidence</label>
+        <input type="file" name="files_e" class="file" accept="application/pdf" />
+        <div id="showReason_e" style="display:none;">
+            <label>Reason</label>
+            <textarea id="txaReason_e" name="txaReason_e" rows="4"></textarea>
+        </div>
+        <div class="form-actions">
+            <button type="reset" class="btn">Clear</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+<div id="jTableIssueSA"></div>
+
+@if (ViewBag.Complete == true)
+{
+    <br />
+    <form action="@Url.Action("CompIssueSA","SAProcess")" method="post">
+        <input type="hidden" id="hdIDC" name="hdIDC" value="@ViewBag.SAID" />
+        <input type="hidden" id="hdOrg" name="hdOrg" value="@ViewBag.QAOrg" />
+        <button type="submit" class="btn btn-primary" id="btnComplete" name="btnComplete">Complete</button>
+    </form>
+}

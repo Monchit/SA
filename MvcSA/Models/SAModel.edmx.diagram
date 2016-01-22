@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0d9cd0943e8c42f9acc77d9f29477c21" Name="Diagram1" ZoomLevel="94">
+        <EntityTypeShape EntityType="SAModel.TD_CarPar" Width="1.5" PointX="8.75" PointY="34" />
+        <EntityTypeShape EntityType="SAModel.TD_ConcernEN" Width="1.5" PointX="0.75" PointY="26.125" />
+        <EntityTypeShape EntityType="SAModel.TD_ConcernOther" Width="1.5" PointX="0.75" PointY="21.625" />
+        <EntityTypeShape EntityType="SAModel.TD_ConcernQC" Width="1.5" PointX="0.75" PointY="28.125" />
+        <EntityTypeShape EntityType="SAModel.TD_Disposition" Width="1.5" PointX="4.75" PointY="32.25" />
+        <EntityTypeShape EntityType="SAModel.TD_File" Width="1.5" PointX="2.75" PointY="20" />
+        <EntityTypeShape EntityType="SAModel.TD_Main" Width="1.5" PointX="2.7720657897983054" PointY="26.377458435659044" />
+        <EntityTypeShape EntityType="SAModel.TD_Problem" Width="1.5" PointX="0.75" PointY="32.375" />
+        <EntityTypeShape EntityType="SAModel.TD_Tell" Width="1.5" PointX="0.75" PointY="23.5" />
+        <EntityTypeShape EntityType="SAModel.TD_Transaction" Width="1.5" PointX="4.75" PointY="20.75" />
+        <EntityTypeShape EntityType="SAModel.TD_Transaction_Log" Width="1.5" PointX="4.75" PointY="27.5" />
+        <EntityTypeShape EntityType="SAModel.TM_Action" Width="1.5" PointX="4.75" PointY="25.125" />
+        <EntityTypeShape EntityType="SAModel.TM_ActionMapping" Width="1.5" PointX="8.75" PointY="28.5" />
+        <EntityTypeShape EntityType="SAModel.TM_Admin" Width="1.5" PointX="10.75" PointY="26.5" />
+        <EntityTypeShape EntityType="SAModel.TM_Disposition" Width="1.5" PointX="4.75" PointY="34.625" />
+        <EntityTypeShape EntityType="SAModel.TM_Level" Width="1.5" PointX="6.75" PointY="32.25" />
+        <EntityTypeShape EntityType="SAModel.TM_Problem" Width="1.5" PointX="0.75" PointY="30.125" />
+        <EntityTypeShape EntityType="SAModel.TM_Status" Width="1.5" PointX="8.75" PointY="25.75" />
+        <EntityTypeShape EntityType="SAModel.TM_SysGroup" Width="1.5" PointX="10.75" PointY="30.875" />
+        <EntityTypeShape EntityType="SAModel.TM_SysGroupCode" Width="1.5" PointX="6.75" PointY="35" />
+        <EntityTypeShape EntityType="SAModel.TM_SysGroupType" Width="1.5" PointX="10.75" PointY="28.25" />
+        <EntityTypeShape EntityType="SAModel.TM_SysPlant" Width="1.5" PointX="8.75" PointY="31" />
+        <EntityTypeShape EntityType="SAModel.TM_SysUser" Width="1.5" PointX="10.75" PointY="34.25" />
+        <AssociationConnector Association="SAModel.FK_TD_CarPar_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_ConcernEN_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_ConcernOther_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_ConcernQC_TD_Main1" />
+        <AssociationConnector Association="SAModel.FK_TD_Disposition_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_Disposition_TM_Disposition" />
+        <AssociationConnector Association="SAModel.FK_TD_File_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_Main_TM_SysPlant" />
+        <AssociationConnector Association="SAModel.FK_TD_Problem_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_Tell_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_Log_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_Problem_TM_Problem" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_TM_Action" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_TM_Level" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_TM_Status" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_TM_SysPlant" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_Log_TM_Action" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_Log_TM_Level" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_Log_TM_Status" />
+        <AssociationConnector Association="SAModel.FK_TD_Transaction_Log_TM_SysPlant" />
+        <AssociationConnector Association="SAModel.FK_TM_ActionMapping_TM_Level" />
+        <AssociationConnector Association="SAModel.FK_TM_ActionMapping_TM_Status" />
+        <AssociationConnector Association="SAModel.FK_TM_SysGroup_TM_SysGroupType" />
+        <AssociationConnector Association="SAModel.FK_TM_SysGroup_TM_SysPlant" />
+        <AssociationConnector Association="SAModel.FK_TM_SysUser_TM_SysGroup" />
+        <EntityTypeShape EntityType="SAModel.TD_SA" Width="1.5" PointX="2.75" PointY="33.25" />
+        <EntityTypeShape EntityType="SAModel.TM_Result" Width="1.5" PointX="0.75" PointY="34.75" />
+        <AssociationConnector Association="SAModel.FK_TD_SA_TD_Main" />
+        <AssociationConnector Association="SAModel.FK_TD_SA_TM_Result1" />
+        <EntityTypeShape EntityType="SAModel.TD_Inform" Width="1.5" PointX="6.625" PointY="25.125" />
+        <AssociationConnector Association="SAModel.FK_TD_Inform_TD_Main" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

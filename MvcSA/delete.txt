@@ -1,0 +1,12 @@
+TRUNCATE TABLE [SpecialAcceptance].[dbo].[TD_CarPar]
+TRUNCATE TABLE [SpecialAcceptance].[dbo].[TD_ConcernEN]
+TRUNCATE TABLE [SpecialAcceptance].[dbo].[TD_ConcernOther]
+TRUNCATE TABLE [SpecialAcceptance].[dbo].[TD_ConcernQC]
+TRUNCATE TABLE [SpecialAcceptance].[dbo].[TD_Disposition]
+TRUNCATE TABLE [SpecialAcceptance].[dbo].[TD_Problem]
+TRUNCATE TABLE [SpecialAcceptance].[dbo].[TD_Tell]
+DELETE FROM [SpecialAcceptance].[dbo].[TD_Transaction]
+DELETE FROM [SpecialAcceptance].[dbo].[TD_Main] WHERE id < 100
+DBCC CHECKIDENT('SpecialAcceptance.dbo.TD_Main',RESEED, 0)
+DELETE FROM [SpecialAcceptance].[dbo].[TD_File] WHERE file_id < 100
+DBCC CHECKIDENT('SpecialAcceptance.dbo.TD_File',RESEED, 0)

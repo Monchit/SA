@@ -1,0 +1,190 @@
+﻿@model MvcSA.Models.TD_Main
+
+<h2>@ViewBag.Title</h2>
+
+<style type="text/css">
+    textarea {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 99%;
+}
+</style>
+<script type="text/javascript">
+    function CheckControlNo(){
+        //if ($("#hdControlNo").val().indexOf('nosetcode') != -1) {
+        //    alert("Not set Control No.\nPlease contact your system administrator.\nTel. 6522");
+        //    return false;
+        //} else 
+        if ($("#hdControlNo").val() == "") {
+            alert("Control No. Not set.\nPlease contact your system administrator (Tel. 6522).");
+            return false;
+        }
+    }
+    $(document).ready(function () {
+        CheckControlNo();
+
+        $("[name='cbxProblem']").valAttr('', 'validate_checkbox_group').valAttr('qty', 'min1')
+        //  .valAttr('error-msg', 'chose 1, max 6');
+
+        //$.validationSetup();
+        $.validationSetup({
+            validateOnBlur : false // disable validation when input looses focus
+            //errorMessagePosition : 'top', // Instead of 'element' which is default
+            //scrollToTopOnError : true // Set this property to true if you have a long form
+        });
+
+        //Datepicker Setting
+        $(".datepicker").datepicker({
+            //beforeShowDay: nonWorkingDates,
+            dateFormat: 'dd-mm-yy',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            showButtonPanel: true
+            //minDate: new Date()//set minDate is today
+        });
+
+        //$("#dtpIssueDate").datepicker("setDate", new Date()).datepicker("destroy");//.datepicker('disable');
+
+        $.get("@Url.Action("ProblemCheckBoxList", "SAProcess", new { said = ViewBag.SAID })", function (data) {
+            $("#divProblem").append(data);
+        });
+
+        $.get("@Url.Action("DispositionRadioList", "SAProcess", new { said = ViewBag.SAID })", function (data) {
+            $("#divDispos").append(data);
+        });
+
+        $(document).on("click", ".lnkDel", function () {
+            $(this).parent().remove();
+            return false;
+        });
+        $("#btnAddFile").click(function () {
+            $('#divAttach').last().after($('<div><input type="file" name="files" class="file" /> <button type="button" class="lnkDel btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></button></div>'));
+        });
+
+        $(document).on("click", ".prob", function () {
+            var nexElem = $(this).next();
+            if ($(this).is(":checked")) {
+                if (nexElem.attr("type") == "text") {
+                    nexElem.attr("data-validation", "required");
+                }
+            } else {
+                if (nexElem.attr("type") == "text") {
+                    nexElem.removeAttr("data-validation");
+                }
+            }
+        });
+
+        $(document).on("click", ".dispos", function () {
+            $(".dispostxt").each(function () {
+                $(this).removeAttr("data-validation");
+            });
+            var nexElem = $(this).next();
+            if (nexElem.attr("type") == "text") {
+                nexElem.attr("data-validation", "required");
+            }
+        });
+
+        $('#formSA').submit(function () {
+            if ($('input[type="checkbox"]:checked').length > 0) {
+                //return true;
+            } else {
+                alert('Please Select at least 1 Problem!');
+                return false;
+            }
+            
+            if ($('input:radio:checked').length > 0) {
+                //return true;
+            } else {
+                alert('Please Select Disposition!');
+                return false;
+            }
+
+            //CheckControlNo();
+        });
+    });
+</script>
+
+<form id="formSA" method="POST" action="@Url.Action("UpdateSA","SAProcess")" enctype="multipart/form-data">
+    <table class="table table-bordered table-striped table-condensed">
+    <tr>
+        <td>QA Control No.</td>
+        <td>Type of Nonconformities</td>
+        <td>Item Code</td>
+        <td>Customer</td>
+        <td>Expect Date of Answer</td>
+    </tr>
+    <tr>
+        <td style="font-size:1.2em; font-weight:bold;">@Model.id. @Model.control_no
+            <input type="hidden" id="hdID" name="hdID" value="@Model.id" />
+        </td>
+        <td>
+            @*<input type="text" id="txtNonconformities" name="txtNonconformities" value="@Model.title" data-validation="required" />*@
+            <textarea id="txtNonconformities" name="txtNonconformities" data-validation="required" rows="4">@Model.title</textarea>
+        </td>
+        <td><input type="text" id="txtItemcode" name="txtItemcode" value="@Model.item_code" data-validation="length" data-validation-length="1-50" /></td>
+        <td><input type="text" id="txtCustomer" name="txtCustomer" value="@Model.customer" data-validation="length" data-validation-length="1-50" /></td>
+        <td><input type="text" id="dtpExpectDate" name="dtpExpectDate" value="@Model.expect_date.Date.ToString("dd-MM-yyyy")" readonly="true" class="datepicker input-medium" data-validation="date" data-validation-format="dd-mm-yyyy" /></td>
+        @*<td><input type="text" id="dtpIssueDate" readonly="true" class="datepicker input-medium" /><span id="spanIssueDate" class="input-medium uneditable-input"></span></td>*@
+    </tr>
+    <tr>
+        <td>Material</td>
+        <td>Batch No.</td>
+        <td>Job No. / Lot No.</td>
+        <td>Defective Qty</td>
+        <td>Plant</td>
+    </tr>
+    <tr>
+        <td><input type="text" id="txtMaterial" name="txtMaterial" value="@Model.material" data-validation="length" data-validation-length="1-50" /></td>
+        <td><input type="text" id="txtBatchNo" name="txtBatchNo" value="@Model.batch_no" data-validation="length" data-validation-length="1-50" /></td>
+        <td><input type="text" id="txtJobNo" name="txtJobNo" value="@Model.job_no" data-validation="length" data-validation-length="1-50" /></td>
+        <td><input type="text" id="txtDefectiveQty" value="@Model.defective_qty" name="txtDefectiveQty" data-validation="length" data-validation-length="1-50" /></td>
+        
+        <td><select id="slPlant" name="slPlant" class="span2">
+            @foreach (var item in ViewBag.SysPlant)
+            {
+                if (item.Sys_Plant_id == Model.Sys_Plant_id)
+                {
+                    <option value="@item.Sys_Plant_id" selected="selected">@item.Sys_Group_name</option>
+                }
+                else
+                {
+                    <option value="@item.Sys_Plant_id">@item.Sys_Group_name</option>
+                }
+            }
+            </select></td>
+    </tr>
+    <tr>
+        <td colspan="2">Problem</td>
+        <td><u>Disposition of Defectives</u></td>
+        <td colspan="2">File Attachments <span class="label label-important">(PDF Only)</span> &nbsp;<button id="btnAddFile" type="button" class="btn btn-info"><i class="icon-plus icon-white"></i> Add File</button></td>
+    </tr>
+    <tr>
+        <td colspan="2"><div id="divProblem"></div></td>
+        <td><div id="divDispos"></div></td>
+        <td colspan="2"><div id="divAttach"><div><input type="file" name="files" class="file" accept="application/pdf" /></div></div></td>
+    </tr>
+    <tr>
+        <td colspan="2"><u>Root Cause :</u></td>
+        <td colspan="2"><u>Preventive action :</u></td>
+        <td>Effective Date</td>
+    </tr>
+    <tr>
+        <td colspan="2"><textarea rows="4" id="txaReason" name="txaReason" data-validation="required">@Model.reason</textarea></td>
+        <td colspan="2"><textarea rows="4" id="txaPreventive" name="txaPreventive" data-validation="required">@Model.preventive</textarea></td>
+        <td><input type="text" id="dtpEffectiveDate" name="dtpEffectiveDate" value="@Model.effective_dt.Date.ToString("dd-MM-yyyy")" readonly="true" class="datepicker input-medium" data-validation="date" data-validation-format="dd-mm-yyyy" /></td>
+    </tr>
+    <tr>
+        <td colspan="5" style="text-align:center;">@*<button type="reset" class="btn" style="width:120px;">Clear</button> *@
+            &nbsp;&nbsp;&nbsp;<button type="submit" id="btnSubmit" class="btn btn-primary" style="width:120px;">Submit</button></td>
+    </tr>
+</table>
+</form>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

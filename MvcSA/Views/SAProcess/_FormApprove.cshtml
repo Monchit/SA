@@ -1,0 +1,38 @@
+﻿<script src="~/Scripts/jqValidate.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#formApprove").submit(function () {
+            if (!$.validate({ form: "formApprove" })) {
+                return false;
+            }
+        });
+    });
+</script>
+
+<form id="formApprove" name="formApprove" action="@Url.Action("AddApprove")" method="post" enctype="multipart/form-data">
+    <table class="table table-striped table-condensed">
+        <tr>
+            <td style="width:100px;">Comment<span class="text-error">**</span> : </td>
+            <td><textarea rows="4" id="txaComment" name="txaComment" data-validate="required"></textarea></td>
+        </tr>
+        <tr>
+            <td>Action : </td>
+            <td><select id="slAction" name="slAction">
+                @foreach (var item in ViewBag.Action)
+                {
+                    <option value="@item.act_id">@item.act_name</option>
+                }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">@Html.Partial("_SectionUploadFiles")</td>
+        </tr>
+        <tr>
+            <td><input type="hidden" value="@ViewBag.SAID" id="hdID" name="hdID" />
+                <input type="hidden" value="@ViewBag.STID" id="hdSTID" name="hdSTID" />
+            </td>
+            <td style="text-align:right;"><button class="btn btn-primary" type="submit">Submit</button></td>
+        </tr>
+    </table>
+</form>

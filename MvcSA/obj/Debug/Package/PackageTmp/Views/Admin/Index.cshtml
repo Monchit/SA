@@ -1,0 +1,198 @@
+﻿
+<style type="text/css">
+    /* fix the size of the pager */
+    input.ui-pg-input { width: auto; padding: 0px; margin: 0px; line-height: normal; }
+    select.ui-pg-selbox { width: auto; padding: 0px; margin: 0px; line-height: normal }
+    .ui-jqgrid .ui-state-highlight { background: #7AC0DA; }
+    .ui-jqgrid tr.jqgrow td { white-space: normal !important; }
+</style>
+
+<script type="text/javascript">
+    function CreateGridPlant() {
+        jQuery("#grid_plant").jqGrid({
+            url: "@Url.Action("GridPlantMaster","Admin")",
+            datatype: 'json',
+            mtype: 'POST',
+            colNames: ['Plant ID', 'Plant Name'],
+            colModel: [
+              { name: 'Sys_Plant_id', index: 'Sys_Plant_id', key: true, align: 'center', width: 25, editable: true, editrules: { edithidden: false } },
+              { name: 'Sys_Plant_name', index: 'Sys_Plant_name', align: 'center', sortable: true, editable: true, edittype: 'text', editrules: { required: true } }
+            ],
+            pager: jQuery('#pager_plant'),
+            rowNum: 10,
+            rowList: [5, 10, 20, 50],
+            //autowidth: true,
+            width: 500,
+            height: 'auto',
+            sortname: 'Sys_Plant_id',
+            sortorder: "asc",
+            viewrecords: true,
+            caption: 'Master Plant',
+            ajaxSelectOptions: { cache: false },
+            //loadonce: false,
+            scrollOffset: 0
+
+        });
+
+        jQuery("#grid_plant").jqGrid('navGrid', '#pager_plant',
+            { edit: true, add: true, del: true, search: false },
+            { url: "@Url.Action("EditPlant","Admin")", closeAfterEdit: true, width: 450, beforeShowForm: function (formid) { $("#tr_Sys_Plant_id", formid).hide(); } },
+            { url: "@Url.Action("AddPlant","Admin")", closeAfterAdd: true, width: 450, beforeShowForm: function (formid) { $("#tr_Sys_Plant_id", formid).hide(); } },
+            { url: "@Url.Action("DelPlant","Admin")", width: 400,
+                      beforeShowForm: function (formid) {
+                          var selRowId = $(this).jqGrid('getGridParam', 'selrow');
+                          $("td.delmsg", formid[0]).html("Do you really want delete <br /><b>Plant : " +
+                               $(this).jqGrid('getCell', selRowId, 'Sys_Plant_name') + "</b>?");
+                      }
+            }, {}, {});
+    }
+
+    function CreateGridGroupType() {
+        jQuery("#grid_grptype").jqGrid({
+            url: "@Url.Action("GridGroupTypeMaster","Admin")",
+            datatype: 'json',
+            mtype: 'POST',
+            colNames: ['ID', 'Group Type Name'],
+            colModel: [
+              { name: 'Sys_GroupType_id', index: 'Sys_GroupType_id', key: true, align: 'center', width: 25, editable: true, editrules: { edithidden: false } },
+              { name: 'Sys_GroupType_name', index: 'Sys_GroupType_name', align: 'center', sortable: true, editable: true, edittype: 'text', editrules: { required: true } }
+            ],
+            pager: jQuery('#pager_grptype'),
+            rowNum: 10,
+            rowList: [5, 10, 20, 50],
+            //autowidth: true,
+            width: 500,
+            height: 'auto',
+            sortname: 'Sys_GroupType_id',
+            sortorder: "asc",
+            viewrecords: true,
+            caption: 'Master Group Type',
+            ajaxSelectOptions: { cache: false },
+            //loadonce: false,
+            scrollOffset: 0
+        });
+
+        jQuery("#grid_grptype").jqGrid('navGrid', '#pager_grptype',
+            { edit: true, add: true, del: true, search: false },
+            { url: "@Url.Action("EditGroupType","Admin")", closeAfterEdit: true, width: 450, beforeShowForm: function (formid) { $("#tr_Sys_GroupType_id", formid).hide(); } },
+            { url: "@Url.Action("AddGroupType","Admin")", closeAfterAdd: true, width: 450, beforeShowForm: function (formid) { $("#tr_Sys_GroupType_id", formid).hide(); } },
+            {
+                url: "@Url.Action("DelGroupType","Admin")", width: 400,
+                beforeShowForm: function (formid) {
+                    var selRowId = $(this).jqGrid('getGridParam', 'selrow');
+                    $("td.delmsg", formid[0]).html("Do you really want delete <br /><b>Group Type : " +
+                         $(this).jqGrid('getCell', selRowId, 'Sys_GroupType_name') + "</b>?");
+                }
+            }, {}, {});
+    }
+
+    function CreateGridGroup() {
+        jQuery("#grid_group").jqGrid({
+            url: "@Url.Action("GridGroupMaster","Admin")",
+            datatype: 'json',
+            mtype: 'POST',
+            colNames: ['Group', 'Group Name', 'Group Type', 'Plant'],
+            colModel: [
+              { name: 'group_id', index: 'group_id', key: true, align: 'center', sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("GroupSelectList","Admin")" }, editrules: { required: true } },
+              { name: 'group_name', index: 'group_name', align: 'center', sortable: true, editable: true, edittype: 'text', editrules: { required: true } },
+              { name: 'group_type', index: 'group_type', align: 'center', sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("GroupTypeSelectList","Admin")" }, editrules: { required: true } },
+              { name: 'plant', index: 'plant', align: 'center', sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("PlantSelectList","Admin")" }, editrules: { required: true } }
+            ],
+            pager: jQuery('#pager_group'),
+            rowNum: 10,
+            rowList: [5, 10, 20, 50],
+            //autowidth: true,
+            width: 500,
+            height: 'auto',
+            sortname: 'group_name',
+            sortorder: "asc",
+            viewrecords: true,
+            caption: 'Master Group',
+            ajaxSelectOptions: { cache: false },
+            //loadonce: false,
+            scrollOffset: 0
+        });
+
+        jQuery("#grid_group").jqGrid('navGrid', '#pager_group',
+            { edit: true, add: true, del: true, search: false },
+            { url: "@Url.Action("EditGroup","Admin")", closeAfterEdit: true, width: 450, beforeShowForm: function (formid) { $("#tr_group_id", formid).hide(); } },
+            { url: "@Url.Action("AddGroup","Admin")", addCaption: 'Create New Group', closeAfterAdd: true, width: 450, beforeShowForm: function (formid) { $("#tr_group_id", formid).show(); } },
+            {
+                url: "@Url.Action("DelGroup","Admin")", width: 400,
+                beforeShowForm: function (formid) {
+                    var selRowId = $(this).jqGrid('getGridParam', 'selrow');
+                    $("td.delmsg", formid[0]).html("Do you really want delete <br /><b>Group : " +
+                         $(this).jqGrid('getCell', selRowId, 'Sys_Group_name') + "</b>?");
+                }
+            }, {}, {});
+    }
+
+    function CreateGridUser() {
+        jQuery("#grid_user").jqGrid({
+            url: "@Url.Action("GridUserMaster","Admin")",
+            datatype: 'json',
+            mtype: 'POST',
+            colNames: ['Emp Code', 'Name', 'Group', 'Plant', 'Group Type'],
+            colModel: [
+              { name: 'emp_code', index: 'emp_code', key: true, align: 'center', sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("UserSelectList","Admin")" }, editrules: { required: true } },
+              { name: 'emp_name', index: 'emp_name', sortable: true },
+              { name: 'group_name', index: 'group_name', align: 'center', sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("GroupInSelectList","Admin")" }, editrules: { required: true } },
+              { name: 'plant_name', index: 'plant_name', sortable: true },
+              { name: 'group_type', index: 'group_type', sortable: true }
+            ],
+            pager: jQuery('#pager_user'),
+            rowNum: 10,
+            rowList: [5, 10, 20, 50],
+            //autowidth: true,
+            width: 500,
+            height: 'auto',
+            sortname: 'emp_code',
+            sortorder: "asc",
+            viewrecords: true,
+            caption: 'Master User',
+            ajaxSelectOptions: { cache: false },
+            //loadonce: false,
+            scrollOffset: 0
+        });
+
+        jQuery("#grid_user").jqGrid('navGrid', '#pager_user',
+            { edit: true, add: true, del: true, search: false },
+            { url: "@Url.Action("EditUser","Admin")", closeAfterEdit: true, width: 450, beforeShowForm: function (formid) { $("#tr_emp_code", formid).hide(); } },
+            { url: "@Url.Action("AddUser","Admin")", addCaption: 'Create New User', closeAfterAdd: true, width: 450, beforeShowForm: function (formid) { $("#tr_emp_code", formid).show(); } },
+            {
+                url: "@Url.Action("DelUser","Admin")", width: 400,
+                beforeShowForm: function (formid) {
+                    var selRowId = $(this).jqGrid('getGridParam', 'selrow');
+                    $("td.delmsg", formid[0]).html("Do you really want delete <br /><b>User : " +
+                         $(this).jqGrid('getCell', selRowId, 'emp_name') + "</b>?");
+                }
+            }, {}, {});
+    }
+
+    $(document).ready(function () {
+        CreateGridUser();
+        CreateGridGroup();
+        CreateGridPlant();
+        CreateGridGroupType();
+    });
+</script>
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<table id="grid_user">
+</table>
+<div id="pager_user"></div>
+<br />
+<table id="grid_group">
+</table>
+<div id="pager_group"></div>
+<br />
+<table id="grid_grptype">
+</table>
+<div id="pager_grptype"></div>
+<br />
+<table id="grid_plant">
+</table>
+<div id="pager_plant"></div>

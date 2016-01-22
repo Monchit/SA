@@ -1,0 +1,64 @@
+﻿
+<style type="text/css">
+    /* fix the size of the pager */
+    /*input.ui-pg-input { width: auto; padding: 0px; margin: 0px; line-height: normal; }
+    select.ui-pg-selbox { width: auto; padding: 0px; margin: 0px; line-height: normal }
+    .ui-jqgrid .ui-state-highlight { background: #7AC0DA; }
+    .ui-jqgrid tr.jqgrow td { white-space: normal !important; }*/
+
+    /*fix jTable*/
+    span.jtable-goto-page select, span.jtable-page-size-change select {
+        height: 25px;
+        width: 60px;
+        padding: 2px 2px;
+        margin-bottom:auto;
+    }
+    div.jtable-main-container table.jtable thead th {
+        text-align: center;
+    }
+    div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td {
+        text-align: center;
+    }
+    div.accordion-heading {
+        font-weight:600;
+    }
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+    }
+    .ui-dialog-title {
+        color:white;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#jTablePlant').jtable({
+            title: 'Plant Master',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            selecting: true, //Enable selecting
+            defaultSorting: 'Sys_Plant_name', //Set default sorting
+            actions: {
+                listAction: '@Url.Action("PlantList","PowerUser")',
+                deleteAction: '@Url.Action("DeletePlant","PowerUser")',
+                updateAction: '@Url.Action("UpdatePlant","PowerUser")',
+                createAction: '@Url.Action("CreatePlant","PowerUser")'
+            },
+            fields: {
+                Sys_Plant_id: { title: 'ID', key: true },
+                Sys_Plant_name: { title: 'Plant Name' },
+                update_dt: { title: 'Update Date', type: 'date', displayFormat: 'dd-mm-yy', create: false, edit: false },
+                update_by: { title: 'Update By', list: false, create: false, edit: false },
+                del_flag: { title: 'Delete', list: false, create: false, edit: false }
+            }
+        });
+        //Load student list from server
+        $('#jTablePlant').jtable('load');
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div id="jTablePlant"></div>

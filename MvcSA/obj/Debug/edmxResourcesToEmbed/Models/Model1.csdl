@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TNC_ADMINModel1" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="TNC_ADMINEntities1" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="tnc_default_permission" EntityType="TNC_ADMINModel1.tnc_default_permission" />
+  </EntityContainer>
+  <EntityType Name="tnc_default_permission">
+    <Key>
+      <PropertyRef Name="emp_code" />
+    </Key>
+    <Property Name="emp_code" Type="String" Nullable="false" MaxLength="25" Unicode="true" FixedLength="false" />
+    <Property Name="level" Type="Byte" />
+    <Property Name="approve" Type="Byte" />
+  </EntityType>
+</Schema>

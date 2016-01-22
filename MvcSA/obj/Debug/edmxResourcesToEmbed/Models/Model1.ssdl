@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TNC_ADMINModel1.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="TNC_ADMINModel1StoreContainer">
+    <EntitySet Name="tnc_default_permission" EntityType="TNC_ADMINModel1.Store.tnc_default_permission" store:Type="Tables" Schema="dbo" />
+  </EntityContainer>
+  <EntityType Name="tnc_default_permission">
+    <Key>
+      <PropertyRef Name="emp_code" />
+    </Key>
+    <Property Name="emp_code" Type="nvarchar" Nullable="false" MaxLength="25" />
+    <Property Name="level" Type="tinyint" />
+    <Property Name="approve" Type="tinyint" />
+  </EntityType>
+</Schema>

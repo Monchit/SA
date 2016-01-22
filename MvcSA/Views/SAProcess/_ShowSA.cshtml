@@ -1,0 +1,27 @@
+﻿@model IEnumerable<MvcSA.Models.TD_SA>
+
+<table class="table table-bordered table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>SA No.</th>
+            <th>Customer</th>
+            <th>Issue Date</th>
+            <th>Result</th>
+            <th>File Evidence</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.sa_no</td>
+            <td>@item.cust_name</td>
+            <td>@item.issue_date</td>
+            <td>@item.TM_Result.result_name</td>
+            <td><a href="@Url.Content(item.file_evidence)" target="_blank">@System.IO.Path.GetFileName(item.file_evidence)</a></td>
+            <td>@item.reason</td>
+        </tr>
+        }
+    </tbody>
+</table>

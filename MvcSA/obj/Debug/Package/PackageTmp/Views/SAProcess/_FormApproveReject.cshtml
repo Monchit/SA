@@ -1,0 +1,28 @@
+﻿
+<form action="@Url.Action("ApproveReject")" method="post" enctype="multipart/form-data">
+    <table class="table table-striped table-condensed">
+        @*<tr>
+            <td colspan="3" style="text-align:center;font-weight:600;">.: Form Approve :.</td>
+        </tr>*@
+        <tr>
+            <td>Comment : </td>
+            <td><textarea rows="4" id="txaComment" name="txaComment"></textarea></td>
+        </tr>
+        <tr>
+            <td>Action : </td>
+            <td><select id="slAction" name="slAction">
+                @foreach (var item in ViewBag.Action)
+                {
+                    <option value="@item.act_id">@item.act_name</option>
+                }
+                </select></td>
+        </tr>
+        <tr>
+            <td colspan="2">@Html.Partial("_SectionUploadFiles")</td>
+        </tr>
+        <tr>
+            <td><input type="hidden" value="@ViewBag.SAID" id="hdID" name="hdID" /></td>
+            <td style="text-align:right;"><button class="btn btn-primary" type="submit">Submit</button></td>
+        </tr>
+    </table>
+</form>

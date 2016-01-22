@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="SpecialAcceptanceModelStoreContainer" CdmEntityContainer="SpecialAcceptanceEntities">
+    <EntitySetMapping Name="TD_Main">
+      <EntityTypeMapping TypeName="SpecialAcceptanceModel.TD_Main">
+        <MappingFragment StoreEntitySet="TD_Main">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="control_no" ColumnName="control_no" />
+          <ScalarProperty Name="issue_dt" ColumnName="issue_dt" />
+          <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="item_code" ColumnName="item_code" />
+          <ScalarProperty Name="customer" ColumnName="customer" />
+          <ScalarProperty Name="material" ColumnName="material" />
+          <ScalarProperty Name="batch_no" ColumnName="batch_no" />
+          <ScalarProperty Name="job_no" ColumnName="job_no" />
+          <ScalarProperty Name="defective_qty" ColumnName="defective_qty" />
+          <ScalarProperty Name="reason" ColumnName="reason" />
+          <ScalarProperty Name="expect_date" ColumnName="expect_date" />
+          <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+          <ScalarProperty Name="effective_dt" ColumnName="effective_dt" />
+          <ScalarProperty Name="preventive" ColumnName="preventive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Transaction">
+      <EntityTypeMapping TypeName="SpecialAcceptanceModel.TD_Transaction">
+        <MappingFragment StoreEntitySet="TD_Transaction">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="status_id" ColumnName="status_id" />
+          <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+          <ScalarProperty Name="org_id" ColumnName="org_id" />
+          <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+          <ScalarProperty Name="act_id" ColumnName="act_id" />
+          <ScalarProperty Name="actor" ColumnName="actor" />
+          <ScalarProperty Name="act_dt" ColumnName="act_dt" />
+          <ScalarProperty Name="comment" ColumnName="comment" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Level">
+      <EntityTypeMapping TypeName="SpecialAcceptanceModel.TM_Level">
+        <MappingFragment StoreEntitySet="TM_Level">
+          <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+          <ScalarProperty Name="lv_name" ColumnName="lv_name" />
+          <ScalarProperty Name="position_min" ColumnName="position_min" />
+          <ScalarProperty Name="position_max" ColumnName="position_max" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Status">
+      <EntityTypeMapping TypeName="SpecialAcceptanceModel.TM_Status">
+        <MappingFragment StoreEntitySet="TM_Status">
+          <ScalarProperty Name="status_id" ColumnName="status_id" />
+          <ScalarProperty Name="status_name" ColumnName="status_name" />
+          <ScalarProperty Name="lv_min" ColumnName="lv_min" />
+          <ScalarProperty Name="lv_max" ColumnName="lv_max" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_SysUser">
+      <EntityTypeMapping TypeName="SpecialAcceptanceModel.TM_SysUser">
+        <MappingFragment StoreEntitySet="TM_SysUser">
+          <ScalarProperty Name="user_active" ColumnName="user_active" />
+          <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+          <ScalarProperty Name="Sys_User_id" ColumnName="Sys_User_id" />
+          <ScalarProperty Name="Sys_GroupType_id" ColumnName="Sys_GroupType_id" />
+          <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

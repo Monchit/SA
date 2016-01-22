@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="TNC_ADMINModel1StoreContainer" CdmEntityContainer="TNC_ADMINEntities1">
+    <EntitySetMapping Name="tnc_default_permission">
+      <EntityTypeMapping TypeName="TNC_ADMINModel1.tnc_default_permission">
+        <MappingFragment StoreEntitySet="tnc_default_permission">
+          <ScalarProperty Name="emp_code" ColumnName="emp_code" />
+          <ScalarProperty Name="level" ColumnName="level" />
+          <ScalarProperty Name="approve" ColumnName="approve" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

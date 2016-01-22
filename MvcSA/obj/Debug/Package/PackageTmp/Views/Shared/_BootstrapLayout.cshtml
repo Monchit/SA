@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    @*<meta http-equiv="x-ua-compatible" content="IE=8" />*@
+    <title>@ViewBag.Title | SA Online</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @RenderSection("Head",false)
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+ 
+    @*@Styles.Render("~/Content/css")*@
+    @Styles.Render("~/Content/bootstrap-css")
+    @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/jqueryjqgrid")
+    @Styles.Render("~/Content/form-validator")
+    @Styles.Render("~/Content/jTable")
+    @Styles.Render("~/Content/select2")
+    <style type="text/css">
+    body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      /*.sidebar-nav {
+        padding: 9px 0;
+      }*/
+
+      @@media (max-width: 980px) {
+          body { padding-top: 0px; }
+        /* Enable use of floated navbar text */
+        /*.navbar-text.pull-right {
+          float: none;
+          padding-left: 5px;
+          padding-right: 5px;
+        }*/
+      }
+    </style>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/form-validator")
+    @Scripts.Render("~/bundles/jTable")
+    @Scripts.Render("~/bundles/jqueryjqgrid")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/moment")
+    @Scripts.Render("~/bundles/validate")
+    @*@Scripts.Render("~/bundles/timepicker")*@
+</head>
+<body>
+
+    <div class="navbar navbar-fixed-top"><!--Add "navbar-inverse" for change header color to black-->
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="#">SA Online</a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        @if (Session["SA_Auth"] == null)
+                        {
+                        <li @if (ViewBag.Menu == 1) { <text>class="active"</text> }>@Html.ActionLink("Home", "Index", "Home")</li>
+                        }
+                        else
+                        {
+                        <li @if (ViewBag.Menu == 1) { <text>class="active"</text> }>@Html.ActionLink("Main", "Index", "SAProcess")</li>
+                        <li @if (ViewBag.Menu == 3) { <text>class="active"</text> }>@Html.ActionLink("Report", "ExcelFilter", "SAProcess")</li>
+                            if (Session["SA_UType"] != null)
+                            {
+                                if (Session["SA_UserLv"].ToString() == "1" || Session["SA_UserLv"].ToString() == "2")
+                                {
+                                    <li @if (ViewBag.Menu == 2) { <text>class="active"</text> }>@Html.ActionLink("New", "NewSA", "SAProcess")</li>
+                                }
+                                @*<li @if (ViewBag.Menu == 3) { <text>class="active"</text> }>@Html.ActionLink("Report", "Report", "SAProcess")</li>*@
+                                //if (Session["SA_UType"].ToString() == "1")//Admin
+                                //{
+                                @*<li @if (ViewBag.Menu == 5) { <text>class="dropdown active"</text> } 
+                                         else { <text>class="dropdown"</text> }>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Master <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("Master User", "Master_User", "Admin")</li>
+                                        <li>@Html.ActionLink("Master Group", "Master_Group", "Admin")</li>
+                                        <li>@Html.ActionLink("Master Group Type", "Master_GroupType", "Admin")</li>
+                                        <li>@Html.ActionLink("Master Plant", "Master_Plant", "Admin")</li>
+                                    </ul>
+                                </li>*@
+                                //}
+                                if (Session["SA_UType"].ToString() == "2" || Session["SA_UType"].ToString() == "1")//PowerUser or Admin
+                                {
+                                    <li @if (ViewBag.Menu == 6) { <text>class="dropdown active"</text> } 
+                                         else { <text>class="dropdown"</text> }>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Master <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("Master User", "UserMaster", "PowerUser")</li>
+                                        <li>@Html.ActionLink("Master Group", "GroupMaster", "PowerUser")</li>
+                                        <li>@Html.ActionLink("Master Group Type", "GroupTypeMaster", "PowerUser")</li>
+                                        <li>@Html.ActionLink("Master Plant", "PlantMaster", "PowerUser")</li>
+                                    </ul>
+                                </li>
+                                }
+                            }
+                        }
+                        <li  @if (ViewBag.Menu == 9) { <text>class="dropdown active"</text> } else { <text>class="dropdown"</text> }>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Purpose", "About", "Home")</li>
+                                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                                <li class="divider"></li>
+                                <li class="nav-header">Work Instruction</li>
+                                <li><a href="@Url.Content("~/Manual/Thai.pdf")" target="_blank">Thai</a></li>
+                                <li><a href="@Url.Content("~/Manual/Eng.pdf")" target="_blank">Eng</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        @RenderBody()
+    <hr>
+ 
+    <footer>
+        <p>
+            Copyright &copy; @DateTime.Now.Year - Thai NOK Co.,Ltd. All Rights Reserved.
+            <br />
+            <small>Created by <a href="mailto:monchit@nok.co.th">Monchit W.</a> (IS3 - Information System Group)</small>
+        </p>
+    </footer>
+ 
+    </div>
+    <!--/.fluid-container-->
+ 
+    @RenderSection("scripts", required: false)
+</body>
+</html>

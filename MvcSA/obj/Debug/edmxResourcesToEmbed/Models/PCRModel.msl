@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PCRModelStoreContainer" CdmEntityContainer="PCREntities">
+    <EntitySetMapping Name="PCR_Consider_Master">
+      <EntityTypeMapping TypeName="PCRModel.PCR_Consider_Master">
+        <MappingFragment StoreEntitySet="PCR_Consider_Master">
+          <ScalarProperty Name="group_type_id" ColumnName="group_type_id" />
+          <ScalarProperty Name="con_group_id" ColumnName="con_group_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PCR_GCode">
+      <EntityTypeMapping TypeName="PCRModel.PCR_GCode">
+        <MappingFragment StoreEntitySet="PCR_GCode">
+          <ScalarProperty Name="g_id" ColumnName="g_id" />
+          <ScalarProperty Name="g_code" ColumnName="g_code" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PCR_GroupType">
+      <EntityTypeMapping TypeName="PCRModel.PCR_GroupType">
+        <MappingFragment StoreEntitySet="PCR_GroupType">
+          <ScalarProperty Name="group_type_id" ColumnName="group_type_id" />
+          <ScalarProperty Name="group_type" ColumnName="group_type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PCR_Impact">
+      <EntityTypeMapping TypeName="PCRModel.PCR_Impact">
+        <MappingFragment StoreEntitySet="PCR_Impact">
+          <ScalarProperty Name="imp_id" ColumnName="imp_id" />
+          <ScalarProperty Name="imp_name" ColumnName="imp_name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PCR_OperateUser">
+      <EntityTypeMapping TypeName="PCRModel.PCR_OperateUser">
+        <MappingFragment StoreEntitySet="PCR_OperateUser">
+          <ScalarProperty Name="emp_code" ColumnName="emp_code" />
+          <ScalarProperty Name="pcr_group_id" ColumnName="pcr_group_id" />
+          <ScalarProperty Name="utype_id" ColumnName="utype_id" />
+          <ScalarProperty Name="dept_id" ColumnName="dept_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PCR_SubGroup">
+      <EntityTypeMapping TypeName="PCRModel.PCR_SubGroup">
+        <MappingFragment StoreEntitySet="PCR_SubGroup">
+          <ScalarProperty Name="pcr_group_id" ColumnName="pcr_group_id" />
+          <ScalarProperty Name="pcr_group_name" ColumnName="pcr_group_name" />
+          <ScalarProperty Name="group_type_id" ColumnName="group_type_id" />
+          <ScalarProperty Name="imp_id" ColumnName="imp_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

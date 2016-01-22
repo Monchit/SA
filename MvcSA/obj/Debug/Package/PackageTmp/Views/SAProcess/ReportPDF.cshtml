@@ -1,0 +1,134 @@
+﻿@{
+    Layout = null;
+}
+@model MvcSA.Models.TD_Main
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Export PDF</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <style type="text/css">
+        .td_title {
+            text-align:right !important;
+            font-weight:600;
+        }
+        .divhead {
+            font-size:1.2em; 
+            font-weight:600;
+            padding: 5px 0px 5px 0px;
+        }
+    </style>
+</head>
+<body>
+    <div style="font-size:1.5em; font-weight:700; text-align:center;">SPECIAL ACCEPTANCE REQUISITION FORM</div>
+    <div class="divhead">Detail : </div>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <td class="td_title" style="width:120px;">Control No.</td>
+            <td style="width:250px;">@Html.DisplayFor(m => m.control_no)</td>
+            <td class="td_title" style="width:175px;">Type of Nonconformities</td>
+            <td>@Html.DisplayFor(m => m.title)</td>
+        </tr>
+        <tr>
+            <td class="td_title">Item Code</td>
+            <td>@Html.DisplayFor(m => m.item_code)</td>
+            <td class="td_title">Customer</td>
+            <td>@Html.DisplayFor(m => m.customer)</td>
+        </tr>
+        <tr>
+            <td class="td_title">Material</td>
+            <td>@Html.DisplayFor(m => m.material)</td>
+            <td class="td_title">Job No. / Lot No.</td>
+            <td>@Html.DisplayFor(m => m.job_no)</td>
+        </tr>
+        <tr>
+            <td class="td_title">Batch No.</td>
+            <td>@Html.DisplayFor(m => m.batch_no)</td>
+            <td class="td_title">Defective Qty</td>
+            <td>@Html.DisplayFor(m => m.defective_qty)</td>
+        </tr>
+        <tr>
+            <td class="td_title">Plant</td>
+            <td>@Html.DisplayFor(m => m.TM_SysPlant.Sys_Plant_name)</td>
+            <td class="td_title">Expect Date of Answer</td>
+            <td>@Model.expect_date.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <td class="td_title">Issued Date</td>
+            <td>@Model.issue_dt.ToString("dd/MM/yyyy")</td>
+            <td class="td_title">Effective Date</td>
+            <td>@Model.effective_dt.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <td class="td_title">Problem</td>
+            <td>@foreach (var item in Model.TD_Problem)
+                {
+                    @item.TM_Problem.prob_name
+                    if (item.TM_Problem.text_flag)
+                    {
+                        <text> : </text>@item.prob_text
+                    }
+                    <br />
+                }
+            </td>
+            <td class="td_title">Disposition of Defectives</td>
+            <td>@foreach (var item in Model.TD_Disposition)
+                {
+                    @item.TM_Disposition.dispos_name
+                    if(item.TM_Disposition.text_flag){
+                        <text> : </text>@item.dispos_text
+                    }
+                    <br />
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="td_title">Reason</td>
+            <td colspan="3">@Html.DisplayFor(m => m.reason)</td>
+            
+        </tr>
+        <tr>
+            <td class="td_title">Preventive action</td>
+            <td colspan="3">@Html.DisplayFor(m => m.preventive)</td>
+        </tr>
+    </table>
+
+    <div class="divhead">Comment : </div>
+    <table class="table table-bordered table-striped table-condensed">
+        <thead>
+            <tr>
+                <th>Section</th>
+                <th>Level</th>
+                <th>Comment</th>
+                <th>Date</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in @ViewBag.Comment)
+        {
+            <tr>
+                <td style="width:150px;">@item.TM_Status.status_name</td>
+                <td>@item.TM_Level.lv_name</td>
+                <td>@item.comment</td>
+                <td style="width: 90px">@item.act_dt.ToString("dd/MM/yyyy")</td>
+                <td style="width: 90px">@item.TM_Action.act_name</td>
+            </tr>
+        }
+        </tbody>
+        @*<tr>
+            <td class="td_title" style="width:150px;">QA Dept. Review</td>
+            <td>@ViewBag.QADept.comment</td>
+            <td style="width: 120px">Date : @ViewBag.QADept.act_dt.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <td class="td_title">Final Dicision</td>
+            <td>@ViewBag.Final.comment</td>
+            <td>Date : @ViewBag.Final.act_dt.ToString("dd/MM/yyyy")</td>
+        </tr>*@
+    </table>
+</body>
+</html>

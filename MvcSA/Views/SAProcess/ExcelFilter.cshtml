@@ -1,0 +1,58 @@
+﻿
+<script src="~/Scripts/jqValidate.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#formFilter").submit(function () {
+            if (!$.validate({ form: "formFilter" })) {
+                return false;
+            }
+        });
+
+        //Datepicker Setting
+        //$(".datepicker").datepicker({
+        //    //beforeShowDay: nonWorkingDates,
+        //    dateFormat: 'dd-mm-yy',
+        //    showOtherMonths: true,
+        //    selectOtherMonths: true,
+        //    showButtonPanel: true
+        //    //minDate: new Date()//set minDate is today
+        //});
+
+        $("#dtpDateFrom").datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            //numberOfMonths: 2,
+            onClose: function (selectedDate) {
+                $("#dtpDateTo").datepicker("option", "minDate", selectedDate);
+            }
+        });
+        $("#dtpDateTo").datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            //numberOfMonths: 2,
+            onClose: function (selectedDate) {
+                $("#dtpDateFrom").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+    });
+</script>
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<div class="filtering">
+    <form id="formFilter" name="formFilter" action="@Url.Action("ExportLedger")" method="post">
+        <table class="table table-condensed" style="width:auto;">
+            <tr>
+                <td>Select Date From : </td>
+                <td><input type="text" id="dtpDateFrom" name="dtpDateFrom" readonly="true" class="datepicker input-medium" data-validate="date" data-validate-format="dd-mm-yyyy" /></td>
+                <td>To : </td>
+                <td><input type="text" id="dtpDateTo" name="dtpDateTo" readonly="true" class="datepicker input-medium" data-validate="date" data-validate-format="dd-mm-yyyy" /></td>
+                <td><button type="submit" id="btnExport" class="btn btn-success">Export to Excel</button></td>
+            </tr>
+            <tr><td colspan="5"></td></tr>
+        </table>
+    </form>
+</div>
