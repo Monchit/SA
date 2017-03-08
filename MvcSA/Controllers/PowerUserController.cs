@@ -615,6 +615,23 @@ namespace MvcSA.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult UpdateComment()
+        {
+            try
+            {
+                var data = dbSA.TD_Transaction.Find();
+                data.comment = Request.Form["comment"];
+                dbSA.SaveChanges();
+
+                return Json(new { Result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = "ERROR", Message = ex.Message });
+            }
+        }
+
         [HttpGet]
         public ActionResult SelectSA(string searchTerm)
         {
@@ -624,6 +641,49 @@ namespace MvcSA.Controllers
                 .Select(a => new { id = a.id, text = a.control_no })
                 .Take(16).ToList();
             return Json(qa, JsonRequestBehavior.AllowGet);
+        }
+
+        //----------------------------------------------//
+
+        [Check_Authen]
+        [Check_Authen_Admin]
+        public ActionResult AddRoute()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult InsertRoute()
+        {
+            try
+            {
+                var id = int.Parse(Request.Form["control_no"]);
+                var status = byte.Parse(Request.Form["status"]);
+                var lv = byte.Parse(Request.Form["ulv"]);
+                var org = int.Parse(Request.Form["org"]);
+                var dbData = dbSA.TD_Transaction.Find(id, status, lv, org, 0);
+                if (dbData == null)
+                {
+                    TD_Transaction data = new TD_Transaction();
+                    data.id = id;
+                    data.status_id = status;
+                    data.lv_id = lv;
+                    data.org_id = org;
+                    data.Sys_Plant_id = 0;
+                    data.act_dt = DateTime.Now;
+                    data.active = true;
+
+                    dbSA.TD_Transaction.Add(data);
+                    dbSA.SaveChanges();
+                }
+
+                return RedirectToAction("Index","SAProcess");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex;
+                return RedirectToAction("AddRoute", "PowerUser");
+            }
         }
 
         //----------------------------------------------//

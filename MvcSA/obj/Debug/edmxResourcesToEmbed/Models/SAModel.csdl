@@ -143,6 +143,10 @@
       <End Role="TD_Main" EntitySet="TD_Main" />
       <End Role="TD_Inform" EntitySet="TD_Inform" />
     </AssociationSet>
+    <EntitySet Name="V_OnProcess" EntityType="SAModel.V_OnProcess" />
+    <EntitySet Name="v_sa" EntityType="SAModel.v_sa" />
+    <EntitySet Name="v_sa_issuer" EntityType="SAModel.v_sa_issuer" />
+    <EntitySet Name="v_sa_onprocess" EntityType="SAModel.v_sa_onprocess" />
   </EntityContainer>
   <EntityType Name="TD_CarPar">
     <Key>
@@ -874,4 +878,73 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="V_OnProcess">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="control_no" />
+      <PropertyRef Name="title" />
+      <PropertyRef Name="issue_dt" />
+      <PropertyRef Name="issue_by" />
+      <PropertyRef Name="item_code" />
+      <PropertyRef Name="org_id" />
+      <PropertyRef Name="status_id" />
+    </Key>
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="String" Name="control_no" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="title" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="issue_dt" Nullable="false" Precision="3" />
+    <Property Type="String" Name="issue_by" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="item_code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="group_name" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_fname" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_lname" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="org_id" Nullable="false" />
+    <Property Type="Byte" Name="status_id" Nullable="false" />
+  </EntityType>
+  <EntityType Name="v_sa">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="control_no" />
+      <PropertyRef Name="title" />
+      <PropertyRef Name="issue_dt" />
+      <PropertyRef Name="issue_by" />
+      <PropertyRef Name="item_code" />
+      <PropertyRef Name="status" />
+    </Key>
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="String" Name="control_no" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="title" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="name" MaxLength="511" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="group_name" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="issue_dt" Nullable="false" Precision="3" />
+    <Property Type="String" Name="issue_by" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="item_code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="status" Nullable="false" MaxLength="108" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="v_sa_issuer">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="String" Name="group_name" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="name" MaxLength="511" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="v_sa_onprocess">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="status" />
+      <PropertyRef Name="control_no" />
+      <PropertyRef Name="issue_dt" />
+      <PropertyRef Name="issue_by" />
+      <PropertyRef Name="title" />
+      <PropertyRef Name="item_code" />
+    </Key>
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="String" Name="status" Nullable="false" MaxLength="108" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="control_no" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="issue_dt" Nullable="false" Precision="3" />
+    <Property Type="String" Name="issue_by" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="title" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="item_code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
 </Schema>

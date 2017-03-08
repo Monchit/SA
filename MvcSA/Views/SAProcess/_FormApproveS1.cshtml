@@ -39,7 +39,6 @@ $(document).ready(function () {
     });
 
     $('#selectQA').select2({
-        //minimumInputLength: 1,
         multiple: true,
         ajax: {
             url: '@Url.Action("SelectQA", "SAProcess")',
@@ -58,7 +57,6 @@ $(document).ready(function () {
     });
 
     $('#selectQC').select2({
-        //minimumInputLength: 1,
         multiple: true,
         ajax: {
             url: '@Url.Action("SelectQC", "SAProcess")',
@@ -77,7 +75,6 @@ $(document).ready(function () {
     });
 
     $('#selectEN').select2({
-        //minimumInputLength: 1,
         multiple: true,
         ajax: {
             url: '@Url.Action("SelectEN", "SAProcess")',
@@ -96,7 +93,6 @@ $(document).ready(function () {
     });
 
     $('#selectOther').select2({
-        //minimumInputLength: 1,
         multiple: true,
         ajax: {
             url: '@Url.Action("SelectOther", "SAProcess")',
@@ -115,7 +111,6 @@ $(document).ready(function () {
     });
 
     $('#selectInform').select2({
-        //minimumInputLength: 1,
         multiple: true,
         ajax: {
             url: '@Url.Action("SelectAll", "SAProcess")',
@@ -163,8 +158,8 @@ $(document).ready(function () {
                             <td><input type="text" id="selectQC" name="selectQC" data-placeholder="Select QC" class="span5" data-validate="required"/></td>
                         </tr>
                         <tr>
-                            <td>**Other : </td>
-                            <td><input type="text" id="selectOther" name="selectOther" data-placeholder="Select Other" class="span5" data-validate="required" /></td>
+                            <td>Other : </td>
+                            <td><input type="text" id="selectOther" name="selectOther" data-placeholder="Select Other" class="span5" /></td>
                         </tr>
                         <tr>
                             <td>Engineering : </td>

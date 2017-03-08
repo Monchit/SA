@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    @*<meta http-equiv="x-ua-compatible" content="IE=8" />*@
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
     <title>@ViewBag.Title | SA Online</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,6 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
  
-    @*@Styles.Render("~/Content/css")*@
     @Styles.Render("~/Content/bootstrap-css")
     @Styles.Render("~/Content/themes/base/css")
     @Styles.Render("~/Content/jqueryjqgrid")
@@ -20,6 +19,12 @@
     @Styles.Render("~/Content/jTable")
     @Styles.Render("~/Content/select2")
     <style type="text/css">
+    /*html{
+        -moz-filter: grayscale(100%);
+        -webkit-filter: grayscale(100%);
+        filter: gray;
+        filter:grayscale(100%);
+    }*/
     body {
         padding-top: 60px;
         padding-bottom: 40px;
@@ -48,11 +53,10 @@
     @Scripts.Render("~/bundles/select2")
     @Scripts.Render("~/bundles/moment")
     @Scripts.Render("~/bundles/validate")
-    @*@Scripts.Render("~/bundles/timepicker")*@
 </head>
 <body>
 
-    <div class="navbar navbar-fixed-top"><!--Add "navbar-inverse" for change header color to black-->
+    <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
                 <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -77,20 +81,6 @@
                                 {
                                     <li @if (ViewBag.Menu == 2) { <text>class="active"</text> }>@Html.ActionLink("New", "NewSA", "SAProcess")</li>
                                 }
-                                @*<li @if (ViewBag.Menu == 3) { <text>class="active"</text> }>@Html.ActionLink("Report", "Report", "SAProcess")</li>*@
-                                //if (Session["SA_UType"].ToString() == "1")//Admin
-                                //{
-                                @*<li @if (ViewBag.Menu == 5) { <text>class="dropdown active"</text> } 
-                                         else { <text>class="dropdown"</text> }>
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Master <b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink("Master User", "Master_User", "Admin")</li>
-                                        <li>@Html.ActionLink("Master Group", "Master_Group", "Admin")</li>
-                                        <li>@Html.ActionLink("Master Group Type", "Master_GroupType", "Admin")</li>
-                                        <li>@Html.ActionLink("Master Plant", "Master_Plant", "Admin")</li>
-                                    </ul>
-                                </li>*@
-                                //}
                                 if (Session["SA_UType"].ToString() == "2" || Session["SA_UType"].ToString() == "1")//PowerUser or Admin
                                 {
                                     <li @if (ViewBag.Menu == 6) { <text>class="dropdown active"</text> } 
@@ -101,6 +91,8 @@
                                         <li>@Html.ActionLink("Master Group", "GroupMaster", "PowerUser")</li>
                                         <li>@Html.ActionLink("Master Group Type", "GroupTypeMaster", "PowerUser")</li>
                                         <li>@Html.ActionLink("Master Plant", "PlantMaster", "PowerUser")</li>
+                                        <li>@Html.ActionLink("Add Route", "AddRoute", "PowerUser")</li>
+                                        <li>@Html.ActionLink("Edit Comment", "EditComment", "PowerUser")</li>
                                     </ul>
                                 </li>
                                 }
@@ -113,8 +105,8 @@
                                 <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                                 <li class="divider"></li>
                                 <li class="nav-header">Work Instruction</li>
-                                <li><a href="@Url.Content("~/Manual/Thai.pdf")" target="_blank">Thai</a></li>
-                                <li><a href="@Url.Content("~/Manual/Eng.pdf")" target="_blank">Eng</a></li>
+                                <li><a href="@Url.Content("~/Manual/WI-QA1-0001-r01.pdf")" target="_blank">Standard for Controlling Special Requisition</a></li>
+                                <li><a href="@Url.Content("~/Manual/WI-QA2-0003.pdf")" target="_blank">SA Online manual</a></li>
                             </ul>
                         </li>
                     </ul>

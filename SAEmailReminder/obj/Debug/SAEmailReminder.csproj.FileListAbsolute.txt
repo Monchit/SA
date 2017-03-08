@@ -14,3 +14,11 @@ C:\Users\monchit.TNC\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmail
 C:\Users\monchit.TNC\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\obj\Debug\SAEmailReminder.csprojResolveAssemblyReference.cache
 C:\Users\monchit.TNC\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\obj\Debug\SAEmailReminder.exe
 C:\Users\monchit.TNC\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\obj\Debug\SAEmailReminder.pdb
+C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\bin\Debug\SAEmailReminder.exe.config
+C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\bin\Debug\SAEmailReminder.exe
+C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\bin\Debug\SAEmailReminder.pdb
+C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\bin\Debug\EntityFramework.dll
+C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\bin\Debug\EntityFramework.xml
+C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\obj\Debug\SAEmailReminder.csprojResolveAssemblyReference.cache
+C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\obj\Debug\SAEmailReminder.exe
+C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\SAEmailReminder\obj\Debug\SAEmailReminder.pdb

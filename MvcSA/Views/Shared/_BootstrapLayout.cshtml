@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    @*<meta http-equiv="x-ua-compatible" content="IE=8" />*@
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
     <title>@ViewBag.Title | SA Online</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +19,12 @@
     @Styles.Render("~/Content/jTable")
     @Styles.Render("~/Content/select2")
     <style type="text/css">
+    /*html{
+        -moz-filter: grayscale(100%);
+        -webkit-filter: grayscale(100%);
+        filter: gray;
+        filter:grayscale(100%);
+    }*/
     body {
         padding-top: 60px;
         padding-bottom: 40px;
@@ -85,6 +91,8 @@
                                         <li>@Html.ActionLink("Master Group", "GroupMaster", "PowerUser")</li>
                                         <li>@Html.ActionLink("Master Group Type", "GroupTypeMaster", "PowerUser")</li>
                                         <li>@Html.ActionLink("Master Plant", "PlantMaster", "PowerUser")</li>
+                                        <li>@Html.ActionLink("Add Route", "AddRoute", "PowerUser")</li>
+                                        <li>@Html.ActionLink("Edit Comment", "EditComment", "PowerUser")</li>
                                     </ul>
                                 </li>
                                 }
@@ -97,8 +105,8 @@
                                 <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                                 <li class="divider"></li>
                                 <li class="nav-header">Work Instruction</li>
-                                <li><a href="@Url.Content("~/Manual/Thai.pdf")" target="_blank">Thai</a></li>
-                                <li><a href="@Url.Content("~/Manual/Eng.pdf")" target="_blank">Eng</a></li>
+                                <li><a href="@Url.Content("~/Manual/WI-QA1-0001-r01.pdf")" target="_blank">Standard for Controlling Special Requisition</a></li>
+                                <li><a href="@Url.Content("~/Manual/WI-QA2-0003.pdf")" target="_blank">SA Online manual</a></li>
                             </ul>
                         </li>
                     </ul>

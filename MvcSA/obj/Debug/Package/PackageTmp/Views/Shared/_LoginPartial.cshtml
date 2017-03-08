@@ -6,29 +6,18 @@
                 $.validationSetup({
                     validateOnBlur: false
                 });
-
-                @*$("#Username").keyup(function () {
-                    if ($(this).val().length == 6) {
-                        $.get("@Url.Action("GetLoginPlant","Home")", "user=" + $(this).val(), function (data) {
-                            $("#spanPlant").children().remove();
-                            if (data.length > 0) {
-                                var htmlSel = "<select id='selPlant' name='selPlant' class='span2'>"
-                                for (var i = 0; i < data.length; i++) {
-                                    htmlSel += "<option value='" + data[i].pid + "'>" + data[i].pname + "</option>";
-                                }
-                                htmlSel += "</select>"
-                                $("#spanPlant").append(htmlSel);
-                            }
-                        });
-                    }
-                });*@
             });
         </script>
         <form id="formLogin" class="navbar-form pull-right" action="@Url.Action("Login", "Home")" method="post">
-                @*<span id="spanPlant"></span>*@
-            <input id="Username" name="Username" class="input-small" type="text" placeholder="Username" data-validation="required">
-            <input id="Password" name="Password" class="input-small" type="password" placeholder="Password" data-validation="required">
-            <button type="submit" class="btn btn-primary">Login</button>
+            <div class="input-prepend">
+                <span class="add-on"><i class="icon-user"></i></span>
+                <input id="Username" name="Username" class="input-small" type="text" placeholder="Username" data-validation="required">
+            </div>
+            <div class="input-prepend input-append">
+                <span class="add-on"><i class="icon-lock"></i></span>
+                <input id="Password" name="Password" class="input-small" type="password" placeholder="Password" data-validation="required">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
         </form>
     </text>
 } else {

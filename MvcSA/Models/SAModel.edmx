@@ -32,6 +32,52 @@
           <EntitySet Name="TM_SysGroupType" EntityType="SAModel.Store.TM_SysGroupType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TM_SysPlant" EntityType="SAModel.Store.TM_SysPlant" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TM_SysUser" EntityType="SAModel.Store.TM_SysUser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="V_OnProcess" EntityType="SAModel.Store.V_OnProcess" store:Type="Views" store:Schema="dbo" store:Name="V_OnProcess">
+            <DefiningQuery>SELECT 
+      [V_OnProcess].[id] AS [id], 
+      [V_OnProcess].[control_no] AS [control_no], 
+      [V_OnProcess].[title] AS [title], 
+      [V_OnProcess].[issue_dt] AS [issue_dt], 
+      [V_OnProcess].[issue_by] AS [issue_by], 
+      [V_OnProcess].[item_code] AS [item_code], 
+      [V_OnProcess].[group_name] AS [group_name], 
+      [V_OnProcess].[emp_fname] AS [emp_fname], 
+      [V_OnProcess].[emp_lname] AS [emp_lname], 
+      [V_OnProcess].[org_id] AS [org_id], 
+      [V_OnProcess].[status_id] AS [status_id]
+      FROM [dbo].[V_OnProcess] AS [V_OnProcess]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="v_sa" EntityType="SAModel.Store.v_sa" store:Type="Views" store:Schema="dbo" store:Name="v_sa">
+            <DefiningQuery>SELECT 
+      [v_sa].[id] AS [id], 
+      [v_sa].[control_no] AS [control_no], 
+      [v_sa].[title] AS [title], 
+      [v_sa].[name] AS [name], 
+      [v_sa].[group_name] AS [group_name], 
+      [v_sa].[issue_dt] AS [issue_dt], 
+      [v_sa].[issue_by] AS [issue_by], 
+      [v_sa].[item_code] AS [item_code], 
+      [v_sa].[status] AS [status]
+      FROM [dbo].[v_sa] AS [v_sa]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="v_sa_issuer" EntityType="SAModel.Store.v_sa_issuer" store:Type="Views" store:Schema="dbo" store:Name="v_sa_issuer">
+            <DefiningQuery>SELECT 
+      [v_sa_issuer].[id] AS [id], 
+      [v_sa_issuer].[group_name] AS [group_name], 
+      [v_sa_issuer].[name] AS [name]
+      FROM [dbo].[v_sa_issuer] AS [v_sa_issuer]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="v_sa_onprocess" EntityType="SAModel.Store.v_sa_onprocess" store:Type="Views" store:Schema="dbo" store:Name="v_sa_onprocess">
+            <DefiningQuery>SELECT 
+      [v_sa_onprocess].[id] AS [id], 
+      [v_sa_onprocess].[status] AS [status], 
+      [v_sa_onprocess].[control_no] AS [control_no], 
+      [v_sa_onprocess].[issue_dt] AS [issue_dt], 
+      [v_sa_onprocess].[issue_by] AS [issue_by], 
+      [v_sa_onprocess].[title] AS [title], 
+      [v_sa_onprocess].[item_code] AS [item_code]
+      FROM [dbo].[v_sa_onprocess] AS [v_sa_onprocess]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_TD_ConcernEN_TD_Main" Association="SAModel.Store.FK_TD_ConcernEN_TD_Main">
             <End Role="TD_Main" EntitySet="TD_Main" />
             <End Role="TD_ConcernEN" EntitySet="TD_ConcernEN" />
@@ -420,6 +466,87 @@
           <Property Name="Sys_User_id" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="lv_id" Type="tinyint" Nullable="false" />
           <Property Name="user_active" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'SpecialAcceptance.dbo.V_OnProcess' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="V_OnProcess">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="control_no" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="issue_dt" />
+            <PropertyRef Name="issue_by" />
+            <PropertyRef Name="item_code" />
+            <PropertyRef Name="org_id" />
+            <PropertyRef Name="status_id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="control_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="issue_dt" Type="datetime" Nullable="false" />
+          <Property Name="issue_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="item_code" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="group_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="emp_fname" Type="nvarchar" MaxLength="255" />
+          <Property Name="emp_lname" Type="nvarchar" MaxLength="255" />
+          <Property Name="org_id" Type="int" Nullable="false" />
+          <Property Name="status_id" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'SpecialAcceptance.dbo.v_sa' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="v_sa">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="control_no" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="issue_dt" />
+            <PropertyRef Name="issue_by" />
+            <PropertyRef Name="item_code" />
+            <PropertyRef Name="status" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="control_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="511" />
+          <Property Name="group_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="issue_dt" Type="datetime" Nullable="false" />
+          <Property Name="issue_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="item_code" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="status" Type="nvarchar" Nullable="false" MaxLength="108" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'SpecialAcceptance.dbo.v_sa_issuer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="v_sa_issuer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="group_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="name" Type="nvarchar" MaxLength="511" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'SpecialAcceptance.dbo.v_sa_onprocess' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="v_sa_onprocess">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="status" />
+            <PropertyRef Name="control_no" />
+            <PropertyRef Name="issue_dt" />
+            <PropertyRef Name="issue_by" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="item_code" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="status" Type="nvarchar" Nullable="false" MaxLength="108" />
+          <Property Name="control_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="issue_dt" Type="datetime" Nullable="false" />
+          <Property Name="issue_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="item_code" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <Association Name="FK_TD_ConcernEN_TD_Main">
           <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
@@ -968,6 +1095,10 @@
             <End Role="TD_Main" EntitySet="TD_Main" />
             <End Role="TD_Inform" EntitySet="TD_Inform" />
           </AssociationSet>
+          <EntitySet Name="V_OnProcess" EntityType="SAModel.V_OnProcess" />
+          <EntitySet Name="v_sa" EntityType="SAModel.v_sa" />
+          <EntitySet Name="v_sa_issuer" EntityType="SAModel.v_sa_issuer" />
+          <EntitySet Name="v_sa_onprocess" EntityType="SAModel.v_sa_onprocess" />
         </EntityContainer>
         <EntityType Name="TD_CarPar">
           <Key>
@@ -1699,6 +1830,75 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="V_OnProcess">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="control_no" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="issue_dt" />
+            <PropertyRef Name="issue_by" />
+            <PropertyRef Name="item_code" />
+            <PropertyRef Name="org_id" />
+            <PropertyRef Name="status_id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="control_no" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="title" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="issue_dt" Nullable="false" Precision="3" />
+          <Property Type="String" Name="issue_by" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="item_code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="group_name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="emp_fname" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="emp_lname" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="org_id" Nullable="false" />
+          <Property Type="Byte" Name="status_id" Nullable="false" />
+        </EntityType>
+        <EntityType Name="v_sa">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="control_no" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="issue_dt" />
+            <PropertyRef Name="issue_by" />
+            <PropertyRef Name="item_code" />
+            <PropertyRef Name="status" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="control_no" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="title" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="name" MaxLength="511" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="group_name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="issue_dt" Nullable="false" Precision="3" />
+          <Property Type="String" Name="issue_by" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="item_code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="status" Nullable="false" MaxLength="108" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="v_sa_issuer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="group_name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="name" MaxLength="511" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="v_sa_onprocess">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="status" />
+            <PropertyRef Name="control_no" />
+            <PropertyRef Name="issue_dt" />
+            <PropertyRef Name="issue_by" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="item_code" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="status" Nullable="false" MaxLength="108" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="control_no" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="issue_dt" Nullable="false" Precision="3" />
+          <Property Type="String" Name="issue_by" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="title" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="item_code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1980,6 +2180,60 @@
             <EntityTypeMapping TypeName="SAModel.TD_Inform">
               <MappingFragment StoreEntitySet="TD_Inform">
                 <ScalarProperty Name="group_id" ColumnName="group_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_OnProcess">
+            <EntityTypeMapping TypeName="SAModel.V_OnProcess">
+              <MappingFragment StoreEntitySet="V_OnProcess">
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
+                <ScalarProperty Name="org_id" ColumnName="org_id" />
+                <ScalarProperty Name="emp_lname" ColumnName="emp_lname" />
+                <ScalarProperty Name="emp_fname" ColumnName="emp_fname" />
+                <ScalarProperty Name="group_name" ColumnName="group_name" />
+                <ScalarProperty Name="item_code" ColumnName="item_code" />
+                <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+                <ScalarProperty Name="issue_dt" ColumnName="issue_dt" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="control_no" ColumnName="control_no" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v_sa">
+            <EntityTypeMapping TypeName="SAModel.v_sa">
+              <MappingFragment StoreEntitySet="v_sa">
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="item_code" ColumnName="item_code" />
+                <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+                <ScalarProperty Name="issue_dt" ColumnName="issue_dt" />
+                <ScalarProperty Name="group_name" ColumnName="group_name" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="control_no" ColumnName="control_no" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v_sa_issuer">
+            <EntityTypeMapping TypeName="SAModel.v_sa_issuer">
+              <MappingFragment StoreEntitySet="v_sa_issuer">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="group_name" ColumnName="group_name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v_sa_onprocess">
+            <EntityTypeMapping TypeName="SAModel.v_sa_onprocess">
+              <MappingFragment StoreEntitySet="v_sa_onprocess">
+                <ScalarProperty Name="item_code" ColumnName="item_code" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+                <ScalarProperty Name="issue_dt" ColumnName="issue_dt" />
+                <ScalarProperty Name="control_no" ColumnName="control_no" />
+                <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -51,5 +51,9 @@ namespace MvcSA.Models
         public DbSet<TD_SA> TD_SA { get; set; }
         public DbSet<TM_Result> TM_Result { get; set; }
         public DbSet<TD_Inform> TD_Inform { get; set; }
+        public DbSet<V_OnProcess> V_OnProcess { get; set; }
+        public DbSet<v_sa> v_sa { get; set; }
+        public DbSet<v_sa_issuer> v_sa_issuer { get; set; }
+        public DbSet<v_sa_onprocess> v_sa_onprocess { get; set; }
     }
 }

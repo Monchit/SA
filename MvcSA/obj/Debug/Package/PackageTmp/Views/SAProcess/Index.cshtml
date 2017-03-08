@@ -1,11 +1,5 @@
 ﻿
 <style type="text/css">
-    /* fix the size of the pager */
-    input.ui-pg-input { width: auto; padding: 0px; margin: 0px; line-height: normal; }
-    select.ui-pg-selbox { width: auto; padding: 0px; margin: 0px; line-height: normal }
-    .ui-jqgrid .ui-state-highlight { background: #7AC0DA; }
-    .ui-jqgrid tr.jqgrow td { white-space: normal !important; }
-
     /*fix jTable*/
     span.jtable-goto-page select, span.jtable-page-size-change select {
         height: 25px;
@@ -45,32 +39,29 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#divJTable').jtable({
-            //title: 'Test',
             paging: true, //Enable paging
             pageSize: 10, //Set page size (default: 10)
             sorting: true, //Enable sorting
             selecting: true, //Enable selecting
-            //multiselect: true, //Allow multiple selecting
-            //selectingCheckboxes: true, //Show checkboxes on first column
-            //selectOnRowClick: false, //Enable this to only select using checkboxes
-            defaultSorting: 'issue_dt DESC', //Set default sorting
+            defaultSorting: 'status DESC', //Set default sorting
             actions: {
                 listAction: '@Url.Action("GridSAOnProcess","SAProcess")'
             },
             recordsLoaded: function (event, data) {
                 $("table.jtable").children().eq(1).children().each(function () {
-                    if ($(this).children().eq(5).text() == "Completed.") {
+                    if ($(this).children().eq(6).text() == "Completed.") {
                         $(this).addClass("rowComp");
                     }
-                    else if ($(this).children().eq(5).text() == "Canceled.") {
+                    else if ($(this).children().eq(6).text() == "Cancelled.") {
                         $(this).addClass("rowCanc");
                     }
-                    else if ($(this).children().eq(5).text() == "Rejected.") {
+                    else if ($(this).children().eq(6).text() == "Rejected.") {
                         $(this).addClass("rowRej");
                     }
                 });
             },
             fields: {
+                id: { list: false },
                 control_no: {
                     title: 'Control No.', width: '15%',
                     visibility: 'fixed', //This column always will be shown
@@ -79,23 +70,24 @@
                     }
                 },
                 title: { title: 'Type of Nonconformities', width: '20%' },
-                issuer: { title: 'Issued by', width: '15%' },
-                group_name: { title: 'Issued group', width: '15%' },
+                item_code: { title: 'Item code', width: '8%' },
+                name: { title: 'Issued by', width: '13%' },
+                group_name: { title: 'Issued group', width: '13%' },
                 issue_dt: {
-                    title: 'Issued date', width: '12%',
+                    title: 'Issued date', width: '10%',
                     display: function (data) {
                         return moment(data.record.issue_dt).format('DD/MM/YYYY HH:mm');//.fromNow();//.calendar();
                     }
                 },
-                status: { title: 'Status', width: '15%' },
+                status: { title: 'Status', width: '13%' },
                 files: {
-                    title: 'Files', width: '4%', visibility: 'fixed', //This column always will be shown
+                    title: 'Files', width: '4%', visibility: 'fixed',
                     display: function (data) {
                         return $('<a href="#fileModal" class="viewfiles" data-toggle="modal" rel="' + data.record.id + '"><i class="icon-folder-open"></i></a>');
                     }
                 },
                 tell: {
-                    title: 'Tell', width: '4%', visibility: 'fixed', //This column always will be shown
+                    title: 'Tell', width: '4%', visibility: 'fixed',
                     display: function (data) {
                         return $('<a href="#" class="viewtell" rel="' + data.record.id + '"><i class="icon-comment"></i></a>');
                     }
@@ -103,7 +95,7 @@
             }
         });
 
-        //$('#divJTable').jtable('load');
+        $('#divJTable').jtable('load');
 
         //Re-load records when user click 'load records' button.
         $('#btSearch').click(function (e) {
@@ -111,7 +103,7 @@
             $('#divJTable').jtable('load', {
                 control_no: $('#txt_controlno').val(),
                 title: $('#txt_title').val(),
-                issuer: $('#txt_issuer').val(),
+                name: $('#txt_issuer').val(),
                 group: $('#txt_group').val(),
                 status: $('#txt_status').val(),
                 item: $('#txt_item').val()
@@ -119,14 +111,7 @@
         });
 
         //Load all records when page is first shown
-        $('#btSearch').click(); //Comment -> 2014-10-13 by Monchit W.
-
-        //$("tr.jtable-data-row").each(function () {
-        //    console.log("1");
-        //    if ($(this).children().eq(6).text() == "Completed.") {
-        //        console.log("2");
-        //    }
-        //});
+        //$('#divJTable').jtable('load', { user: 2 });
 
         $('#btMySA').click(function (e) {
             e.preventDefault();
@@ -137,8 +122,6 @@
             autoOpen: false,
             width: 900,//'auto',
             height: 'auto',
-            //resizable: false,
-            //title: 'hi there',
             modal: true
         });
 

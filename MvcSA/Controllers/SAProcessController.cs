@@ -37,6 +37,22 @@ namespace MvcSA.Controllers
         }
 
         [Check_Authen]
+        public ActionResult Index2()
+        {
+            ViewBag.Menu = 1;
+            ViewBag.Title = "Main";
+            var status = from s in dbSA.TM_Status
+                         select s;
+
+            ViewBag.Status = status;
+
+            ViewBag.IssueGroup = from a in dbTNC.tnc_group_master
+                                 orderby a.group_name
+                                 select a;
+            return View();
+        }
+
+        [Check_Authen]
         public ActionResult SAClosed()
         {
             ViewBag.Title = "Closed";
@@ -87,7 +103,57 @@ namespace MvcSA.Controllers
             {
                 return RedirectToAction("Index", "SAProcess");
             }
-            
+        }
+
+        [Check_Authen]
+        public ActionResult NewSA1()
+        {
+            if (Session["SA_UserLv"].ToString() == "1" || Session["SA_UserLv"].ToString() == "2")
+            {
+                ViewBag.Title = "Special Acceptance Requisition Form";
+                ViewBag.Menu = 2;
+
+                var plant = from a in dbSA.TM_SysGroup
+                            where a.Sys_GroupType_id == 2
+                            select a;
+                ViewBag.SysPlant = plant;
+
+                if (Session["SA_Org"] != null)
+                {
+                    ViewBag.ControlNo = InitialControlNo(Session["SA_Org"].ToString());
+                }
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "SAProcess");
+            }
+        }
+
+        [Check_Authen]
+        public ActionResult NewSA2()
+        {
+            if (Session["SA_UserLv"].ToString() == "1" || Session["SA_UserLv"].ToString() == "2")
+            {
+                ViewBag.Title = "Special Acceptance Requisition Form";
+                ViewBag.Menu = 2;
+
+                var plant = from a in dbSA.TM_SysGroup
+                            where a.Sys_GroupType_id == 2
+                            select a;
+                ViewBag.SysPlant = plant;
+
+                if (Session["SA_Org"] != null)
+                {
+                    ViewBag.ControlNo = InitialControlNo(Session["SA_Org"].ToString());
+                }
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "SAProcess");
+            }
+
         }
 
         [Check_Authen]
@@ -122,9 +188,30 @@ namespace MvcSA.Controllers
             return View(query);
         }
 
+
         public ActionResult SpecialReject(int id)
         {
-            var said = id;
+            var actor = Session["SA_Auth"].ToString();
+            int org = int.Parse(Session["SA_Org"].ToString());
+            byte lv = byte.Parse(Session["SA_UserLv"].ToString());
+
+            var tran = from a in dbSA.TD_Transaction
+                       where a.id == id && a.active == true
+                       select a;
+
+            foreach (var item in tran)
+            {
+                if (item.act_id > 1)
+                {
+                    item.act_id = 99;
+                }
+                item.act_dt = DateTime.Now;
+                item.active = false;
+            }
+            dbSA.SaveChanges();
+
+            Insert_Transaction(id, 101, lv, org, false);
+
             return RedirectToAction("Index","SAProcess");
         }
 
@@ -710,6 +797,283 @@ namespace MvcSA.Controllers
                     // End Add data to DB TD_File //
                     dbSA.SaveChanges();
 
+                    //var concern_qc = Request.Form["selectQC"] != null ? Request.Form["selectQC"].ToString() : null;
+                    //var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
+                    //var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
+                    //var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
+                    //AddConcernQC(main_id, concern_qc);
+                    //AddConcernEN(main_id, concern_en);
+                    //AddConcernOther(main_id, concern_other);
+                    //AddInform(main_id, inform);
+
+                    scope.Complete();
+                }
+
+                // Add data to DB TD_Transaction //
+                int org_id = int.Parse(Session["SA_Org"].ToString());
+                byte lv = byte.Parse(Session["SA_UserLv"].ToString());
+
+                NextStep_Transaction(main_id, 1, lv, org_id, 0);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return RedirectToAction("Index", "SAProcess");
+        }
+
+        [Check_Authen]
+        [HttpPost]
+        public ActionResult AddSA1(IEnumerable<HttpPostedFileBase> files)
+        {
+            // define our transaction scope
+            var scope = new TransactionScope(
+                // a new transaction will always be created
+                TransactionScopeOption.RequiresNew,
+                // we will allow volatile data to be read during transaction
+                new TransactionOptions()
+                {
+                    IsolationLevel = IsolationLevel.ReadUncommitted,
+                    Timeout = TransactionManager.MaximumTimeout
+                }
+            );
+            DateTime dt = DateTime.Now;
+            int main_id;
+            var controlno = Request.Form["hdControlNo"] != null ? Request.Form["hdControlNo"].ToString() : string.Empty;
+
+            try
+            {
+                using (scope)
+                {
+                    // Add data to DB TD_Main //
+                    TD_Main main = new TD_Main();
+                    main.control_no = controlno + GetRunNo(controlno).ToString("000");
+                    main.title = Request.Form["txtNonconformities"] != null ? Request.Form["txtNonconformities"].ToString() : null;
+                    main.item_code = Request.Form["txtItemcode"] != null ? Request.Form["txtItemcode"].ToString() : null;
+                    main.customer = Request.Form["txtCustomer"] != null ? Request.Form["txtCustomer"].ToString() : null;
+                    main.issue_dt = dt;
+                    main.material = Request.Form["txtMaterial"] != null ? Request.Form["txtMaterial"].ToString() : null;
+                    main.batch_no = Request.Form["txtBatchNo"] != null ? Request.Form["txtBatchNo"].ToString() : null;
+                    main.job_no = Request.Form["txtJobNo"] != null ? Request.Form["txtJobNo"].ToString() : null;
+                    main.defective_qty = Request.Form["txtDefectiveQty"] != null ? Request.Form["txtDefectiveQty"].ToString() : "0";
+                    main.expect_date = Request.Form["dtpExpectDate"] != null ? ParseToDate(Request.Form["dtpExpectDate"].ToString()) : dt;
+                    main.reason = Request.Form["txaReason"] != null ? Request.Form["txaReason"].ToString() : "";
+                    main.preventive = Request.Form["txaPreventive"] != null ? Request.Form["txaPreventive"].ToString() : "";
+                    main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
+                    main.issue_by = Session["SA_Auth"].ToString();
+                    main.Sys_Plant_id = byte.Parse(Request.Form["slPlant"].ToString());
+
+                    dbSA.TD_Main.Add(main);
+                    dbSA.SaveChanges();
+                    // End Add data DB to TD_Main //
+                    main_id = main.id;
+                    // Add data to DB TD_Problem //
+                    if (Request.Form["cbxProblem"] != null)
+                    {
+                        var problem = Request.Form["cbxProblem"].ToString();
+                        var listProb = problem.Split(',');
+                        foreach (var item in listProb)
+                        {
+                            var problem_id = byte.Parse(item);
+                            var query = (from a in dbSA.TM_Problem
+                                         where a.prob_id == problem_id
+                                         select a).First();
+                            TD_Problem prob = new TD_Problem();
+                            prob.id = main_id;
+                            prob.prob_id = problem_id;
+                            if (query.text_flag)
+                            {
+                                prob.prob_text = Request.Form["txtProb" + item].ToString();
+                            }
+                            dbSA.TD_Problem.Add(prob);
+                        }
+                    }
+                    // End Add data DB to TD_Problem //
+
+                    // Add data to DB TD_Disposition //
+                    if (Request.Form["rdoDispos"] != null)
+                    {
+                        var dispos_id = byte.Parse(Request.Form["rdoDispos"].ToString());
+                        TD_Disposition disp = new TD_Disposition();
+                        disp.id = main_id;
+                        disp.dispos_id = dispos_id;
+                        var query = (from a in dbSA.TM_Disposition
+                                     where a.dispos_id == dispos_id
+                                     select a).First();
+                        if (query.text_flag)
+                        {
+                            disp.dispos_text = Request.Form["txtDisp" + dispos_id].ToString();
+                        }
+                        dbSA.TD_Disposition.Add(disp);
+                    }
+                    // End Add data to DB TD_Disposition //
+
+                    // Add data to DB TD_File //
+                    string subPath = "~/UploadFiles/" + dt.Year + "/" + dt.Month + "/" + main_id + "/";
+                    if (!Directory.Exists(Server.MapPath(subPath)))
+                    {
+                        Directory.CreateDirectory(Server.MapPath(subPath));
+                    }
+                    foreach (var file in files)
+                    {
+                        if (file != null && file.ContentLength > 0)
+                        {
+                            if (file.ContentType == "application/pdf")//Check accept file type.
+                            {
+                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                                var path = Path.Combine(Server.MapPath(subPath), fileName);
+                                file.SaveAs(path);
+                                SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
+                            }
+                        }
+                    }
+
+                    // End Add data to DB TD_File //
+                    dbSA.SaveChanges();
+
+                    var concern_qc = Request.Form["selectQC"] != null ? Request.Form["selectQC"].ToString() : null;
+                    //var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
+                    //var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
+                    //var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
+                    AddConcernQC(main_id, concern_qc);
+                    //AddConcernEN(main_id, concern_en);
+                    //AddConcernOther(main_id, concern_other);
+                    //AddInform(main_id, inform);
+
+                    scope.Complete();
+                }
+
+                // Add data to DB TD_Transaction //
+                int org_id = int.Parse(Session["SA_Org"].ToString());
+                byte lv = byte.Parse(Session["SA_UserLv"].ToString());
+
+                NextStep_Transaction(main_id, 1, lv, org_id, 0);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return RedirectToAction("Index", "SAProcess");
+        }
+
+        [Check_Authen]
+        [HttpPost]
+        public ActionResult AddSA2(IEnumerable<HttpPostedFileBase> files)
+        {
+            // define our transaction scope
+            var scope = new TransactionScope(
+                // a new transaction will always be created
+                TransactionScopeOption.RequiresNew,
+                // we will allow volatile data to be read during transaction
+                new TransactionOptions()
+                {
+                    IsolationLevel = IsolationLevel.ReadUncommitted,
+                    Timeout = TransactionManager.MaximumTimeout
+                }
+            );
+            DateTime dt = DateTime.Now;
+            int main_id;
+            var controlno = Request.Form["hdControlNo"] != null ? Request.Form["hdControlNo"].ToString() : string.Empty;
+
+            try
+            {
+                using (scope)
+                {
+                    // Add data to DB TD_Main //
+                    TD_Main main = new TD_Main();
+                    main.control_no = controlno + GetRunNo(controlno).ToString("000");
+                    main.title = Request.Form["txtNonconformities"] != null ? Request.Form["txtNonconformities"].ToString() : null;
+                    main.item_code = Request.Form["txtItemcode"] != null ? Request.Form["txtItemcode"].ToString() : null;
+                    main.customer = Request.Form["txtCustomer"] != null ? Request.Form["txtCustomer"].ToString() : null;
+                    main.issue_dt = dt;
+                    main.material = Request.Form["txtMaterial"] != null ? Request.Form["txtMaterial"].ToString() : null;
+                    main.batch_no = Request.Form["txtBatchNo"] != null ? Request.Form["txtBatchNo"].ToString() : null;
+                    main.job_no = Request.Form["txtJobNo"] != null ? Request.Form["txtJobNo"].ToString() : null;
+                    main.defective_qty = Request.Form["txtDefectiveQty"] != null ? Request.Form["txtDefectiveQty"].ToString() : "0";
+                    main.expect_date = Request.Form["dtpExpectDate"] != null ? ParseToDate(Request.Form["dtpExpectDate"].ToString()) : dt;
+                    main.reason = Request.Form["txaReason"] != null ? Request.Form["txaReason"].ToString() : "";
+                    main.preventive = Request.Form["txaPreventive"] != null ? Request.Form["txaPreventive"].ToString() : "";
+                    main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
+                    main.issue_by = Session["SA_Auth"].ToString();
+                    main.Sys_Plant_id = byte.Parse(Request.Form["slPlant"].ToString());
+
+                    dbSA.TD_Main.Add(main);
+                    dbSA.SaveChanges();
+                    // End Add data DB to TD_Main //
+                    main_id = main.id;
+                    // Add data to DB TD_Problem //
+                    if (Request.Form["cbxProblem"] != null)
+                    {
+                        var problem = Request.Form["cbxProblem"].ToString();
+                        var listProb = problem.Split(',');
+                        foreach (var item in listProb)
+                        {
+                            var problem_id = byte.Parse(item);
+                            var query = (from a in dbSA.TM_Problem
+                                         where a.prob_id == problem_id
+                                         select a).First();
+                            TD_Problem prob = new TD_Problem();
+                            prob.id = main_id;
+                            prob.prob_id = problem_id;
+                            if (query.text_flag)
+                            {
+                                prob.prob_text = Request.Form["txtProb" + item].ToString();
+                            }
+                            dbSA.TD_Problem.Add(prob);
+                        }
+                    }
+                    // End Add data DB to TD_Problem //
+
+                    // Add data to DB TD_Disposition //
+                    if (Request.Form["rdoDispos"] != null)
+                    {
+                        var dispos_id = byte.Parse(Request.Form["rdoDispos"].ToString());
+                        TD_Disposition disp = new TD_Disposition();
+                        disp.id = main_id;
+                        disp.dispos_id = dispos_id;
+                        var query = (from a in dbSA.TM_Disposition
+                                     where a.dispos_id == dispos_id
+                                     select a).First();
+                        if (query.text_flag)
+                        {
+                            disp.dispos_text = Request.Form["txtDisp" + dispos_id].ToString();
+                        }
+                        dbSA.TD_Disposition.Add(disp);
+                    }
+                    // End Add data to DB TD_Disposition //
+
+                    // Add data to DB TD_File //
+                    string subPath = "~/UploadFiles/" + dt.Year + "/" + dt.Month + "/" + main_id + "/";
+                    if (!Directory.Exists(Server.MapPath(subPath)))
+                    {
+                        Directory.CreateDirectory(Server.MapPath(subPath));
+                    }
+                    foreach (var file in files)
+                    {
+                        if (file != null && file.ContentLength > 0)
+                        {
+                            if (file.ContentType == "application/pdf")//Check accept file type.
+                            {
+                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                                var path = Path.Combine(Server.MapPath(subPath), fileName);
+                                file.SaveAs(path);
+                                SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
+                            }
+                        }
+                    }
+
+                    // End Add data to DB TD_File //
+                    dbSA.SaveChanges();
+
+                    var concern_qc = Request.Form["selectQC"] != null ? Request.Form["selectQC"].ToString() : null;
+                    var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
+                    var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
+                    var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
+                    AddConcernQC(main_id, concern_qc);
+                    AddConcernEN(main_id, concern_en);
+                    AddConcernOther(main_id, concern_other);
+                    AddInform(main_id, inform);
+
                     scope.Complete();
                 }
 
@@ -1096,6 +1460,15 @@ namespace MvcSA.Controllers
                 }
                 else//Accept or Not Accept
                 {
+                    //var concern_qc = Request.Form["selectQC"] != null ? Request.Form["selectQC"].ToString() : null;
+                    //var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
+                    //var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
+                    //var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
+                    //AddConcernQC(id, concern_qc);
+                    //AddConcernEN(id, concern_en);
+                    //AddConcernOther(id, concern_other);
+                    //AddInform(id, inform);
+
                     Update_Transaction(id, lv_id, org, true, approver, act_id, comment, status, plant);
                     //if (act_id == 4)// 4 = Not Accept
                     //{
@@ -1184,10 +1557,13 @@ namespace MvcSA.Controllers
                     tell.tell_user = approver;
                     db.TD_Tell.Add(tell);
 
-                    var query = db.TD_Transaction.Find(id, status, lv_id, org, plant);
-                    query.comment = "Tell";
-                    query.actor = approver;
-
+                    //var query = db.TD_Transaction.Find(id, status, lv_id, org, plant);
+                    var query = db.TD_Transaction.Where(w => w.id == id && w.status_id == status && w.lv_id == lv_id && w.org_id == org).FirstOrDefault();
+                    if (query != null)
+                    {
+                        query.comment = "Tell";
+                        query.actor = approver;
+                    }
                     db.SaveChanges();
                     //Send Email to Issuer
                     SendEmailCenter(GetTellEmail(id), id, 2, tellisuer);
@@ -2076,7 +2452,7 @@ namespace MvcSA.Controllers
                 {
                     //Add Issue Transaction
                     Insert_Transaction(id, status, lv, org_id, false, 0, user, act_id);
-                    Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true);
+                    Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true,0,tnc_org.ManagerId);
                     SendEmailCenter(tnc_org.ManagerEMail, id);
                 }
                 else if (act_id < 6)//Go to next step
@@ -2098,7 +2474,7 @@ namespace MvcSA.Controllers
                         {
                             if (Check_All_Approve(id, status, lv, user_org))
                             {
-                                Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true);
+                                Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true, 0, tnc_org.ManagerId);
                                 SendEmailCenter(tnc_org.ManagerEMail, id);
                             }
                         }
@@ -2106,8 +2482,8 @@ namespace MvcSA.Controllers
                         {
                             if (Check_All_Approve(id, status, lv))
                             {
-                                //Update Date 2014-10-22 by Monchit W. -> Change
-                                Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true);
+                                //Update Date 2014-10-22 by Monchit W.
+                                Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true, 0, tnc_org.ManagerId);
                                 SendEmailCenter(tnc_org.ManagerEMail, id);
                             }
                         }
@@ -2137,13 +2513,48 @@ namespace MvcSA.Controllers
                                 }
                             }
                         }
+                        //if (status == 1 || status == 2)//status Issue, QA go to QC
+                        //{
+                        //    if (Check_All_Approve(id, status))
+                        //    {
+                        //        //Update Date 2016-09-29 by Monchit W.
+                        //        if (AddQCTransaction(id, 3, get_min_lv)){}
+                        //        else if (AddOtherTransaction(id, 4, 2)){}
+                        //        else if (AddENTransaction(id, 5, 1)){}
+                        //        else
+                        //        {
+                        //            Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
+
+                        //            var get_email = from a in dbTNC.tnc_user
+                        //                            where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
+                        //                            (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
+                        //                            select a.email;
+                        //            foreach (var item in get_email)
+                        //            {
+                        //                SendEmailCenter(item, id);
+                        //            }
+                        //        }
+                        //    }
+                        //}
                         else if (status == 3)//status QC go to Other
                         {
                             if (Check_All_Approve(id, status))
                             {
-                                if (!AddOtherTransaction(id, new_status, get_min_lv))
+                                //Update Date 2016-09-29 by Monchit W.
+                                if (AddOtherTransaction(id, new_status, get_min_lv)){}
+                                else if (AddENTransaction(id, (byte)(new_status + 1), 1)){}
+                                else
                                 {
-                                    AddENTransaction(id, (byte)(new_status + 1), 1);
+                                    Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
+
+                                    var get_email = from a in dbTNC.tnc_user
+                                                    where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
+                                                    (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
+                                                    select a.email;
+                                    foreach (var item in get_email)
+                                    {
+                                        SendEmailCenter(item, id);
+                                    }
                                 }
                             }
                         }
@@ -2151,9 +2562,9 @@ namespace MvcSA.Controllers
                         {
                             if (Check_All_Approve(id, status))
                             {
-                                if (!AddENTransaction(id, new_status, get_min_lv))
-                                {
-                                    //Update Date 2014-09-22 by Monchit W.
+                                //Update Date 2016-09-29 by Monchit W.
+                                if (AddENTransaction(id, new_status, get_min_lv)){}
+                                else{
                                     Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
 
                                     var get_email = from a in dbTNC.tnc_user
@@ -2377,10 +2788,11 @@ namespace MvcSA.Controllers
                     string body = "";
                     string int_link = "http://webExternal";//web02,webExternal
                     string ext_link = "http://webExternal.nok.co.th";//web02,webExternal
+                    short flag = 0;//0=Send, 1=Not Send
                     if (type == 0)//Default
                     {
                         subject = "You have SA Online waiting for Operate.";
-                        body = "Dear. All Concern,<br /><br />" +
+                        body = "Dear. All Concern,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2392,7 +2804,7 @@ namespace MvcSA.Controllers
                     else if (type == 1)//Revise
                     {
                         subject = "You have SA Online waiting for Revise.";
-                        body = "Dear. Issuer,<br /><br />" +
+                        body = "Dear. Issuer,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2406,7 +2818,7 @@ namespace MvcSA.Controllers
                     else if (type == 2)//Tell Issuer
                     {
                         subject = "You have SA Online waiting for support";
-                        body = "Dear. Issuer,<br /><br />" +
+                        body = "Dear. Issuer,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2421,7 +2833,7 @@ namespace MvcSA.Controllers
                     else if (type == 3)//Complete
                     {
                         subject = "SA Accepted (SA No. : " + get_sa.control_no + ")";
-                        body = "Dear All,<br /><br />" +
+                        body = "Dear All,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2435,7 +2847,7 @@ namespace MvcSA.Controllers
                     else if (type == 4)//Close, Reject
                     {
                         subject = "SA Rejected (SA No. : " + get_sa.control_no + ")";
-                        body = "Dear All,<br /><br />" +
+                        body = "Dear All,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2448,7 +2860,7 @@ namespace MvcSA.Controllers
                     else if (type == 5)//Not Accept
                     {
                         subject = "SA Not Accept";
-                        body = "Dear Issuer,<br /><br />" +
+                        body = "Dear Issuer,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2456,14 +2868,13 @@ namespace MvcSA.Controllers
                             "<b>Not Accepted because : </b>" + content + 
                             " (<b>From : </b>" + Session["SA_Name"].ToString() + ")<br />" +
                             "<b>Link : </b><a href='" + int_link + Url.Action("Detail", "SAProcess", new { id = get_sa.id }) + "'>Internal</a>, <a href='" + ext_link + Url.Action("Detail", "SAProcess", new { id = get_sa.id }) + "'>External</a><br />" +
-                            //"<b>Link : </b><a href='" + Url.Action("Detail", "SAProcess", null, Request.Url.Scheme, null) + "/" + get_sa.id + "'>Internal</a>, <a href='" + ext_link + Url.Action("Detail", "SAProcess", new { id = get_sa.id }) + "'>External</a><br />" +
                             "<br /><b>*This message is automatic sending from SA Online, please do not reply*</b><br />" +
                             "<br />Best Regard,<br />From SA Online";
                     }
                     else if (type == 6)//Reply Tell Issuer
                     {
                         subject = "Support completed, You have SA Online for Operate again.";
-                        body = "Dear All,<br /><br />" +
+                        body = "Dear All,<br /><br />" + mailto + "<br />" +
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2474,65 +2885,56 @@ namespace MvcSA.Controllers
                             "<br />Best Regard,<br />From SA Online";
                     }
 
-                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, null);
-                    //"monchit@nok.co.th,patcharee_ji@nok.co.th"
+                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, null, flag: flag);//Real
+                    //tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", "monchit@nok.co.th", subject, body);//Test
                 }
             }
         }
 
         [HttpPost]
-        public ActionResult GridSAOnProcess(string control_no, string title, string issuer, string group, string status, string item, int user = 0, int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
+        public ActionResult GridSAOnProcess(string control_no, string title, string name, string group, string status, string item, int user = 0, int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
         {
             try
             {
-                var query = (from m in dbSA.TD_Main.ToList()
-                             join u in dbTNC.tnc_user.ToList() on m.issue_by equals u.emp_code
-                             join t in dbSA.TD_Transaction.Where(w => w.act_id == 0 || w.act_id == 1).ToList() on m.id equals t.id  //Issuer
-                             join g in dbTNC.tnc_group_master.ToList() on t.org_id equals g.id
-                             select new
-                             {
-                                 m.id,
-                                 m.control_no,
-                                 m.title,
-                                 name = u.emp_fname + " " + u.emp_lname,
-                                 g.group_name,
-                                 m.issue_dt,
-                                 m.issue_by,
-                                 m.item_code,
-                                 status = GetStatusName(m.id)
-                             });
+                var query = from a in dbSA.v_sa
+                            select a;
 
                 if (!string.IsNullOrEmpty(control_no))
                 {
-                    query = query.Where(w => w.control_no.IndexOf(control_no, StringComparison.OrdinalIgnoreCase) >= 0);
+                    query = query.Where(w => w.control_no.Contains(control_no.ToUpper()));
                 }
                 if (!string.IsNullOrEmpty(title))
                 {
-                    query = query.Where(w => w.title.IndexOf(title, StringComparison.OrdinalIgnoreCase) >= 0);
+                    query = query.Where(w => w.title.ToLower().Contains(title.ToLower()));
                 }
-                if (!string.IsNullOrEmpty(issuer))
+                if (!string.IsNullOrEmpty(name))
                 {
-                    query = query.Where(w => w.name.IndexOf(issuer, StringComparison.OrdinalIgnoreCase) >= 0);
+                    query = query.Where(w => w.name.ToLower().Contains(name.ToLower()));
                 }
                 if (!string.IsNullOrEmpty(group))
                 {
-                    query = query.Where(w => w.group_name.IndexOf(group, StringComparison.OrdinalIgnoreCase) >= 0);
+                    query = query.Where(w => w.group_name.ToLower().Contains(group.ToLower()));
                 }
                 if (!string.IsNullOrEmpty(status))
                 {
-                    query = query.Where(w => w.status.IndexOf(status, StringComparison.OrdinalIgnoreCase) >= 0);
+                    query = query.Where(w => w.status.ToLower().Contains(status.ToLower()));
                 }
                 if (!string.IsNullOrEmpty(item))
                 {
-                    query = query.Where(w => w.item_code.IndexOf(item, StringComparison.OrdinalIgnoreCase) >= 0);
+                    query = query.Where(w => w.item_code.ToLower().Contains(item.ToLower()));
                 }
 
                 if (user == 1)
                 {
                     if (Session["SA_Auth"] != null)
-                        query = query.Where(w => w.issue_by == Session["SA_Auth"].ToString());
+                    {
+                        var auth = Session["SA_Auth"].ToString();
+                        query = query.Where(w => w.issue_by == auth);
+                    }
                     else
+                    {
                         return RedirectToAction("Index", "Home");
+                    }
                 }
 
                 //Get data from database
@@ -2545,13 +2947,13 @@ namespace MvcSA.Controllers
                         s.id,
                         s.control_no,
                         s.title,
-                        issuer = s.name,
+                        s.item_code,
+                        s.name,
                         s.group_name,
                         s.issue_dt,
                         s.status
                     });
 
-                //Return result to jTable
                 return Json(new { Result = "OK", Records = output, TotalRecordCount = TotalRecord });
             }
             catch (Exception ex)
@@ -2559,7 +2961,7 @@ namespace MvcSA.Controllers
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
         }
-
+        
         [HttpPost]
         public ActionResult GridSAClosed(string control_no, string title, string issuer, string group, string status, string item, int user = 0, int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
         {

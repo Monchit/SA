@@ -2,7 +2,7 @@
     $(document).ready(function () {
         $("#selQC").select2({
             multiple: true,
-            placeholder: "Select QC",
+            placeholder: "-",
             ajax: {
                 url: '@Url.Action("SelectQC", "SAProcess")',
                 dataType: 'json',
@@ -21,7 +21,7 @@
 
         $("#selEN").select2({
             multiple: true,
-            placeholder: "Select Engineering",
+            placeholder: "-",
             ajax: {
                 url: '@Url.Action("SelectEN", "SAProcess")',
                 dataType: 'json',
@@ -40,7 +40,7 @@
 
         $("#selOT").select2({
             multiple: true,
-            placeholder: "Select Other",
+            placeholder: "-",
             ajax: {
                 url: '@Url.Action("SelectOther", "SAProcess")',
                 dataType: 'json',

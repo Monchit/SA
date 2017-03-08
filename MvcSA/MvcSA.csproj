@@ -402,6 +402,18 @@
     <Compile Include="Models\V_Employee_Info.cs">
       <DependentUpon>ModelTNCAdmin.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\V_OnProcess.cs">
+      <DependentUpon>SAModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\v_sa.cs">
+      <DependentUpon>SAModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\v_sa_issuer.cs">
+      <DependentUpon>SAModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\v_sa_onprocess.cs">
+      <DependentUpon>SAModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\VM_AttachFiles.cs" />
     <Compile Include="ViewModels\VM_Comment.cs" />
@@ -1018,7 +1030,7 @@
     <Content Include="Views\SAProcess\_ShowDetail.cshtml" />
     <Content Include="Views\SAProcess\TestUpload.cshtml" />
     <Content Include="Views\SAProcess\_ShowComment.cshtml" />
-    <Content Include="Views\SAProcess\Index_1.cshtml" />
+    <Content Include="Views\SAProcess\Index2.cshtml" />
     <Content Include="Views\SAProcess\_FormComment.cshtml" />
     <Content Include="Views\SAProcess\_FormApprove.cshtml" />
     <Content Include="Views\SAProcess\_FormTellIssuer.cshtml" />
@@ -1056,6 +1068,9 @@
     <Content Include="Views\SAProcess\_ShowConcern.cshtml" />
     <Content Include="Views\PowerUser\EditComment.cshtml" />
     <Content Include="Views\SAProcess\SAClosed.cshtml" />
+    <Content Include="Views\SAProcess\NewSA2.cshtml" />
+    <Content Include="Views\PowerUser\AddRoute.cshtml" />
+    <Content Include="Views\SAProcess\NewSA1.cshtml" />
     <None Include="Web.Backload.Default.config" />
     <None Include="Web.Backload.xsd">
       <SubType>Designer</SubType>

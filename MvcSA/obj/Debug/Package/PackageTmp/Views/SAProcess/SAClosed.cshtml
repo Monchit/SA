@@ -43,25 +43,24 @@
             pageSize: 10, //Set page size (default: 10)
             sorting: true, //Enable sorting
             selecting: true, //Enable selecting
-            defaultSorting: 'status DESC', //Set default sorting
+            defaultSorting: 'status', //Set default sorting
             actions: {
-                listAction: '@Url.Action("GridSAOnProcess","SAProcess")'
+                listAction: '@Url.Action("GridSAClosed","SAProcess")'
             },
             recordsLoaded: function (event, data) {
                 $("table.jtable").children().eq(1).children().each(function () {
-                    if ($(this).children().eq(6).text() == "Completed.") {
+                    if ($(this).children().eq(5).text() == "Completed.") {
                         $(this).addClass("rowComp");
                     }
-                    else if ($(this).children().eq(6).text() == "Cancelled.") {
+                    else if ($(this).children().eq(5).text() == "Canceled.") {
                         $(this).addClass("rowCanc");
                     }
-                    else if ($(this).children().eq(6).text() == "Rejected.") {
+                    else if ($(this).children().eq(5).text() == "Rejected.") {
                         $(this).addClass("rowRej");
                     }
                 });
             },
             fields: {
-                id: { list: false },
                 control_no: {
                     title: 'Control No.', width: '15%',
                     visibility: 'fixed', //This column always will be shown
@@ -70,16 +69,15 @@
                     }
                 },
                 title: { title: 'Type of Nonconformities', width: '20%' },
-                item_code: { title: 'Item code', width: '8%' },
-                name: { title: 'Issued by', width: '13%' },
-                group_name: { title: 'Issued group', width: '13%' },
+                issuer: { title: 'Issued by', width: '15%' },
+                group_name: { title: 'Issued group', width: '15%' },
                 issue_dt: {
-                    title: 'Issued date', width: '10%',
+                    title: 'Issued date', width: '12%',
                     display: function (data) {
-                        return moment(data.record.issue_dt).format('DD/MM/YYYY HH:mm');//.fromNow();//.calendar();
+                        return moment(data.record.issue_dt).format('DD/MM/YYYY HH:mm');
                     }
                 },
-                status: { title: 'Status', width: '13%' },
+                status: { title: 'Status', width: '15%' },
                 files: {
                     title: 'Files', width: '4%', visibility: 'fixed',
                     display: function (data) {
@@ -95,7 +93,7 @@
             }
         });
 
-        $('#divJTable').jtable('load');
+        //$('#divJTable').jtable('load');
 
         //Re-load records when user click 'load records' button.
         $('#btSearch').click(function (e) {
@@ -103,7 +101,7 @@
             $('#divJTable').jtable('load', {
                 control_no: $('#txt_controlno').val(),
                 title: $('#txt_title').val(),
-                name: $('#txt_issuer').val(),
+                issuer: $('#txt_issuer').val(),
                 group: $('#txt_group').val(),
                 status: $('#txt_status').val(),
                 item: $('#txt_item').val()
@@ -111,7 +109,7 @@
         });
 
         //Load all records when page is first shown
-        //$('#divJTable').jtable('load', { user: 2 });
+        $('#btSearch').click(); //Comment -> 2014-10-13 by Monchit W.
 
         $('#btMySA').click(function (e) {
             e.preventDefault();

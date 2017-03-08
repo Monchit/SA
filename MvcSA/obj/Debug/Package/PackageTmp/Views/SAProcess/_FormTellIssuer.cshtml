@@ -17,7 +17,9 @@
             <td><textarea rows="4" id="txaComment" name="txaComment" data-validate="required"></textarea></td>
         </tr>
         <tr>
-            <td><input type="hidden" id="hdID" name="hdID" value="@ViewBag.SAID" /></td>
+            <td><input type="hidden" id="hdID" name="hdID" value="@ViewBag.SAID" />
+                <input type="hidden" id="hdSTID" name="hdSTID" value="@ViewBag.STID" />
+            </td>
             <td style="text-align:right;"><button class="btn btn-primary" type="submit">Submit</button></td>
         </tr>
     </table>

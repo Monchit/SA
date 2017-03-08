@@ -103,12 +103,12 @@ namespace MvcSA.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult Login(string id)
+        public ActionResult Login(string key)
         {
             getUserInfo user = new getUserInfo();
-            if (!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(key))
             {
-                string empcode = TNCCrypto.Decode(id);
+                string empcode = TNCCrypto.Decode(key);
                 if (user.setUser(empcode))
                 {
                     Session["SA_Auth"] = empcode;

@@ -60,6 +60,10 @@
         <AssociationConnector Association="SAModel.FK_TD_SA_TM_Result1" />
         <EntityTypeShape EntityType="SAModel.TD_Inform" Width="1.5" PointX="6.625" PointY="25.125" />
         <AssociationConnector Association="SAModel.FK_TD_Inform_TD_Main" />
+        <EntityTypeShape EntityType="SAModel.V_OnProcess" Width="1.5" PointX="12.75" PointY="33.5" />
+        <EntityTypeShape EntityType="SAModel.v_sa" Width="1.5" PointX="0.581411266970174" PointY="17.06872328420576" />
+        <EntityTypeShape EntityType="SAModel.v_sa_issuer" Width="1.5" PointX="10.125" PointY="45" />
+        <EntityTypeShape EntityType="SAModel.v_sa_onprocess" Width="1.5" PointX="8.125" PointY="45" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

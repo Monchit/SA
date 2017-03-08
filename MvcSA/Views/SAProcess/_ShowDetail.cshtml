@@ -89,7 +89,7 @@
         @if (ViewBag.SPEdit != null && ViewBag.SPEdit == true)
         {
             <br /><a href="@Url.Action("SpecialEdit", "SAProcess", new { id = ViewBag.SAID })" class="btn btn-warning">Special Edit</a>
-            <button id="btnSRej" name="btnSRej" class="btn btn-danger" data-id="@ViewBag.SAID">Special Reject</button>
+            <a href="@Url.Action("SpecialReject", "SAProcess", new { id = ViewBag.SAID })" class="btn btn-danger">Special Reject</a>
         }
         </td>
         <td class="td_title" style="width:175px;">Type of Nonconformities</td>
@@ -176,10 +176,8 @@
         <td class="td_title">Print Report</td>
         <td><i class="icon-print"></i> @Html.ActionLink("Print", "PrintPDF1", new { said = ViewBag.SAID }, new { target = "_blank" })</td>
         <td class="td_title">Concern Section</td>
-        <td>@if (ViewBag.ShowConcern == true)
-            {
-            <button type="button" class="btn btn-info" id="btnShowConcern" name="btnShowConcern" data-id="@ViewBag.SAID">Show Concern</button>
-            }
+        <td><button type="button" class="btn btn-info" id="btnShowConcern" name="btnShowConcern" data-id="@ViewBag.SAID">Show Concern</button>
+            @*@if (ViewBag.ShowConcern == true){}*@
         </td>
     </tr>
 </table>
