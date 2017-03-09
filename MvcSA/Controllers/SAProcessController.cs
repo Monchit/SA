@@ -932,13 +932,7 @@ namespace MvcSA.Controllers
                     dbSA.SaveChanges();
 
                     var concern_qc = Request.Form["selectQC"] != null ? Request.Form["selectQC"].ToString() : null;
-                    //var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
-                    //var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
-                    //var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
                     AddConcernQC(main_id, concern_qc);
-                    //AddConcernEN(main_id, concern_en);
-                    //AddConcernOther(main_id, concern_other);
-                    //AddInform(main_id, inform);
 
                     scope.Complete();
                 }
@@ -2452,8 +2446,18 @@ namespace MvcSA.Controllers
                 {
                     //Add Issue Transaction
                     Insert_Transaction(id, status, lv, org_id, false, 0, user, act_id);
-                    Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true,0,tnc_org.ManagerId);
-                    SendEmailCenter(tnc_org.ManagerEMail, id);
+                    if (tnc_org.OrgLevel == 1)
+                    {
+                        Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true, 0, tnc_org.ManagerId);
+                        SendEmailCenter(tnc_org.ManagerEMail, id);
+                    }
+                    else if (tnc_org.OrgLevel == 2)
+                    {
+                        Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true, 0, tnc_org.ManagerId);
+                        var email_div = GetEmailDivByDept(tnc_org.OrgId);
+                        SendEmailCenter(tnc_org.ManagerEMail + email_div, id);
+                    }
+                    
                 }
                 else if (act_id < 6)//Go to next step
                 {
@@ -2496,23 +2500,23 @@ namespace MvcSA.Controllers
                                           where m.status_id == new_status && m.lv_min != 0
                                           select m.lv_min).FirstOrDefault();
 
-                        if (status == 1)//status issuer go to QA
+                        if (status == 1)//status issuer go to QC
                         {
                             if (Check_All_Approve(id, status))
                             {
-                                AddQATransaction(id, new_status, get_min_lv);
+                                AddQCTransaction(id, 3, 2);//3 = QC
                             }
                         }
-                        else if (status == 2)//status QA go to QC
-                        {
-                            if (Check_All_Approve(id, status))
-                            {
-                                if (!AddQCTransaction(id, new_status, get_min_lv))
-                                {
-                                    AddOtherTransaction(id, (byte)(new_status + 1), 2);
-                                }
-                            }
-                        }
+                        //else if (status == 2)//status QA go to QC
+                        //{
+                        //    if (Check_All_Approve(id, status))
+                        //    {
+                        //        if (!AddQCTransaction(id, new_status, get_min_lv))
+                        //        {
+                        //            AddOtherTransaction(id, (byte)(new_status + 1), 2);
+                        //        }
+                        //    }
+                        //}
                         //if (status == 1 || status == 2)//status Issue, QA go to QC
                         //{
                         //    if (Check_All_Approve(id, status))
@@ -2536,25 +2540,47 @@ namespace MvcSA.Controllers
                         //        }
                         //    }
                         //}
-                        else if (status == 3)//status QC go to Other
+                        else if (status == 3)//status QC go to
                         {
                             if (Check_All_Approve(id, status))
                             {
                                 //Update Date 2016-09-29 by Monchit W.
-                                if (AddOtherTransaction(id, new_status, get_min_lv)){}
-                                else if (AddENTransaction(id, (byte)(new_status + 1), 1)){}
+                                if (AddOtherTransaction(id, new_status, get_min_lv)){}//Add Other Transaction
+                                else if (AddENTransaction(id, (byte)(new_status + 1), 1)){}//Add Engineer Transaction
                                 else
                                 {
-                                    Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
+                                    var get_group_qc = (from a in dbSA.TD_Transaction
+                                                        where a.id == id && a.status_id == 3 && a.lv_id < 3
+                                                        select a.org_id).ToList();
 
-                                    var get_email = from a in dbTNC.tnc_user
-                                                    where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
-                                                    (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
-                                                    select a.email;
-                                    foreach (var item in get_email)
+                                    var get_dept_qc = (from a in dbTNC.View_Organization
+                                                       where get_group_qc.Contains(a.group_id.Value)
+                                                       select new { a.dept_id, a.DeptMgr_email, a.plant_id, a.PlantMgr_email }).Distinct();
+
+                                    foreach (var item in get_dept_qc)
                                     {
-                                        SendEmailCenter(item, id);
+                                        if (item.DeptMgr_email != null)
+                                        {
+                                            Insert_Transaction(id, 6, 3, item.dept_id.Value, true);
+                                            SendEmailCenter(item.DeptMgr_email, id);
+                                        }
+                                        else
+                                        {
+                                            Insert_Transaction(id, 6, 4, item.plant_id.Value, true);
+                                            SendEmailCenter(item.PlantMgr_email, id);
+                                        }
                                     }
+
+                                    //Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
+
+                                    //var get_email = from a in dbTNC.tnc_user
+                                    //                where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
+                                    //                (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
+                                    //                select a.email;
+                                    //foreach (var item in get_email)
+                                    //{
+                                    //    SendEmailCenter(item, id);
+                                    //}
                                 }
                             }
                         }
@@ -2565,16 +2591,37 @@ namespace MvcSA.Controllers
                                 //Update Date 2016-09-29 by Monchit W.
                                 if (AddENTransaction(id, new_status, get_min_lv)){}
                                 else{
-                                    Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
+                                    var get_group_qc = (from a in dbSA.TD_Transaction
+                                                        where a.id == id && a.status_id == 3 && a.lv_id < 3
+                                                        select a.org_id).ToList();
 
-                                    var get_email = from a in dbTNC.tnc_user
-                                                    where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
-                                                    (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
-                                                    select a.email;
-                                    foreach (var item in get_email)
+                                    var get_dept_qc = (from a in dbTNC.View_Organization
+                                                       where get_group_qc.Contains(a.group_id.Value)
+                                                       select new { a.dept_id, a.DeptMgr_email, a.plant_id, a.PlantMgr_email }).Distinct();
+
+                                    foreach (var item in get_dept_qc)
                                     {
-                                        SendEmailCenter(item, id);
+                                        if (item.DeptMgr_email != null)
+                                        {
+                                            Insert_Transaction(id, 6, 3, item.dept_id.Value, true);
+                                            SendEmailCenter(item.DeptMgr_email, id);
+                                        }
+                                        else
+                                        {
+                                            Insert_Transaction(id, 6, 4, item.plant_id.Value, true);
+                                            SendEmailCenter(item.PlantMgr_email, id);
+                                        }
                                     }
+                                    //Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
+
+                                    //var get_email = from a in dbTNC.tnc_user
+                                    //                where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
+                                    //                (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
+                                    //                select a.email;
+                                    //foreach (var item in get_email)
+                                    //{
+                                    //    SendEmailCenter(item, id);
+                                    //}
                                 }
                             }
                         }
@@ -2582,16 +2629,37 @@ namespace MvcSA.Controllers
                         {
                             if (Check_All_Approve(id, status))
                             {
-                                Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
+                                var get_group_qc = (from a in dbSA.TD_Transaction
+                                                    where a.id == id && a.status_id == 3 && a.lv_id < 3
+                                                    select a.org_id).ToList();
 
-                                var get_email = from a in dbTNC.tnc_user
-                                                where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
-                                                (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
-                                                select a.email;
-                                foreach (var item in get_email)
+                                var get_dept_qc = (from a in dbTNC.View_Organization
+                                                   where get_group_qc.Contains(a.group_id.Value)
+                                                   select new { a.dept_id, a.DeptMgr_email, a.plant_id, a.PlantMgr_email }).Distinct();
+
+                                foreach (var item in get_dept_qc)
                                 {
-                                    SendEmailCenter(item, id);
+                                    if (item.DeptMgr_email != null)
+                                    {
+                                        Insert_Transaction(id, 6, 3, item.dept_id.Value, true);
+                                        SendEmailCenter(item.DeptMgr_email, id);
+                                    }
+                                    else
+                                    {
+                                        Insert_Transaction(id, 6, 4, item.plant_id.Value, true);
+                                        SendEmailCenter(item.PlantMgr_email, id);
+                                    }
                                 }
+                                //Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
+
+                                //var get_email = from a in dbTNC.tnc_user
+                                //                where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
+                                //                (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
+                                //                select a.email;
+                                //foreach (var item in get_email)
+                                //{
+                                //    SendEmailCenter(item, id);
+                                //}
                             }
                         }
                         else if (status == 8)//Final Approve
@@ -2618,39 +2686,61 @@ namespace MvcSA.Controllers
                     UpdateIssuer_Transaction(id, true);
                     SendEmailCenter(GetIssuerEmail(id), id, 1, other);
                 }
-                else if (act_id == 10)//Issue SA Cust/NOK
+                else if (act_id == 10 || act_id == 11)
                 {
                     if (Check_All_Approve(id, status))
                     {
-                        //Modify Date 2015-04-21 by Monchit
-                        var get_qa_group = (from a in dbSA.TD_Transaction
-                                           where a.id == id && a.status_id == 2 && a.lv_id == 1
-                                           select a).FirstOrDefault();
-
-                        Insert_Transaction(id, 7, 1, get_qa_group.org_id, true);
-                        SendEmailCenter(GetQAEngEmail(id), id);
-                        //foreach (var item in get_qa_group)
-                        //{
-                            
-                        //}
-                    }
-                }
-                else if (act_id == 11)//No issue SA Cust/NOK
-                {
-                    if (Check_All_Approve(id, status))
-                    {
-                        Insert_Transaction(id, 8, 3, 49, true);//49 = QS Department
-
-                        var get_email = from a in dbTNC.tnc_user
-                                        where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
-                                        (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
-                                        select a.email;
-                        foreach (var item in get_email)
+                        if (dbSA.TD_Transaction.Any(w => w.id == id && act_id == 10))//Issue SA
                         {
-                            SendEmailCenter(item, id);
+                            //GetQAResponse
+                        }
+                        else//No Issue SA
+                        {
+                            var get_qc_review = from a in dbSA.TD_Transaction
+                                                where a.id == id && a.status_id == 6
+                                                select a;
+
+                            foreach (var tran in get_qc_review)
+                            {
+                                Insert_Transaction(id, 8, tran.lv_id, tran.org_id, true);
+                                SendEmailCenter("", id);
+                            }
                         }
                     }
                 }
+                //else if (act_id == 10)//Issue SA Cust/NOK
+                //{
+                //    if (Check_All_Approve(id, status))
+                //    {
+                //        //Modify Date 2015-04-21 by Monchit
+                //        var get_qa_group = (from a in dbSA.TD_Transaction
+                //                           where a.id == id && a.status_id == 2 && a.lv_id == 1
+                //                           select a).FirstOrDefault();
+
+                //        Insert_Transaction(id, 7, 1, get_qa_group.org_id, true);
+                //        SendEmailCenter(GetQAEngEmail(id), id);
+                //        //foreach (var item in get_qa_group)
+                //        //{
+
+                //        //}
+                //    }
+                //}
+                //else if (act_id == 11)//No issue SA Cust/NOK
+                //{
+                //    if (Check_All_Approve(id, status))
+                //    {
+                //        Insert_Transaction(id, 8, 3, 49, true);//49 = QS Department
+
+                //        var get_email = from a in dbTNC.tnc_user
+                //                        where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
+                //                        (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
+                //                        select a.email;
+                //        foreach (var item in get_email)
+                //        {
+                //            SendEmailCenter(item, id);
+                //        }
+                //    }
+                //}
                 else if (act_id == 15)//No issuer SA Cust/NOK & Approve
                 {
                     Insert_Transaction(id, 100, lv, org_id, false);//Approve
@@ -2661,6 +2751,21 @@ namespace MvcSA.Controllers
                     Insert_Transaction(id, 101, lv, org_id, false);//Rejected
                     SendEmailCenter(GetEmailinRoot(id), id, 4, other);
                 }
+            }
+        }
+
+        private string GetEmailDivByDept(int deptid)
+        {
+            var query = (from a in dbTNC.View_Organization
+                         where a.dept_id == deptid && a.active == true
+                         select a.PlantMgr_email).First();
+            if (query != null)
+            {
+                return "," + query;
+            }
+            else
+            {
+                return "";
             }
         }
 
@@ -2785,14 +2890,14 @@ namespace MvcSA.Controllers
                 {
                     TNCUtility tnc_util = new TNCUtility();
                     string subject = "";
-                    string body = "";
+                    string body = mailto + "<br />";
                     string int_link = "http://webExternal";//web02,webExternal
                     string ext_link = "http://webExternal.nok.co.th";//web02,webExternal
                     short flag = 0;//0=Send, 1=Not Send
                     if (type == 0)//Default
                     {
                         subject = "You have SA Online waiting for Operate.";
-                        body = "Dear. All Concern,<br /><br />" + 
+                        body += "Dear. All Concern,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2804,7 +2909,7 @@ namespace MvcSA.Controllers
                     else if (type == 1)//Revise
                     {
                         subject = "You have SA Online waiting for Revise.";
-                        body = "Dear. Issuer,<br /><br />" + 
+                        body += "Dear. Issuer,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2818,7 +2923,7 @@ namespace MvcSA.Controllers
                     else if (type == 2)//Tell Issuer
                     {
                         subject = "You have SA Online waiting for support";
-                        body = "Dear. Issuer,<br /><br />" + 
+                        body += "Dear. Issuer,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2833,7 +2938,7 @@ namespace MvcSA.Controllers
                     else if (type == 3)//Complete
                     {
                         subject = "SA Accepted (SA No. : " + get_sa.control_no + ")";
-                        body = "Dear All,<br /><br />" + 
+                        body += "Dear All,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2847,7 +2952,7 @@ namespace MvcSA.Controllers
                     else if (type == 4)//Close, Reject
                     {
                         subject = "SA Rejected (SA No. : " + get_sa.control_no + ")";
-                        body = "Dear All,<br /><br />" + 
+                        body += "Dear All,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2860,7 +2965,7 @@ namespace MvcSA.Controllers
                     else if (type == 5)//Not Accept
                     {
                         subject = "SA Not Accept";
-                        body = "Dear Issuer,<br /><br />" + 
+                        body += "Dear Issuer,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2874,7 +2979,7 @@ namespace MvcSA.Controllers
                     else if (type == 6)//Reply Tell Issuer
                     {
                         subject = "Support completed, You have SA Online for Operate again.";
-                        body = "Dear All,<br /><br />" + mailto + "<br />" +
+                        body += "Dear All,<br /><br />" + 
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2885,8 +2990,8 @@ namespace MvcSA.Controllers
                             "<br />Best Regard,<br />From SA Online";
                     }
 
-                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, null, flag: flag);//Real
-                    //tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", "monchit@nok.co.th", subject, body);//Test
+                    //tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, null, flag: flag);//Real
+                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", "monchit@nok.co.th", subject, body);//Test
                 }
             }
         }
