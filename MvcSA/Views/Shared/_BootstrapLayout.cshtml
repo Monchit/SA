@@ -77,7 +77,7 @@
                         <li @if (ViewBag.Menu == 3) { <text>class="active"</text> }>@Html.ActionLink("Report", "ExcelFilter", "SAProcess")</li>
                             if (Session["SA_UType"] != null)
                             {
-                                if (Session["SA_UserLv"].ToString() == "1" || Session["SA_UserLv"].ToString() == "2")
+                                if (Session["SA_UserLv"].ToString() == "2")
                                 {
                                     <li @if (ViewBag.Menu == 2) { <text>class="active"</text> }>@Html.ActionLink("New", "NewSA", "SAProcess")</li>
                                 }
