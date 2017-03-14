@@ -108,15 +108,15 @@ namespace MvcSA.Controllers
         [Check_Authen]
         public ActionResult NewSA1()
         {
-            if (Session["SA_UserLv"].ToString() == "1" || Session["SA_UserLv"].ToString() == "2")
+            if (Session["SA_UserLv"].ToString() == "2")
             {
                 ViewBag.Title = "Special Acceptance Requisition Form";
                 ViewBag.Menu = 2;
 
-                var plant = from a in dbSA.TM_SysGroup
-                            where a.Sys_GroupType_id == 2
-                            select a;
-                ViewBag.SysPlant = plant;
+                //var plant = from a in dbSA.TM_SysGroup
+                //            where a.Sys_GroupType_id == 2
+                //            select a;
+                //ViewBag.SysPlant = plant;
 
                 if (Session["SA_Org"] != null)
                 {
@@ -278,18 +278,18 @@ namespace MvcSA.Controllers
             var user = Session["SA_Auth"].ToString();
             byte user_type = byte.Parse(Session["SA_UType"].ToString());
 
-            if (user_type == 2) ViewBag.SPEdit = true;
+            if (user_type == 2) ViewBag.SPEdit = true;//user_type = 2 is Special Edit
 
             var main = dbSA.TD_Main.Where(w => w.id == id).FirstOrDefault();
             
             byte current_status = GetStatusId(id);
             
-            if (current_status == 7 && CheckIsQAComment(id,user))
+            if (current_status == 7 && CheckIsQAComment(id,user))// status = 7 is Issue SA Cust/NOK
                 ViewBag.IssueSA = 1;
             else
                 ViewBag.IssueSA = 0;
 
-            if (current_status > 2) ViewBag.ShowConcern = true;
+            if (current_status > 3) ViewBag.ShowConcern = true;// status after selec concern
 
             ViewBag.ShowIssueSA = Check_IssueSA(id);
 
@@ -393,23 +393,23 @@ namespace MvcSA.Controllers
                         ViewBag.ShowForm = user_lv;
                     }
                 }
-                else if (status_id == 2)//QA
+                //else if (status_id == 2)//QA
+                //{
+                //    if (user_lv == 1)//Eng.
+                //    {
+                //        if (Check_SysUser(user, status_id, user_lv, query.Sys_Plant_id))
+                //        {
+                //            ViewBag.ShowForm = user_lv;
+                //        }
+                //    }
+                //    else if (user_lv == 2)//Mgr.
+                //    {
+                //        ViewBag.ShowForm = 12;//ApproveS1 Form
+                //    }
+                //}
+                else if (status_id == 3 && user_lv >= 2)//QC and Mgr. Up
                 {
-                    if (user_lv == 1)//Eng.
-                    {
-                        if (Check_SysUser(user, status_id, user_lv, query.Sys_Plant_id))
-                        {
-                            ViewBag.ShowForm = user_lv;
-                        }
-                    }
-                    else if (user_lv == 2)//Mgr.
-                    {
-                        ViewBag.ShowForm = 12;//ApproveS1 Form
-                    }
-                }
-                else if (status_id == 3 && user_lv <= 2)//QC and Mgr. Down
-                {
-                    ViewBag.ShowForm = user_lv;
+                    ViewBag.ShowForm = 10;//Form ApproveS2
                     ViewBag.CarPar = Check_CarPar(id);
                 }
                 else
@@ -611,6 +611,42 @@ namespace MvcSA.Controllers
             return PartialView();
         }
 
+        [OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
+        public ActionResult _FormApproveS2(int id)
+        {
+            byte lv = byte.Parse(Session["SA_UserLv"].ToString());
+            byte status = GetStatusId(id);
+
+            string[] list;
+            var query = (from a in dbSA.TM_ActionMapping
+                         where a.status_id == status && a.lv_id == lv
+                         select a.action_list).FirstOrDefault();
+            if (query != null)
+            {
+                char[] delimiter = new char[] { ',' };
+                list = query.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
+                var action = from a in dbSA.TM_Action.ToList()
+                             where list.Contains(a.act_id.ToString())
+                             select a;
+                ViewBag.Action = action;
+            }
+            ViewBag.SAID = id;
+            ViewBag.STID = status;
+
+            //var get_plant = (from p in dbSA.TD_Main
+            //                 where p.id == id
+            //                 select p.Sys_Plant_id).FirstOrDefault();
+
+            //var get_qa = from q in dbSA.TM_SysGroup
+            //             where q.del_flag == false && q.Sys_GroupType_id == 2 && q.Sys_Plant_id != get_plant
+            //             select q;
+
+            //ViewBag.QAGroup = get_qa;
+
+            return PartialView();
+        }
+
+        [OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
         public ActionResult _FormApprove(int id)
         {
             byte utype = byte.Parse(Session["SA_UType"].ToString());
@@ -861,7 +897,7 @@ namespace MvcSA.Controllers
                     main.preventive = Request.Form["txaPreventive"] != null ? Request.Form["txaPreventive"].ToString() : "";
                     main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
                     main.issue_by = Session["SA_Auth"].ToString();
-                    main.Sys_Plant_id = byte.Parse(Request.Form["slPlant"].ToString());
+                    main.Sys_Plant_id = 0;//byte.Parse(Request.Form["slPlant"].ToString());
 
                     dbSA.TD_Main.Add(main);
                     dbSA.SaveChanges();
@@ -1479,6 +1515,39 @@ namespace MvcSA.Controllers
                     NextStep_Transaction(id, status, lv_id, org, act_id, comment);
                 }
                 
+
+                return RedirectToAction("Index", "SAProcess");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public ActionResult AddApproveS2(IEnumerable<HttpPostedFileBase> files)
+        {
+            int id = Request.Form["hdID"] != null ? int.Parse(Request.Form["hdID"].ToString()) : 0;
+            int org = int.Parse(Session["SA_Org"].ToString());
+            byte lv_id = byte.Parse(Session["SA_UserLv"].ToString());
+            byte act_id = byte.Parse(Request.Form["slAction"].ToString());
+            byte status = byte.Parse(Request.Form["hdSTID"].ToString());
+            string approver = Session["SA_Auth"].ToString();
+            var comment = Request.Form["txaComment"];
+
+            if (id != 0)
+            {
+                UploadFiles(files, id, approver);
+
+                Update_Transaction(id, lv_id, org, true, approver, act_id, comment, status);
+
+                var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
+                var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
+                var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
+                
+                AddConcernEN(id, concern_en);
+                AddConcernOther(id, concern_other);
+                AddInform(id, inform);
+                NextStep_Transaction(id, status, lv_id, org, act_id, comment);
 
                 return RedirectToAction("Index", "SAProcess");
             }
@@ -2449,13 +2518,13 @@ namespace MvcSA.Controllers
                     if (tnc_org.OrgLevel == 1)
                     {
                         Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true, 0, tnc_org.ManagerId);
-                        SendEmailCenter(tnc_org.ManagerEMail, id);
+                        SendEmailCenter(tnc_org.ManagerEMail, id);//Send email to Group Mgr.
                     }
-                    else if (tnc_org.OrgLevel == 2)
+                    else if (tnc_org.OrgLevel == 2)//Mgr. Issue
                     {
                         Insert_Transaction(id, status, (byte)(tnc_org.OrgLevel + 1), tnc_org.OrgId, true, 0, tnc_org.ManagerId);
                         var email_div = GetEmailDivByDept(tnc_org.OrgId);
-                        SendEmailCenter(tnc_org.ManagerEMail + email_div, id);
+                        SendEmailCenter(tnc_org.ManagerEMail + email_div, id);//Send email to Dept. and Div.
                     }
                     
                 }
@@ -2470,7 +2539,7 @@ namespace MvcSA.Controllers
                         SendEmailCenter(GetIssuerEmail(id), id, 5, other);
                     }
 
-                    if (lv < lv_max)
+                    if (lv < lv_max)//Current Status
                     {
                         int user_org = int.Parse(Session["SA_Org"].ToString());
 
@@ -2492,7 +2561,7 @@ namespace MvcSA.Controllers
                             }
                         }
                     }
-                    else //lv >= lv_max
+                    else //lv >= lv_max //Next Status
                     {
                         byte new_status = (byte)(status + 1);//Next Status
 
@@ -2693,6 +2762,8 @@ namespace MvcSA.Controllers
                         if (dbSA.TD_Transaction.Any(w => w.id == id && act_id == 10))//Issue SA
                         {
                             //GetQAResponse
+                            //Insert_Transaction(id, 7, 1, get_qa_group.org_id, true);
+                            //        SendEmailCenter(GetQAEngEmail(id), id);
                         }
                         else//No Issue SA
                         {
@@ -2893,7 +2964,7 @@ namespace MvcSA.Controllers
                     string body = mailto + "<br />";
                     string int_link = "http://webExternal";//web02,webExternal
                     string ext_link = "http://webExternal.nok.co.th";//web02,webExternal
-                    short flag = 0;//0=Send, 1=Not Send
+                    //short flag = 0;//0=Send, 1=Not Send
                     if (type == 0)//Default
                     {
                         subject = "You have SA Online waiting for Operate.";
