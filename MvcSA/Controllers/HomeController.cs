@@ -45,7 +45,7 @@ namespace MvcSA.Controllers
             if (ModelState.IsValid)
             {
                 var user = (from u in dbTNCAdmin.tnc_user
-                            where u.username == username && u.password == pass//Open when real
+                            where u.username == username //&& u.password == pass//Open when real
                             select u).FirstOrDefault();
 
                 if (user != null)

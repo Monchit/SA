@@ -24,7 +24,17 @@
             });
         });
 
-        $(document).on("click", "#btnApproveS1", function (event) {
+        $(document).on("click", "#btnApproveS2", function (event) {
+            var id = $(this).attr('data-id');
+            var remote = "@Url.Action("_FormApproveS2")?id=" + id;
+            $.get(remote, function (data) {
+                $("#divDialog").html(data);
+                $("#divDialog").dialog("option", "title", "Form Approve");
+                $("#divDialog").dialog("open");
+            });
+        });
+
+        @*$(document).on("click", "#btnApproveS1", function (event) {
             var id = $(this).attr('data-id');
             var remote = "@Url.Action("_FormApproveS1")?id=" + id;
             $.get(remote, function (data) {
@@ -32,7 +42,7 @@
                 $("#divDialog").dialog("option", "title", "Form Approve");
                 $("#divDialog").dialog("open");
             });
-        });
+        });*@
 
         $(document).on("click", "#btnPcr", function (event) {
             var id = $(this).attr('data-id');
@@ -90,11 +100,16 @@
     {
         <a href="@Url.Action("EditSA", "SAProcess", new { id = ViewBag.SAID })" class="btn btn-warning">Edit SA</a>
     }
-    else if (ViewBag.ShowForm == 12)//Form QA
+    else if (ViewBag.ShowForm == 10)//Form QC Add 2017-03-14
+    {
+        <button type="button" class="btn btn-info" id="btnApproveS2" name="btnApproveS2" data-id="@ViewBag.SAID">Approve</button>
+        <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
+    }
+    @*else if (ViewBag.ShowForm == 12)//Form QA
     {
         <button type="button" class="btn btn-info" id="btnApproveS1" name="btnApproveS1" data-id="@ViewBag.SAID">Approve</button>
         <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
-    }
+    }*@
     else if (ViewBag.ShowForm == 13)//Form Issue SA Cust/NOK
     {
         <button type="button" class="btn btn-info" id="btnIssueSA" name="btnIssueSA" data-id="@ViewBag.SAID">Approve</button>

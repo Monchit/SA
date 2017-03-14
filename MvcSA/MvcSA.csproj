@@ -1071,6 +1071,7 @@
     <Content Include="Views\SAProcess\NewSA2.cshtml" />
     <Content Include="Views\PowerUser\AddRoute.cshtml" />
     <Content Include="Views\SAProcess\NewSA1.cshtml" />
+    <Content Include="Views\SAProcess\_FormApproveS2.cshtml" />
     <None Include="Web.Backload.Default.config" />
     <None Include="Web.Backload.xsd">
       <SubType>Designer</SubType>

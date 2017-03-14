@@ -79,7 +79,7 @@
                             {
                                 if (Session["SA_UserLv"].ToString() == "2")
                                 {
-                                    <li @if (ViewBag.Menu == 2) { <text>class="active"</text> }>@Html.ActionLink("New", "NewSA", "SAProcess")</li>
+                                    <li @if (ViewBag.Menu == 2) { <text>class="active"</text> }>@Html.ActionLink("New", "NewSA1", "SAProcess")</li>
                                 }
                                 if (Session["SA_UType"].ToString() == "2" || Session["SA_UType"].ToString() == "1")//PowerUser or Admin
                                 {

@@ -148,21 +148,22 @@
         <td>Batch No.</td>
         <td>Job No. / Lot No.</td>
         <td>Defective Qty</td>
-        <td>Plant</td>
+        <td></td>
+        @*<td>Plant</td>*@
     </tr>
     <tr>
         <td><input type="text" id="txtMaterial" name="txtMaterial" data-validation="length" data-validation-length="1-50" /></td>
         <td><input type="text" id="txtBatchNo" name="txtBatchNo" data-validation="length" data-validation-length="1-50" /></td>
         <td><input type="text" id="txtJobNo" name="txtJobNo" data-validation="length" data-validation-length="1-50" /></td>
         <td><input type="text" id="txtDefectiveQty" name="txtDefectiveQty" data-validation="length" data-validation-length="1-50" /></td>
-        
-        <td><select id="slPlant" name="slPlant" class="span2" data-validation="required">
+        <td></td>
+        @*<td><select id="slPlant" name="slPlant" class="span2" data-validation="required">
             <option value="">-Please select-</option>
             @foreach (var item in ViewBag.SysPlant)
             {
                 <option value="@item.Sys_Plant_id">@item.Sys_Group_name</option>
             }
-            </select></td>
+            </select></td>*@
     </tr>
     <tr>
         <td colspan="2">Problem</td>
