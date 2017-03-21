@@ -2763,7 +2763,7 @@ namespace MvcSA.Controllers
                         {
                             //GetQAResponse
                             //Insert_Transaction(id, 7, 1, get_qa_group.org_id, true);
-                            //        SendEmailCenter(GetQAEngEmail(id), id);
+                            //SendEmailCenter(GetQAEngEmail(id), id);
                         }
                         else//No Issue SA
                         {

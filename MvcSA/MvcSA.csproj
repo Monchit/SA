@@ -210,6 +210,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ActiveMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BackloadDemoController.cs" />
     <Compile Include="Controllers\Check_Authen.cs" />
