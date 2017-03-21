@@ -126,6 +126,7 @@
         });
 
         $(document).on("click", ".linkControlNo", function (event) {
+            $("#divMainDetail").html("");
             var id = $(this).attr('rel');
             var remote = "@Url.Action("_ShowDetail")?id=" + id;
             $.get(remote, function (data) {

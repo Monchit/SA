@@ -383,6 +383,7 @@
     <NavigationProperty Name="TD_Transaction" Relationship="SAModel.FK_TD_Transaction_TM_Status" FromRole="TM_Status" ToRole="TD_Transaction" />
     <NavigationProperty Name="TD_Transaction_Log" Relationship="SAModel.FK_TD_Transaction_Log_TM_Status" FromRole="TM_Status" ToRole="TD_Transaction_Log" />
     <NavigationProperty Name="TM_ActionMapping" Relationship="SAModel.FK_TM_ActionMapping_TM_Status" FromRole="TM_Status" ToRole="TM_ActionMapping" />
+    <Property Type="Boolean" Name="active" Nullable="false" />
   </EntityType>
   <EntityType Name="TM_SysGroup">
     <Key>

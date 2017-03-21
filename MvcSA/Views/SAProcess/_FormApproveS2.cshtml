@@ -14,11 +14,14 @@ $(document).ready(function () {
     $.get('@Url.Action("GetSelectedQC","SAProcess")', 'id=@ViewBag.SAID', function (data) {
         $("#selectQC").select2("data", data);
     });*@
+    $.get('@Url.Action("GetSelectedOther","SAProcess")', 'id=@ViewBag.SAID', function (data) {
+        $("#selectOther").select2("data", data);
+    });
     $.get('@Url.Action("GetSelectedEN","SAProcess")', 'id=@ViewBag.SAID', function (data) {
         $("#selectEN").select2("data", data);
     });
-    $.get('@Url.Action("GetSelectedOther","SAProcess")', 'id=@ViewBag.SAID', function (data) {
-        $("#selectOther").select2("data", data);
+    $.get('@Url.Action("GetSelectedInform","SAProcess")', 'id=@ViewBag.SAID', function (data) {
+        $("#selectInform").select2("data", data);
     });
 
     //$("#slAction").change(function () {
@@ -109,13 +112,15 @@ $(document).ready(function () {
                 </select>
             </td>
         </tr>
-@*        <tr>
+        <tr>
             <td>Critical problem : </td>
-            <td><select>
-                    <option>Yes</option>
-                    <option>No</option>
-                </select></td>
-        </tr>*@
+            <td>
+                <select id="critical_problem" name="critical_problem">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </td>
+        </tr>
         <tr>
             <td>Other : </td>
             <td><input type="text" id="selectOther" name="selectOther" data-placeholder="Select Other" class="span5" /></td>

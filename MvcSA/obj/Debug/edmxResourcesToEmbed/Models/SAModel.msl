@@ -188,6 +188,7 @@
     <EntitySetMapping Name="TM_Status">
       <EntityTypeMapping TypeName="SAModel.TM_Status">
         <MappingFragment StoreEntitySet="TM_Status">
+          <ScalarProperty Name="active" ColumnName="active" />
           <ScalarProperty Name="lv_max" ColumnName="lv_max" />
           <ScalarProperty Name="lv_min" ColumnName="lv_min" />
           <ScalarProperty Name="status_name" ColumnName="status_name" />

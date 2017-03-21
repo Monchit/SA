@@ -1,35 +1,34 @@
-﻿using MvcSA.ViewModels;
+﻿using MvcSA.Models;
+using MvcSA.ViewModels;
+using Rotativa;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
-using MvcSA.Models;
-using System.Globalization;
-using System.Transactions;
-using System.IO;
 using WebCommonFunction;
-using Rotativa;
 
 namespace MvcSA.Controllers
 {
     public class SAProcessController : Controller
     {
-        SAEntities dbSA = new SAEntities();
-        PCREntities dbPCR = new PCREntities();
-        TNC_ADMINEntities dbTNC = new TNC_ADMINEntities();
+        private SAEntities dbSA = new SAEntities();
+        private PCREntities dbPCR = new PCREntities();
+        private TNC_ADMINEntities dbTNC = new TNC_ADMINEntities();
 
         [Check_Authen]
         public ActionResult Index()
         {
-            ViewBag.Menu = 1;
             ViewBag.Title = "Main";
             var status = from s in dbSA.TM_Status
                          select s;
 
             ViewBag.Status = status;
-            
+
             ViewBag.IssueGroup = from a in dbTNC.tnc_group_master
                                  orderby a.group_name
                                  select a;
@@ -39,7 +38,6 @@ namespace MvcSA.Controllers
         [Check_Authen]
         public ActionResult Index2()
         {
-            ViewBag.Menu = 1;
             ViewBag.Title = "Main";
             var status = from s in dbSA.TM_Status
                          select s;
@@ -79,15 +77,14 @@ namespace MvcSA.Controllers
             ViewBag.Id = id;
             return View();
         }
-        
+
         [Check_Authen]
         public ActionResult NewSA()
         {
             if (Session["SA_UserLv"].ToString() == "1" || Session["SA_UserLv"].ToString() == "2")
             {
                 ViewBag.Title = "Special Acceptance Requisition Form";
-                ViewBag.Menu = 2;
-                
+
                 var plant = from a in dbSA.TM_SysGroup
                             where a.Sys_GroupType_id == 2
                             select a;
@@ -111,12 +108,11 @@ namespace MvcSA.Controllers
             if (Session["SA_UserLv"].ToString() == "2")
             {
                 ViewBag.Title = "Special Acceptance Requisition Form";
-                ViewBag.Menu = 2;
 
-                //var plant = from a in dbSA.TM_SysGroup
-                //            where a.Sys_GroupType_id == 2
-                //            select a;
-                //ViewBag.SysPlant = plant;
+                var plant = from a in dbSA.TM_SysGroup
+                            where a.Sys_GroupType_id == 2
+                            select a;
+                ViewBag.SysPlant = plant;
 
                 if (Session["SA_Org"] != null)
                 {
@@ -136,7 +132,6 @@ namespace MvcSA.Controllers
             if (Session["SA_UserLv"].ToString() == "1" || Session["SA_UserLv"].ToString() == "2")
             {
                 ViewBag.Title = "Special Acceptance Requisition Form";
-                ViewBag.Menu = 2;
 
                 var plant = from a in dbSA.TM_SysGroup
                             where a.Sys_GroupType_id == 2
@@ -153,7 +148,6 @@ namespace MvcSA.Controllers
             {
                 return RedirectToAction("Index", "SAProcess");
             }
-
         }
 
         [Check_Authen]
@@ -171,7 +165,7 @@ namespace MvcSA.Controllers
             ViewBag.SysPlant = plant;
             return View(query);
         }
-        
+
         [Check_Authen_Admin]
         public ActionResult SpecialEdit(int id)
         {
@@ -187,7 +181,6 @@ namespace MvcSA.Controllers
             ViewBag.SysPlant = plant;
             return View(query);
         }
-
 
         public ActionResult SpecialReject(int id)
         {
@@ -212,7 +205,7 @@ namespace MvcSA.Controllers
 
             Insert_Transaction(id, 101, lv, org, false);
 
-            return RedirectToAction("Index","SAProcess");
+            return RedirectToAction("Index", "SAProcess");
         }
 
         [Check_Authen]
@@ -230,7 +223,6 @@ namespace MvcSA.Controllers
         public ActionResult Report()
         {
             ViewBag.Title = "Print Report";
-            ViewBag.Menu = 3;
             var sacomplete = from a in dbSA.TD_Transaction
                              select a;
             return View(sacomplete);
@@ -239,11 +231,11 @@ namespace MvcSA.Controllers
         public ActionResult ReportPDF(int id)
         {
             ViewBag.Title = "SA Report";
-            
+
             var report = (from a in dbSA.TD_Main
                           where a.id == id
                           select a).FirstOrDefault();
-            
+
             ViewBag.Comment = from c in dbSA.TD_Transaction
                               where c.id == id && (c.act_id != null && c.act_id != 0) && c.act_dt != null
                               orderby c.status_id, c.lv_id
@@ -268,7 +260,6 @@ namespace MvcSA.Controllers
         public ActionResult ExcelFilter()
         {
             ViewBag.Title = "Report Filter";
-            ViewBag.Menu = 3;
             return View();
         }
 
@@ -281,10 +272,10 @@ namespace MvcSA.Controllers
             if (user_type == 2) ViewBag.SPEdit = true;//user_type = 2 is Special Edit
 
             var main = dbSA.TD_Main.Where(w => w.id == id).FirstOrDefault();
-            
+
             byte current_status = GetStatusId(id);
-            
-            if (current_status == 7 && CheckIsQAComment(id,user))// status = 7 is Issue SA Cust/NOK
+
+            if (current_status == 7 && CheckIsQAComment(id, user))// status = 7 is Issue SA Cust/NOK
                 ViewBag.IssueSA = 1;
             else
                 ViewBag.IssueSA = 0;
@@ -330,7 +321,7 @@ namespace MvcSA.Controllers
         //    }
         //    en = en.Substring(1);
 
-        //    text = 
+        //    text =
 
         //    return text;
         //}
@@ -370,9 +361,9 @@ namespace MvcSA.Controllers
 
                 vobj.Add(vm);
             }
-            
+
             var query = (from a in dbSA.TD_Transaction
-                         where a.id == id && a.active == true && a.status_id == status_id 
+                         where a.id == id && a.active == true && a.status_id == status_id
                          && a.lv_id == user_lv && a.org_id == user_org
                          select a).FirstOrDefault();
             ViewBag.SAID = id;
@@ -412,12 +403,16 @@ namespace MvcSA.Controllers
                     ViewBag.ShowForm = 10;//Form ApproveS2
                     ViewBag.CarPar = Check_CarPar(id);
                 }
+                else if (status_id == 6)
+                {
+                    ViewBag.ShowForm = 12;
+                }
                 else
                 {
                     ViewBag.ShowForm = user_lv;
                 }
             }
-            else
+            else // Approve for
             {
                 if (user_lv == 3)//Dept.
                 {
@@ -445,9 +440,9 @@ namespace MvcSA.Controllers
                     foreach (var item in get_all_dept)
                     {
                         var check_dept = (from c in dbSA.TD_Transaction
-                                           where c.id == id && c.active == true && c.status_id == status_id
-                                           && c.org_id == item
-                                           select c).FirstOrDefault();
+                                          where c.id == id && c.active == true && c.status_id == status_id
+                                          && c.org_id == item
+                                          select c).FirstOrDefault();
                         if (check_dept != null)
                         {
                             ViewBag.ShowForm = status_id != 2 ? user_lv : 12;//Update 2014-08-25 by Monchit // 12 is Form S1
@@ -497,9 +492,9 @@ namespace MvcSA.Controllers
             List<VM_AttachFiles> vobj = new List<VM_AttachFiles>();
             VM_AttachFiles vm;
             var files = from t in dbSA.TD_File
-                             where t.id == id
-                             select t;
-            
+                        where t.id == id
+                        select t;
+
             foreach (var item in files)
             {
                 vm = new VM_AttachFiles();
@@ -515,7 +510,7 @@ namespace MvcSA.Controllers
             ViewBag.SAID = id;
             return PartialView(vobj);
         }
-        
+
         public ActionResult _ShowTellIssuer(int id)
         {
             List<VM_TellIssuer> vobj = new List<VM_TellIssuer>();
@@ -573,7 +568,7 @@ namespace MvcSA.Controllers
 
             if (Session["SA_Org"] != null)
                 ViewBag.ControlNo = InitialControlNo(Session["SA_Org"].ToString());
-            
+
             return PartialView();
         }
 
@@ -607,7 +602,7 @@ namespace MvcSA.Controllers
                          select q;
 
             ViewBag.QAGroup = get_qa;
-            
+
             return PartialView();
         }
 
@@ -649,41 +644,41 @@ namespace MvcSA.Controllers
         [OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
         public ActionResult _FormApprove(int id)
         {
-            byte utype = byte.Parse(Session["SA_UType"].ToString());
+            //byte utype = byte.Parse(Session["SA_UType"].ToString());
             byte lv = byte.Parse(Session["SA_UserLv"].ToString());
             byte status = GetStatusId(id);
-            if (status == 8 && utype == 3)
+            //if (status == 8 && utype == 3)//Final Decision
+            //{
+            //    string[] list;
+            //    var query = (from a in dbSA.TM_ActionMapping
+            //                 where a.status_id == status && a.lv_id == 3
+            //                 select a.action_list).FirstOrDefault();
+            //    if (query != null)
+            //    {
+            //        char[] delimiter = new char[] { ',' };
+            //        list = query.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
+            //        var action = from a in dbSA.TM_Action.ToList()
+            //                     where list.Contains(a.act_id.ToString())
+            //                     select a;
+            //        ViewBag.Action = action;
+            //    }
+            //}
+            //else
+            //{
+            string[] list;
+            var query = (from a in dbSA.TM_ActionMapping
+                         where a.status_id == status && a.lv_id == lv
+                         select a.action_list).FirstOrDefault();
+            if (query != null)
             {
-                string[] list;
-                var query = (from a in dbSA.TM_ActionMapping
-                             where a.status_id == status && a.lv_id == 3
-                             select a.action_list).FirstOrDefault();
-                if (query != null)
-                {
-                    char[] delimiter = new char[] { ',' };
-                    list = query.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
-                    var action = from a in dbSA.TM_Action.ToList()
-                                 where list.Contains(a.act_id.ToString())
-                                 select a;
-                    ViewBag.Action = action;
-                }
+                char[] delimiter = new char[] { ',' };
+                list = query.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
+                var action = from a in dbSA.TM_Action.ToList()
+                             where list.Contains(a.act_id.ToString())
+                             select a;
+                ViewBag.Action = action;
             }
-            else
-            {
-                string[] list;
-                var query = (from a in dbSA.TM_ActionMapping
-                             where a.status_id == status && a.lv_id == lv
-                             select a.action_list).FirstOrDefault();
-                if (query != null)
-                {
-                    char[] delimiter = new char[] { ',' };
-                    list = query.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
-                    var action = from a in dbSA.TM_Action.ToList()
-                                 where list.Contains(a.act_id.ToString())
-                                 select a;
-                    ViewBag.Action = action;
-                }
-            }
+            //}
 
             ViewBag.SAID = id;
             ViewBag.STID = status;
@@ -1287,7 +1282,7 @@ namespace MvcSA.Controllers
                         main.preventive = Request.Form["txaPreventive"] != null ? Request.Form["txaPreventive"].ToString() : "";
                         main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
                         main.Sys_Plant_id = byte.Parse(Request.Form["slPlant"].ToString());
-                        
+
                         dbSA.SaveChanges();
                     }
                     // End Add data DB to TD_Main //
@@ -1371,8 +1366,8 @@ namespace MvcSA.Controllers
         public void DelDisposition(int id)
         {
             var list = from a in dbSA.TD_Disposition
-                      where a.id == id
-                      select a.dispos_id;
+                       where a.id == id
+                       select a.dispos_id;
             foreach (var item in list)
             {
                 var del = dbSA.TD_Disposition.Find(id, item);
@@ -1514,7 +1509,6 @@ namespace MvcSA.Controllers
                     AddInform(id, inform);
                     NextStep_Transaction(id, status, lv_id, org, act_id, comment);
                 }
-                
 
                 return RedirectToAction("Index", "SAProcess");
             }
@@ -1537,13 +1531,13 @@ namespace MvcSA.Controllers
             if (id != 0)
             {
                 UploadFiles(files, id, approver);
-
+                Update_Critical(id, Request.Form["critical_problem"]);
                 Update_Transaction(id, lv_id, org, true, approver, act_id, comment, status);
 
                 var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
                 var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
                 var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
-                
+
                 AddConcernEN(id, concern_en);
                 AddConcernOther(id, concern_other);
                 AddInform(id, inform);
@@ -1555,6 +1549,11 @@ namespace MvcSA.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        private void Update_Critical(int id, string p)
+        {
+            throw new NotImplementedException();
         }
 
         private byte GetUserSysPlant(string approver)
@@ -1605,7 +1604,6 @@ namespace MvcSA.Controllers
             {
                 using (var db = new SAEntities())
                 {
-                    
                     byte status = byte.Parse(Request.Form["hdSTID"].ToString());
                     byte lv_id = byte.Parse(Session["SA_UserLv"].ToString());
                     int org = int.Parse(Session["SA_Org"].ToString());
@@ -1656,7 +1654,7 @@ namespace MvcSA.Controllers
                         db.SaveChanges();
                         //Send Email to Tell Issuer
                         string email = GetEmailByEmpcode(query.tell_user);
-                        if(email != "")
+                        if (email != "")
                             SendEmailCenter(email, query.id, 6, query.tell_content);
                     }
                 }
@@ -1700,7 +1698,7 @@ namespace MvcSA.Controllers
         {
             var uploader = Session["SA_Auth"].ToString();
             int id = Request.Form["hdID"] != null ? int.Parse(Request.Form["hdID"].ToString()) : 0;
-            
+
             if (id != 0)
             {
                 UploadFiles(files, id, uploader);
@@ -1764,8 +1762,8 @@ namespace MvcSA.Controllers
                                  select a).FirstOrDefault();
                     if (query != null)
                     {
-                        result += "<input type='checkbox' name='cbxProblem' value='" + item.prob_id + "' class='prob' checked='checked'> " + item.prob_name; 
-                        
+                        result += "<input type='checkbox' name='cbxProblem' value='" + item.prob_id + "' class='prob' checked='checked'> " + item.prob_name;
+
                         if (item.text_flag)
                         {
                             if (string.IsNullOrEmpty(query.prob_text))
@@ -1823,7 +1821,7 @@ namespace MvcSA.Controllers
                     {
                         result += "<input type='radio' name='rdoDispos' value='" + item.dispos_id + "' class='dispos'> " + item.dispos_name;
                     }
-                    
+
                     if (item.text_flag)
                     {
                         if (string.IsNullOrEmpty(query.dispos_text))
@@ -1861,8 +1859,8 @@ namespace MvcSA.Controllers
 
             var group_id = int.Parse(usergroup);
             var get_code = (from g in dbPCR.PCR_GCode
-                         where g.g_id == group_id
-                         select g).FirstOrDefault();
+                            where g.g_id == group_id
+                            select g).FirstOrDefault();
             if (get_code != null)
             {
                 return prefix + get_code.g_code + mm;
@@ -1975,14 +1973,12 @@ namespace MvcSA.Controllers
         {
             string email = "";
 
-            var positionlv = (from p in dbSA.TM_Level
-                              where p.lv_id == lv
-                              select p).FirstOrDefault();
+            var positionlv = dbSA.TM_Level.Find(lv);
 
             if (positionlv != null)
             {
                 var get_email = from a in dbTNC.V_Employee_Info
-                                where a.group_id == group_id && 
+                                where a.group_id == group_id &&
                                 (a.position_level >= positionlv.position_min && a.position_level <= positionlv.position_max)
                                 && (a.email != null && a.email != "")
                                 select a.email;
@@ -2079,7 +2075,7 @@ namespace MvcSA.Controllers
 
             return org_name;
         }
-        
+
         public string GetMainData(int id)
         {
             string main_data = "";
@@ -2088,7 +2084,7 @@ namespace MvcSA.Controllers
                 var query = (from a in db.TD_Main
                              where a.id == id
                              select a).FirstOrDefault();
-                main_data = "<table class='table table-condensed table-hover table-bordered'><tr>" 
+                main_data = "<table class='table table-condensed table-hover table-bordered'><tr>"
                     + "<td class='td_title'>Control No.:</td><td>" + query.control_no + "</td>"
                     + "<td class='td_title'>Item Code:</td><td>" + query.item_code + "</td>"
                     + "<td class='td_title'>Material:</td><td>" + query.material + "</td>"
@@ -2113,7 +2109,7 @@ namespace MvcSA.Controllers
             }
             return main_data;
         }
-        
+
         public string GetProblem(int id)
         {
             string prob = "";
@@ -2153,8 +2149,8 @@ namespace MvcSA.Controllers
         public byte[] GetSysPlant(int id)
         {
             var query = (from a in dbSA.TD_Transaction
-                        where a.id == id && a.status_id == 2 && a.lv_id == 1
-                        select a.Sys_Plant_id).ToArray();
+                         where a.id == id && a.status_id == 2 && a.lv_id == 1
+                         select a.Sys_Plant_id).ToArray();
             return query;
         }
 
@@ -2162,9 +2158,9 @@ namespace MvcSA.Controllers
         public ActionResult GetSelectedQA(int id)
         {
             var get_plant = (from a in dbSA.TD_Transaction
-                           where a.id == id && a.status_id == 2 && a.lv_id == 1
-                           select a.Sys_Plant_id).ToList();
-            var get_qa = dbSA.TM_SysGroup.Where(w => w.Sys_GroupType_id == 2 &&  get_plant.Contains(w.Sys_Plant_id))
+                             where a.id == id && a.status_id == 2 && a.lv_id == 1
+                             select a.Sys_Plant_id).ToList();
+            var get_qa = dbSA.TM_SysGroup.Where(w => w.Sys_GroupType_id == 2 && get_plant.Contains(w.Sys_Plant_id))
                 .Select(s => new { id = s.Sys_Plant_id, text = s.Sys_Group_name, locked = true });
             if (get_qa != null)
                 return Json(get_qa, JsonRequestBehavior.AllowGet);
@@ -2301,7 +2297,7 @@ namespace MvcSA.Controllers
             else
             {
                 var chgFinal = (from c in dbSA.TD_Transaction
-                                where c.id == id && c.status_id == 8 && c.lv_id == lv 
+                                where c.id == id && c.status_id == 8 && c.lv_id == lv
                                 && c.org_id == org && c.Sys_Plant_id == chk_plant
                                 select c).FirstOrDefault();
                 if (chgFinal != null)
@@ -2338,14 +2334,14 @@ namespace MvcSA.Controllers
                 else if (lv == 4)//Plant/Div.
                 {
                     var get_all_dept = from a in dbTNC.View_Organization
-                                        where a.plant_id == org && a.dept_id != 0
-                                        select a.dept_id;
+                                       where a.plant_id == org && a.dept_id != 0
+                                       select a.dept_id;
                     foreach (var item in get_all_dept)
                     {
                         var check_dept = (from c in dbSA.TD_Transaction
-                                           where c.id == id && c.active == chk_active && c.status_id == status
-                                           && c.org_id == item && c.Sys_Plant_id == chk_plant
-                                           select c).FirstOrDefault();
+                                          where c.id == id && c.active == chk_active && c.status_id == status
+                                          && c.org_id == item && c.Sys_Plant_id == chk_plant
+                                          select c).FirstOrDefault();
                         if (check_dept != null)
                         {
                             check_dept.act_id = action;
@@ -2380,7 +2376,7 @@ namespace MvcSA.Controllers
                     }
                 }
                 var query = (from a in db.TD_Transaction
-                             where a.id == id && a.status_id == status && a.lv_id == lv 
+                             where a.id == id && a.status_id == status && a.lv_id == lv
                              && a.org_id == org_id && a.Sys_Plant_id == plant
                              select a).FirstOrDefault();
                 var tran = new TD_Transaction();
@@ -2412,7 +2408,7 @@ namespace MvcSA.Controllers
                     }
                     db.TD_Transaction.Add(tran);
                 }
-                
+
                 db.SaveChanges();
             }
         }
@@ -2526,14 +2522,13 @@ namespace MvcSA.Controllers
                         var email_div = GetEmailDivByDept(tnc_org.OrgId);
                         SendEmailCenter(tnc_org.ManagerEMail + email_div, id);//Send email to Dept. and Div.
                     }
-                    
                 }
                 else if (act_id < 6)//Go to next step
                 {
                     var lv_max = (from n in dbSA.TM_Status
                                   where n.status_id == status
                                   select n.lv_max).FirstOrDefault();
-                    
+
                     if (act_id == 4)// 4 = Not Accept
                     {
                         SendEmailCenter(GetIssuerEmail(id), id, 5, other);
@@ -2614,8 +2609,8 @@ namespace MvcSA.Controllers
                             if (Check_All_Approve(id, status))
                             {
                                 //Update Date 2016-09-29 by Monchit W.
-                                if (AddOtherTransaction(id, new_status, get_min_lv)){}//Add Other Transaction
-                                else if (AddENTransaction(id, (byte)(new_status + 1), 1)){}//Add Engineer Transaction
+                                if (AddOtherTransaction(id, new_status, get_min_lv)) { }//Add Other Transaction
+                                else if (AddENTransaction(id, (byte)(new_status + 1), 1)) { }//Add Engineer Transaction
                                 else
                                 {
                                     var get_group_qc = (from a in dbSA.TD_Transaction
@@ -2658,8 +2653,9 @@ namespace MvcSA.Controllers
                             if (Check_All_Approve(id, status))
                             {
                                 //Update Date 2016-09-29 by Monchit W.
-                                if (AddENTransaction(id, new_status, get_min_lv)){}
-                                else{
+                                if (AddENTransaction(id, new_status, get_min_lv)) { }
+                                else
+                                {
                                     var get_group_qc = (from a in dbSA.TD_Transaction
                                                         where a.id == id && a.status_id == 3 && a.lv_id < 3
                                                         select a.org_id).ToList();
@@ -2744,7 +2740,7 @@ namespace MvcSA.Controllers
                     {
                         Insert_Transaction(id, 102, lv, org_id, false);//Canceled
                     }
-                    else if(status == 8)//Final Dicision
+                    else if (status == 8)//Final Dicision
                     {
                         Insert_Transaction(id, 101, lv, org_id, false);//Rejected
                     }
@@ -2792,7 +2788,6 @@ namespace MvcSA.Controllers
                 //        SendEmailCenter(GetQAEngEmail(id), id);
                 //        //foreach (var item in get_qa_group)
                 //        //{
-
                 //        //}
                 //    }
                 //}
@@ -2908,12 +2903,17 @@ namespace MvcSA.Controllers
             }
             return email;
         }
-        
-        private bool Check_All_Approve(int id, byte status, byte lv=0, int org_id=0)
+
+        //private string GetMgrByGroup(int group)
+        //{
+        //    return "";
+        //}
+
+        private bool Check_All_Approve(int id, byte status, byte lv = 0, int org_id = 0)
         {
             var query = from a in dbSA.TD_Transaction
-                        where a.id == id && a.status_id == status && 
-                        (a.act_id == null || a.act_id == 1 || (a.act_id > 7 && a.act_id < 10)) 
+                        where a.id == id && a.status_id == status &&
+                        (a.act_id == null || a.act_id == 1 || (a.act_id > 7 && a.act_id < 10))
                         select a;
             if (lv != 0)
             {
@@ -2925,14 +2925,14 @@ namespace MvcSA.Controllers
             }
             return query.Any() ? false : true;
         }
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="receiver"></param>
         /// <param name="id"></param>
         /// <param name="type">0:Default, 1:Revise, 2:Tell Issuer, 3:Complete, 4:Close</param>
-        public void SendEmailCenter(string receiver, int id, int type=0, string content="")
+        public void SendEmailCenter(string receiver, int id, int type = 0, string content = "")
         {
             if (!string.IsNullOrEmpty(receiver))
             {
@@ -2952,7 +2952,7 @@ namespace MvcSA.Controllers
                 {
                     mailto = receiver;
                 }
-                
+
                 var get_sa = (from a in dbSA.TD_Main
                               where a.id == id
                               select a).FirstOrDefault();
@@ -2968,7 +2968,7 @@ namespace MvcSA.Controllers
                     if (type == 0)//Default
                     {
                         subject = "You have SA Online waiting for Operate.";
-                        body += "Dear. All Concern,<br /><br />" + 
+                        body += "Dear. All Concern,<br /><br />" +
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2980,7 +2980,7 @@ namespace MvcSA.Controllers
                     else if (type == 1)//Revise
                     {
                         subject = "You have SA Online waiting for Revise.";
-                        body += "Dear. Issuer,<br /><br />" + 
+                        body += "Dear. Issuer,<br /><br />" +
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -2994,14 +2994,14 @@ namespace MvcSA.Controllers
                     else if (type == 2)//Tell Issuer
                     {
                         subject = "You have SA Online waiting for support";
-                        body += "Dear. Issuer,<br /><br />" + 
+                        body += "Dear. Issuer,<br /><br />" +
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
                             "<b>Customer : </b>" + get_sa.customer + "<br />" +
                             "<b>Tell Issuer : </b>" + content +
                             " (<b>From : </b>" + Session["SA_Name"].ToString() + ")<br />" +
-                            "<b>*Must click reply after support complete*</b><br />"+
+                            "<b>*Must click reply after support complete*</b><br />" +
                             "<b>Link : </b><a href='" + int_link + Url.Action("Detail", "SAProcess", new { id = get_sa.id }) + "'>Internal</a>, <a href='" + ext_link + Url.Action("Detail", "SAProcess", new { id = get_sa.id }) + "'>External</a><br />" +
                             "<br /><b>*This message is automatic sending from SA Online, please do not reply*</b><br />" +
                             "<br />Best Regard,<br />From SA Online";
@@ -3009,7 +3009,7 @@ namespace MvcSA.Controllers
                     else if (type == 3)//Complete
                     {
                         subject = "SA Accepted (SA No. : " + get_sa.control_no + ")";
-                        body += "Dear All,<br /><br />" + 
+                        body += "Dear All,<br /><br />" +
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -3023,7 +3023,7 @@ namespace MvcSA.Controllers
                     else if (type == 4)//Close, Reject
                     {
                         subject = "SA Rejected (SA No. : " + get_sa.control_no + ")";
-                        body += "Dear All,<br /><br />" + 
+                        body += "Dear All,<br /><br />" +
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -3036,12 +3036,12 @@ namespace MvcSA.Controllers
                     else if (type == 5)//Not Accept
                     {
                         subject = "SA Not Accept";
-                        body += "Dear Issuer,<br /><br />" + 
+                        body += "Dear Issuer,<br /><br />" +
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
                             "<b>Customer : </b>" + get_sa.customer + "<br />" +
-                            "<b>Not Accepted because : </b>" + content + 
+                            "<b>Not Accepted because : </b>" + content +
                             " (<b>From : </b>" + Session["SA_Name"].ToString() + ")<br />" +
                             "<b>Link : </b><a href='" + int_link + Url.Action("Detail", "SAProcess", new { id = get_sa.id }) + "'>Internal</a>, <a href='" + ext_link + Url.Action("Detail", "SAProcess", new { id = get_sa.id }) + "'>External</a><br />" +
                             "<br /><b>*This message is automatic sending from SA Online, please do not reply*</b><br />" +
@@ -3050,7 +3050,7 @@ namespace MvcSA.Controllers
                     else if (type == 6)//Reply Tell Issuer
                     {
                         subject = "Support completed, You have SA Online for Operate again.";
-                        body += "Dear All,<br /><br />" + 
+                        body += "Dear All,<br /><br />" +
                             "<b>Control No. : </b>" + get_sa.control_no + "<br />" +
                             "<b>Type of Nonconformities. : </b>" + get_sa.title + "<br />" +
                             "<b>Item code : </b>" + get_sa.item_code + "<br />" +
@@ -3137,7 +3137,7 @@ namespace MvcSA.Controllers
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
         }
-        
+
         [HttpPost]
         public ActionResult GridSAClosed(string control_no, string title, string issuer, string group, string status, string item, int user = 0, int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
         {
@@ -3301,25 +3301,38 @@ namespace MvcSA.Controllers
         {
             var id = int.Parse(Request.Form["hdIDC"]);
             var org = int.Parse(Request.Form["hdOrg"]);//Add by Monchit 2015/07/27
-            //TNCOrganization tnc_org = new TNCOrganization();
-            //tnc_org.GetApprover(Session["SA_Auth"].ToString(),3);
 
-            Update_Transaction(id, 1, org, true, Session["SA_Auth"].ToString(), 2, "", set_active:false);
-            //Insert_Transaction(id, 8, 3, tnc_org.OrgId, true);//11 is Quality Control Div.
-            Insert_Transaction(id, 8, 3, 49, true);//49 = QS Department
-            //SendEmailCenter(tnc_org.ManagerEMail,id);
-            //SendEmailCenter("duangnapa@nok.co.th", id);
-            var get_email = from a in dbTNC.tnc_user
-                            where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
-                            (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
-                            select a.email;
-            foreach (var item in get_email)
+            Update_Transaction(id, 1, org, true, Session["SA_Auth"].ToString(), 2, "", set_active: false);
+
+            var query = from a in dbSA.TD_Transaction
+                        where a.id == id && a.status_id == 6
+                        select a;
+
+            foreach (var item in query)
             {
-                SendEmailCenter(item, id);
+                Insert_Transaction(id, 8, item.lv_id, item.org_id, true);
+                SendEmailCenter(GetEmailByEmpcode(item.actor), id);
             }
-            //AddDeptDivTransaction(id, 7, 1, 1);
-            
-            return RedirectToAction("Index","SAProcess");
+
+            ////TNCOrganization tnc_org = new TNCOrganization();
+            ////tnc_org.GetApprover(Session["SA_Auth"].ToString(),3);
+
+            //Update_Transaction(id, 1, org, true, Session["SA_Auth"].ToString(), 2, "", set_active: false);
+            ////Insert_Transaction(id, 8, 3, tnc_org.OrgId, true);//11 is Quality Control Div.
+            //Insert_Transaction(id, 8, 3, 49, true);//49 = QS Department
+            ////SendEmailCenter(tnc_org.ManagerEMail,id);
+            ////SendEmailCenter("duangnapa@nok.co.th", id);
+            //var get_email = from a in dbTNC.tnc_user
+            //                where (a.emp_position == 6 && a.emp_depart == 49) ||//QS Department
+            //                (a.emp_position == 4 && a.emp_plant == 11)//QC Div.
+            //                select a.email;
+            //foreach (var item in get_email)
+            //{
+            //    SendEmailCenter(item, id);
+            //}
+            ////AddDeptDivTransaction(id, 7, 1, 1);
+
+            return RedirectToAction("Index", "SAProcess");
         }
 
         [OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
@@ -3409,7 +3422,7 @@ namespace MvcSA.Controllers
         public ActionResult RenderStatus(int id)
         {
             string status_menu = "";
-            var all_status = dbSA.TM_Status.Where(w => w.lv_min != 0).OrderBy(o => o.status_id);
+            var all_status = dbSA.TM_Status.Where(w => w.lv_min != 0 && w.active == true).OrderBy(o => o.status_id);
             int current_status = GetStatusId(id);
             foreach (var item in all_status)
             {
@@ -3445,9 +3458,9 @@ namespace MvcSA.Controllers
         public ActionResult SelectQC(string searchTerm)
         {
             var qc = dbTNC.View_Organization
-                .Where(w => (w.dept_id == 3 || w.dept_id == 14 || w.dept_id == 50) && w.active == true && w.IsRealCostCode == 1 && w.group_id != 0 
+                .Where(w => (w.dept_id == 3 || w.dept_id == 14 || w.dept_id == 50) && w.active == true && w.IsRealCostCode == 1 && w.group_id != 0
                     && (w.group_name.Contains(searchTerm)))
-                .GroupBy(g => new {g.group_id, g.group_name})
+                .GroupBy(g => new { g.group_id, g.group_name })
                 .OrderBy(g => g.Key.group_name)
                 .Select(g => new { id = g.Key.group_id, text = g.Key.group_name })
                 .Take(20).ToList();
@@ -3628,7 +3641,7 @@ namespace MvcSA.Controllers
                 foreach (var item in get_qc)
                 {
                     Insert_Transaction(id, new_status, min_lv, item.group_id, true);
-                    SendEmailCenter(GetTNCEmailbyGroup(item.group_id, 1), id);
+                    SendEmailCenter(GetTNCEmailbyGroup(item.group_id, 2), id);
                 }
                 return true;
             }
@@ -3662,8 +3675,8 @@ namespace MvcSA.Controllers
         private bool AddOtherTransaction(int id, byte new_status, byte min_lv)
         {
             var get_oth = from a in dbSA.TD_ConcernOther
-                         where a.id == id
-                         select a;
+                          where a.id == id
+                          select a;
 
             if (get_oth.Any())
             {
@@ -3731,8 +3744,8 @@ namespace MvcSA.Controllers
                              Status = getStatusExcel(a.id),
                              Reason = getFinalReason(a.id)
                          }).ToList();
-                         
-            util.CreateExcel(query,"Ledger_" + DateTime.Now.ToString("dd-MM-yyyy"));
+
+            util.CreateExcel(query, "Ledger_" + DateTime.Now.ToString("dd-MM-yyyy"));
         }
 
         private string getFinalReason(int p)
@@ -3784,10 +3797,11 @@ namespace MvcSA.Controllers
         {
             var plant_name = "";
             var get_plant = (from a in dbTNC.V_Employee_Info
-                            where a.emp_code == p
-                            select a.plant_name).FirstOrDefault();
+                             where a.emp_code == p
+                             select a.plant_name).FirstOrDefault();
 
-            if(get_plant.Any()){
+            if (get_plant.Any())
+            {
                 plant_name = get_plant;
             }
 

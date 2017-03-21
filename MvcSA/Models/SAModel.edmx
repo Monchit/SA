@@ -414,6 +414,7 @@
           <Property Name="status_name" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="lv_min" Type="tinyint" Nullable="false" />
           <Property Name="lv_max" Type="tinyint" Nullable="false" />
+          <Property Name="active" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TM_SysGroup">
           <Key>
@@ -1335,6 +1336,7 @@
           <NavigationProperty Name="TD_Transaction" Relationship="SAModel.FK_TD_Transaction_TM_Status" FromRole="TM_Status" ToRole="TD_Transaction" />
           <NavigationProperty Name="TD_Transaction_Log" Relationship="SAModel.FK_TD_Transaction_Log_TM_Status" FromRole="TM_Status" ToRole="TD_Transaction_Log" />
           <NavigationProperty Name="TM_ActionMapping" Relationship="SAModel.FK_TM_ActionMapping_TM_Status" FromRole="TM_Status" ToRole="TM_ActionMapping" />
+          <Property Type="Boolean" Name="active" Nullable="false" />
         </EntityType>
         <EntityType Name="TM_SysGroup">
           <Key>
@@ -2092,6 +2094,7 @@
           <EntitySetMapping Name="TM_Status">
             <EntityTypeMapping TypeName="SAModel.TM_Status">
               <MappingFragment StoreEntitySet="TM_Status">
+                <ScalarProperty Name="active" ColumnName="active" />
                 <ScalarProperty Name="lv_max" ColumnName="lv_max" />
                 <ScalarProperty Name="lv_min" ColumnName="lv_min" />
                 <ScalarProperty Name="status_name" ColumnName="status_name" />

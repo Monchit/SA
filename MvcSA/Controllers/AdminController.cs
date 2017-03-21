@@ -31,7 +31,6 @@ namespace MvcSA.Controllers
         [Check_Authen_Admin]
         public ActionResult Master_User()
         {
-            ViewBag.Menu = 5;
             ViewBag.Title = "Master User";
             return View();
         }
@@ -40,7 +39,6 @@ namespace MvcSA.Controllers
         [Check_Authen_Admin]
         public ActionResult Master_Group()
         {
-            ViewBag.Menu = 5;
             ViewBag.Title = "Master Group";
             return View();
         }
@@ -49,7 +47,6 @@ namespace MvcSA.Controllers
         [Check_Authen_Admin]
         public ActionResult Master_GroupType()
         {
-            ViewBag.Menu = 5;
             ViewBag.Title = "Master Group Type";
             return View();
         }
@@ -58,7 +55,6 @@ namespace MvcSA.Controllers
         [Check_Authen_Admin]
         public ActionResult Master_Plant()
         {
-            ViewBag.Menu = 5;
             ViewBag.Title = "Master Plant";
             return View();
         }
