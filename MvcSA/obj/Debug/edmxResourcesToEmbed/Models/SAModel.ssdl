@@ -272,6 +272,7 @@
     <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
     <Property Name="effective_dt" Type="date" Nullable="false" />
     <Property Name="preventive" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="critical_problem" Type="bit" />
   </EntityType>
   <EntityType Name="TD_Problem">
     <Key>

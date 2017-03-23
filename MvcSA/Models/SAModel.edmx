@@ -277,6 +277,7 @@
           <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
           <Property Name="effective_dt" Type="date" Nullable="false" />
           <Property Name="preventive" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="critical_problem" Type="bit" />
         </EntityType>
         <EntityType Name="TD_Problem">
           <Key>
@@ -1195,6 +1196,7 @@
           <NavigationProperty Name="TD_Transaction" Relationship="SAModel.FK_TD_Transaction_TD_Main" FromRole="TD_Main" ToRole="TD_Transaction" />
           <NavigationProperty Name="TD_SA" Relationship="SAModel.FK_TD_SA_TD_Main" FromRole="TD_Main" ToRole="TD_SA" />
           <NavigationProperty Name="TD_Inform" Relationship="SAModel.FK_TD_Inform_TD_Main" FromRole="TD_Main" ToRole="TD_Inform" />
+          <Property Type="Boolean" Name="critical_problem" />
         </EntityType>
         <EntityType Name="TD_Problem">
           <Key>
@@ -1966,6 +1968,7 @@
           <EntitySetMapping Name="TD_Main">
             <EntityTypeMapping TypeName="SAModel.TD_Main">
               <MappingFragment StoreEntitySet="TD_Main">
+                <ScalarProperty Name="critical_problem" ColumnName="critical_problem" />
                 <ScalarProperty Name="preventive" ColumnName="preventive" />
                 <ScalarProperty Name="effective_dt" ColumnName="effective_dt" />
                 <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />

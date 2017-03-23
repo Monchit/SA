@@ -45,6 +45,7 @@ namespace MvcSA.Models
         public byte Sys_Plant_id { get; set; }
         public System.DateTime effective_dt { get; set; }
         public string preventive { get; set; }
+        public Nullable<bool> critical_problem { get; set; }
     
         public virtual TD_CarPar TD_CarPar { get; set; }
         public virtual ICollection<TD_ConcernEN> TD_ConcernEN { get; set; }
