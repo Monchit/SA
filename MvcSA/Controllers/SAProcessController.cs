@@ -403,10 +403,10 @@ namespace MvcSA.Controllers
                     ViewBag.ShowForm = 10;//Form ApproveS2
                     ViewBag.CarPar = Check_CarPar(id);
                 }
-                else if (status_id == 6)
-                {
-                    ViewBag.ShowForm = 12;
-                }
+                //else if (status_id == 6)
+                //{
+                //    ViewBag.ShowForm = 12;
+                //}
                 else
                 {
                     ViewBag.ShowForm = user_lv;
@@ -719,139 +719,139 @@ namespace MvcSA.Controllers
             return PartialView(get_group);
         }
 
-        [Check_Authen]
-        [HttpPost]
-        public ActionResult AddSA(IEnumerable<HttpPostedFileBase> files)
-        {
-            // define our transaction scope
-            var scope = new TransactionScope(
-                // a new transaction will always be created
-                TransactionScopeOption.RequiresNew,
-                // we will allow volatile data to be read during transaction
-                new TransactionOptions()
-                {
-                    IsolationLevel = IsolationLevel.ReadUncommitted,
-                    Timeout = TransactionManager.MaximumTimeout
-                }
-            );
-            DateTime dt = DateTime.Now;
-            int main_id;
-            var controlno = Request.Form["hdControlNo"] != null ? Request.Form["hdControlNo"].ToString() : string.Empty;
+        //[Check_Authen]
+        //[HttpPost]
+        //public ActionResult AddSA(IEnumerable<HttpPostedFileBase> files)
+        //{
+        //    // define our transaction scope
+        //    var scope = new TransactionScope(
+        //        // a new transaction will always be created
+        //        TransactionScopeOption.RequiresNew,
+        //        // we will allow volatile data to be read during transaction
+        //        new TransactionOptions()
+        //        {
+        //            IsolationLevel = IsolationLevel.ReadUncommitted,
+        //            Timeout = TransactionManager.MaximumTimeout
+        //        }
+        //    );
+        //    DateTime dt = DateTime.Now;
+        //    int main_id;
+        //    var controlno = Request.Form["hdControlNo"] != null ? Request.Form["hdControlNo"].ToString() : string.Empty;
 
-            try
-            {
-                using (scope)
-                {
-                    // Add data to DB TD_Main //
-                    TD_Main main = new TD_Main();
-                    main.control_no = controlno + GetRunNo(controlno).ToString("000");
-                    main.title = Request.Form["txtNonconformities"] != null ? Request.Form["txtNonconformities"].ToString() : null;
-                    main.item_code = Request.Form["txtItemcode"] != null ? Request.Form["txtItemcode"].ToString() : null;
-                    main.customer = Request.Form["txtCustomer"] != null ? Request.Form["txtCustomer"].ToString() : null;
-                    main.issue_dt = dt;
-                    main.material = Request.Form["txtMaterial"] != null ? Request.Form["txtMaterial"].ToString() : null;
-                    main.batch_no = Request.Form["txtBatchNo"] != null ? Request.Form["txtBatchNo"].ToString() : null;
-                    main.job_no = Request.Form["txtJobNo"] != null ? Request.Form["txtJobNo"].ToString() : null;
-                    main.defective_qty = Request.Form["txtDefectiveQty"] != null ? Request.Form["txtDefectiveQty"].ToString() : "0";
-                    main.expect_date = Request.Form["dtpExpectDate"] != null ? ParseToDate(Request.Form["dtpExpectDate"].ToString()) : dt;
-                    main.reason = Request.Form["txaReason"] != null ? Request.Form["txaReason"].ToString() : "";
-                    main.preventive = Request.Form["txaPreventive"] != null ? Request.Form["txaPreventive"].ToString() : "";
-                    main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
-                    main.issue_by = Session["SA_Auth"].ToString();
-                    main.Sys_Plant_id = byte.Parse(Request.Form["slPlant"].ToString());
+        //    try
+        //    {
+        //        using (scope)
+        //        {
+        //            // Add data to DB TD_Main //
+        //            TD_Main main = new TD_Main();
+        //            main.control_no = controlno + GetRunNo(controlno).ToString("000");
+        //            main.title = Request.Form["txtNonconformities"] != null ? Request.Form["txtNonconformities"].ToString() : null;
+        //            main.item_code = Request.Form["txtItemcode"] != null ? Request.Form["txtItemcode"].ToString() : null;
+        //            main.customer = Request.Form["txtCustomer"] != null ? Request.Form["txtCustomer"].ToString() : null;
+        //            main.issue_dt = dt;
+        //            main.material = Request.Form["txtMaterial"] != null ? Request.Form["txtMaterial"].ToString() : null;
+        //            main.batch_no = Request.Form["txtBatchNo"] != null ? Request.Form["txtBatchNo"].ToString() : null;
+        //            main.job_no = Request.Form["txtJobNo"] != null ? Request.Form["txtJobNo"].ToString() : null;
+        //            main.defective_qty = Request.Form["txtDefectiveQty"] != null ? Request.Form["txtDefectiveQty"].ToString() : "0";
+        //            main.expect_date = Request.Form["dtpExpectDate"] != null ? ParseToDate(Request.Form["dtpExpectDate"].ToString()) : dt;
+        //            main.reason = Request.Form["txaReason"] != null ? Request.Form["txaReason"].ToString() : "";
+        //            main.preventive = Request.Form["txaPreventive"] != null ? Request.Form["txaPreventive"].ToString() : "";
+        //            main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
+        //            main.issue_by = Session["SA_Auth"].ToString();
+        //            main.Sys_Plant_id = byte.Parse(Request.Form["slPlant"].ToString());
 
-                    dbSA.TD_Main.Add(main);
-                    dbSA.SaveChanges();
-                    // End Add data DB to TD_Main //
-                    main_id = main.id;
-                    // Add data to DB TD_Problem //
-                    if (Request.Form["cbxProblem"] != null)
-                    {
-                        var problem = Request.Form["cbxProblem"].ToString();
-                        var listProb = problem.Split(',');
-                        foreach (var item in listProb)
-                        {
-                            var problem_id = byte.Parse(item);
-                            var query = (from a in dbSA.TM_Problem
-                                         where a.prob_id == problem_id
-                                         select a).First();
-                            TD_Problem prob = new TD_Problem();
-                            prob.id = main_id;
-                            prob.prob_id = problem_id;
-                            if (query.text_flag)
-                            {
-                                prob.prob_text = Request.Form["txtProb" + item].ToString();
-                            }
-                            dbSA.TD_Problem.Add(prob);
-                        }
-                    }
-                    // End Add data DB to TD_Problem //
+        //            dbSA.TD_Main.Add(main);
+        //            dbSA.SaveChanges();
+        //            // End Add data DB to TD_Main //
+        //            main_id = main.id;
+        //            // Add data to DB TD_Problem //
+        //            if (Request.Form["cbxProblem"] != null)
+        //            {
+        //                var problem = Request.Form["cbxProblem"].ToString();
+        //                var listProb = problem.Split(',');
+        //                foreach (var item in listProb)
+        //                {
+        //                    var problem_id = byte.Parse(item);
+        //                    var query = (from a in dbSA.TM_Problem
+        //                                 where a.prob_id == problem_id
+        //                                 select a).First();
+        //                    TD_Problem prob = new TD_Problem();
+        //                    prob.id = main_id;
+        //                    prob.prob_id = problem_id;
+        //                    if (query.text_flag)
+        //                    {
+        //                        prob.prob_text = Request.Form["txtProb" + item].ToString();
+        //                    }
+        //                    dbSA.TD_Problem.Add(prob);
+        //                }
+        //            }
+        //            // End Add data DB to TD_Problem //
 
-                    // Add data to DB TD_Disposition //
-                    if (Request.Form["rdoDispos"] != null)
-                    {
-                        var dispos_id = byte.Parse(Request.Form["rdoDispos"].ToString());
-                        TD_Disposition disp = new TD_Disposition();
-                        disp.id = main_id;
-                        disp.dispos_id = dispos_id;
-                        var query = (from a in dbSA.TM_Disposition
-                                     where a.dispos_id == dispos_id
-                                     select a).First();
-                        if (query.text_flag)
-                        {
-                            disp.dispos_text = Request.Form["txtDisp" + dispos_id].ToString();
-                        }
-                        dbSA.TD_Disposition.Add(disp);
-                    }
-                    // End Add data to DB TD_Disposition //
+        //            // Add data to DB TD_Disposition //
+        //            if (Request.Form["rdoDispos"] != null)
+        //            {
+        //                var dispos_id = byte.Parse(Request.Form["rdoDispos"].ToString());
+        //                TD_Disposition disp = new TD_Disposition();
+        //                disp.id = main_id;
+        //                disp.dispos_id = dispos_id;
+        //                var query = (from a in dbSA.TM_Disposition
+        //                             where a.dispos_id == dispos_id
+        //                             select a).First();
+        //                if (query.text_flag)
+        //                {
+        //                    disp.dispos_text = Request.Form["txtDisp" + dispos_id].ToString();
+        //                }
+        //                dbSA.TD_Disposition.Add(disp);
+        //            }
+        //            // End Add data to DB TD_Disposition //
 
-                    // Add data to DB TD_File //
-                    string subPath = "~/UploadFiles/" + dt.Year + "/" + dt.Month + "/" + main_id + "/";
-                    if (!Directory.Exists(Server.MapPath(subPath)))
-                    {
-                        Directory.CreateDirectory(Server.MapPath(subPath));
-                    }
-                    foreach (var file in files)
-                    {
-                        if (file != null && file.ContentLength > 0)
-                        {
-                            if (file.ContentType == "application/pdf")//Check accept file type.
-                            {
-                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
-                                var path = Path.Combine(Server.MapPath(subPath), fileName);
-                                file.SaveAs(path);
-                                SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
-                            }
-                        }
-                    }
+        //            // Add data to DB TD_File //
+        //            string subPath = "~/UploadFiles/" + dt.Year + "/" + dt.Month + "/" + main_id + "/";
+        //            if (!Directory.Exists(Server.MapPath(subPath)))
+        //            {
+        //                Directory.CreateDirectory(Server.MapPath(subPath));
+        //            }
+        //            foreach (var file in files)
+        //            {
+        //                if (file != null && file.ContentLength > 0)
+        //                {
+        //                    if (file.ContentType == "application/pdf")//Check accept file type.
+        //                    {
+        //                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+        //                        var path = Path.Combine(Server.MapPath(subPath), fileName);
+        //                        file.SaveAs(path);
+        //                        SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
+        //                    }
+        //                }
+        //            }
 
-                    // End Add data to DB TD_File //
-                    dbSA.SaveChanges();
+        //            // End Add data to DB TD_File //
+        //            dbSA.SaveChanges();
 
-                    //var concern_qc = Request.Form["selectQC"] != null ? Request.Form["selectQC"].ToString() : null;
-                    //var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
-                    //var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
-                    //var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
-                    //AddConcernQC(main_id, concern_qc);
-                    //AddConcernEN(main_id, concern_en);
-                    //AddConcernOther(main_id, concern_other);
-                    //AddInform(main_id, inform);
+        //            //var concern_qc = Request.Form["selectQC"] != null ? Request.Form["selectQC"].ToString() : null;
+        //            //var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
+        //            //var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
+        //            //var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
+        //            //AddConcernQC(main_id, concern_qc);
+        //            //AddConcernEN(main_id, concern_en);
+        //            //AddConcernOther(main_id, concern_other);
+        //            //AddInform(main_id, inform);
 
-                    scope.Complete();
-                }
+        //            scope.Complete();
+        //        }
 
-                // Add data to DB TD_Transaction //
-                int org_id = int.Parse(Session["SA_Org"].ToString());
-                byte lv = byte.Parse(Session["SA_UserLv"].ToString());
+        //        // Add data to DB TD_Transaction //
+        //        int org_id = int.Parse(Session["SA_Org"].ToString());
+        //        byte lv = byte.Parse(Session["SA_UserLv"].ToString());
 
-                NextStep_Transaction(main_id, 1, lv, org_id, 0);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return RedirectToAction("Index", "SAProcess");
-        }
+        //        NextStep_Transaction(main_id, 1, lv, org_id, 0);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //    return RedirectToAction("Index", "SAProcess");
+        //}
 
         [Check_Authen]
         [HttpPost]
@@ -893,6 +893,7 @@ namespace MvcSA.Controllers
                     main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
                     main.issue_by = Session["SA_Auth"].ToString();
                     main.Sys_Plant_id = 0;//byte.Parse(Request.Form["slPlant"].ToString());
+                    main.critical_problem = false;
 
                     dbSA.TD_Main.Add(main);
                     dbSA.SaveChanges();
@@ -981,139 +982,139 @@ namespace MvcSA.Controllers
             return RedirectToAction("Index", "SAProcess");
         }
 
-        [Check_Authen]
-        [HttpPost]
-        public ActionResult AddSA2(IEnumerable<HttpPostedFileBase> files)
-        {
-            // define our transaction scope
-            var scope = new TransactionScope(
-                // a new transaction will always be created
-                TransactionScopeOption.RequiresNew,
-                // we will allow volatile data to be read during transaction
-                new TransactionOptions()
-                {
-                    IsolationLevel = IsolationLevel.ReadUncommitted,
-                    Timeout = TransactionManager.MaximumTimeout
-                }
-            );
-            DateTime dt = DateTime.Now;
-            int main_id;
-            var controlno = Request.Form["hdControlNo"] != null ? Request.Form["hdControlNo"].ToString() : string.Empty;
+        //[Check_Authen]
+        //[HttpPost]
+        //public ActionResult AddSA2(IEnumerable<HttpPostedFileBase> files)
+        //{
+        //    // define our transaction scope
+        //    var scope = new TransactionScope(
+        //        // a new transaction will always be created
+        //        TransactionScopeOption.RequiresNew,
+        //        // we will allow volatile data to be read during transaction
+        //        new TransactionOptions()
+        //        {
+        //            IsolationLevel = IsolationLevel.ReadUncommitted,
+        //            Timeout = TransactionManager.MaximumTimeout
+        //        }
+        //    );
+        //    DateTime dt = DateTime.Now;
+        //    int main_id;
+        //    var controlno = Request.Form["hdControlNo"] != null ? Request.Form["hdControlNo"].ToString() : string.Empty;
 
-            try
-            {
-                using (scope)
-                {
-                    // Add data to DB TD_Main //
-                    TD_Main main = new TD_Main();
-                    main.control_no = controlno + GetRunNo(controlno).ToString("000");
-                    main.title = Request.Form["txtNonconformities"] != null ? Request.Form["txtNonconformities"].ToString() : null;
-                    main.item_code = Request.Form["txtItemcode"] != null ? Request.Form["txtItemcode"].ToString() : null;
-                    main.customer = Request.Form["txtCustomer"] != null ? Request.Form["txtCustomer"].ToString() : null;
-                    main.issue_dt = dt;
-                    main.material = Request.Form["txtMaterial"] != null ? Request.Form["txtMaterial"].ToString() : null;
-                    main.batch_no = Request.Form["txtBatchNo"] != null ? Request.Form["txtBatchNo"].ToString() : null;
-                    main.job_no = Request.Form["txtJobNo"] != null ? Request.Form["txtJobNo"].ToString() : null;
-                    main.defective_qty = Request.Form["txtDefectiveQty"] != null ? Request.Form["txtDefectiveQty"].ToString() : "0";
-                    main.expect_date = Request.Form["dtpExpectDate"] != null ? ParseToDate(Request.Form["dtpExpectDate"].ToString()) : dt;
-                    main.reason = Request.Form["txaReason"] != null ? Request.Form["txaReason"].ToString() : "";
-                    main.preventive = Request.Form["txaPreventive"] != null ? Request.Form["txaPreventive"].ToString() : "";
-                    main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
-                    main.issue_by = Session["SA_Auth"].ToString();
-                    main.Sys_Plant_id = byte.Parse(Request.Form["slPlant"].ToString());
+        //    try
+        //    {
+        //        using (scope)
+        //        {
+        //            // Add data to DB TD_Main //
+        //            TD_Main main = new TD_Main();
+        //            main.control_no = controlno + GetRunNo(controlno).ToString("000");
+        //            main.title = Request.Form["txtNonconformities"] != null ? Request.Form["txtNonconformities"].ToString() : null;
+        //            main.item_code = Request.Form["txtItemcode"] != null ? Request.Form["txtItemcode"].ToString() : null;
+        //            main.customer = Request.Form["txtCustomer"] != null ? Request.Form["txtCustomer"].ToString() : null;
+        //            main.issue_dt = dt;
+        //            main.material = Request.Form["txtMaterial"] != null ? Request.Form["txtMaterial"].ToString() : null;
+        //            main.batch_no = Request.Form["txtBatchNo"] != null ? Request.Form["txtBatchNo"].ToString() : null;
+        //            main.job_no = Request.Form["txtJobNo"] != null ? Request.Form["txtJobNo"].ToString() : null;
+        //            main.defective_qty = Request.Form["txtDefectiveQty"] != null ? Request.Form["txtDefectiveQty"].ToString() : "0";
+        //            main.expect_date = Request.Form["dtpExpectDate"] != null ? ParseToDate(Request.Form["dtpExpectDate"].ToString()) : dt;
+        //            main.reason = Request.Form["txaReason"] != null ? Request.Form["txaReason"].ToString() : "";
+        //            main.preventive = Request.Form["txaPreventive"] != null ? Request.Form["txaPreventive"].ToString() : "";
+        //            main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
+        //            main.issue_by = Session["SA_Auth"].ToString();
+        //            main.Sys_Plant_id = byte.Parse(Request.Form["slPlant"].ToString());
 
-                    dbSA.TD_Main.Add(main);
-                    dbSA.SaveChanges();
-                    // End Add data DB to TD_Main //
-                    main_id = main.id;
-                    // Add data to DB TD_Problem //
-                    if (Request.Form["cbxProblem"] != null)
-                    {
-                        var problem = Request.Form["cbxProblem"].ToString();
-                        var listProb = problem.Split(',');
-                        foreach (var item in listProb)
-                        {
-                            var problem_id = byte.Parse(item);
-                            var query = (from a in dbSA.TM_Problem
-                                         where a.prob_id == problem_id
-                                         select a).First();
-                            TD_Problem prob = new TD_Problem();
-                            prob.id = main_id;
-                            prob.prob_id = problem_id;
-                            if (query.text_flag)
-                            {
-                                prob.prob_text = Request.Form["txtProb" + item].ToString();
-                            }
-                            dbSA.TD_Problem.Add(prob);
-                        }
-                    }
-                    // End Add data DB to TD_Problem //
+        //            dbSA.TD_Main.Add(main);
+        //            dbSA.SaveChanges();
+        //            // End Add data DB to TD_Main //
+        //            main_id = main.id;
+        //            // Add data to DB TD_Problem //
+        //            if (Request.Form["cbxProblem"] != null)
+        //            {
+        //                var problem = Request.Form["cbxProblem"].ToString();
+        //                var listProb = problem.Split(',');
+        //                foreach (var item in listProb)
+        //                {
+        //                    var problem_id = byte.Parse(item);
+        //                    var query = (from a in dbSA.TM_Problem
+        //                                 where a.prob_id == problem_id
+        //                                 select a).First();
+        //                    TD_Problem prob = new TD_Problem();
+        //                    prob.id = main_id;
+        //                    prob.prob_id = problem_id;
+        //                    if (query.text_flag)
+        //                    {
+        //                        prob.prob_text = Request.Form["txtProb" + item].ToString();
+        //                    }
+        //                    dbSA.TD_Problem.Add(prob);
+        //                }
+        //            }
+        //            // End Add data DB to TD_Problem //
 
-                    // Add data to DB TD_Disposition //
-                    if (Request.Form["rdoDispos"] != null)
-                    {
-                        var dispos_id = byte.Parse(Request.Form["rdoDispos"].ToString());
-                        TD_Disposition disp = new TD_Disposition();
-                        disp.id = main_id;
-                        disp.dispos_id = dispos_id;
-                        var query = (from a in dbSA.TM_Disposition
-                                     where a.dispos_id == dispos_id
-                                     select a).First();
-                        if (query.text_flag)
-                        {
-                            disp.dispos_text = Request.Form["txtDisp" + dispos_id].ToString();
-                        }
-                        dbSA.TD_Disposition.Add(disp);
-                    }
-                    // End Add data to DB TD_Disposition //
+        //            // Add data to DB TD_Disposition //
+        //            if (Request.Form["rdoDispos"] != null)
+        //            {
+        //                var dispos_id = byte.Parse(Request.Form["rdoDispos"].ToString());
+        //                TD_Disposition disp = new TD_Disposition();
+        //                disp.id = main_id;
+        //                disp.dispos_id = dispos_id;
+        //                var query = (from a in dbSA.TM_Disposition
+        //                             where a.dispos_id == dispos_id
+        //                             select a).First();
+        //                if (query.text_flag)
+        //                {
+        //                    disp.dispos_text = Request.Form["txtDisp" + dispos_id].ToString();
+        //                }
+        //                dbSA.TD_Disposition.Add(disp);
+        //            }
+        //            // End Add data to DB TD_Disposition //
 
-                    // Add data to DB TD_File //
-                    string subPath = "~/UploadFiles/" + dt.Year + "/" + dt.Month + "/" + main_id + "/";
-                    if (!Directory.Exists(Server.MapPath(subPath)))
-                    {
-                        Directory.CreateDirectory(Server.MapPath(subPath));
-                    }
-                    foreach (var file in files)
-                    {
-                        if (file != null && file.ContentLength > 0)
-                        {
-                            if (file.ContentType == "application/pdf")//Check accept file type.
-                            {
-                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
-                                var path = Path.Combine(Server.MapPath(subPath), fileName);
-                                file.SaveAs(path);
-                                SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
-                            }
-                        }
-                    }
+        //            // Add data to DB TD_File //
+        //            string subPath = "~/UploadFiles/" + dt.Year + "/" + dt.Month + "/" + main_id + "/";
+        //            if (!Directory.Exists(Server.MapPath(subPath)))
+        //            {
+        //                Directory.CreateDirectory(Server.MapPath(subPath));
+        //            }
+        //            foreach (var file in files)
+        //            {
+        //                if (file != null && file.ContentLength > 0)
+        //                {
+        //                    if (file.ContentType == "application/pdf")//Check accept file type.
+        //                    {
+        //                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+        //                        var path = Path.Combine(Server.MapPath(subPath), fileName);
+        //                        file.SaveAs(path);
+        //                        SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
+        //                    }
+        //                }
+        //            }
 
-                    // End Add data to DB TD_File //
-                    dbSA.SaveChanges();
+        //            // End Add data to DB TD_File //
+        //            dbSA.SaveChanges();
 
-                    var concern_qc = Request.Form["selectQC"] != null ? Request.Form["selectQC"].ToString() : null;
-                    var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
-                    var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
-                    var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
-                    AddConcernQC(main_id, concern_qc);
-                    AddConcernEN(main_id, concern_en);
-                    AddConcernOther(main_id, concern_other);
-                    AddInform(main_id, inform);
+        //            var concern_qc = Request.Form["selectQC"] != null ? Request.Form["selectQC"].ToString() : null;
+        //            var concern_en = Request.Form["selectEN"] != null ? Request.Form["selectEN"].ToString() : null;
+        //            var concern_other = Request.Form["selectOther"] != null ? Request.Form["selectOther"].ToString() : null;
+        //            var inform = Request.Form["selectInform"] != null ? Request.Form["selectInform"].ToString() : null;
+        //            AddConcernQC(main_id, concern_qc);
+        //            AddConcernEN(main_id, concern_en);
+        //            AddConcernOther(main_id, concern_other);
+        //            AddInform(main_id, inform);
 
-                    scope.Complete();
-                }
+        //            scope.Complete();
+        //        }
 
-                // Add data to DB TD_Transaction //
-                int org_id = int.Parse(Session["SA_Org"].ToString());
-                byte lv = byte.Parse(Session["SA_UserLv"].ToString());
+        //        // Add data to DB TD_Transaction //
+        //        int org_id = int.Parse(Session["SA_Org"].ToString());
+        //        byte lv = byte.Parse(Session["SA_UserLv"].ToString());
 
-                NextStep_Transaction(main_id, 1, lv, org_id, 0);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return RedirectToAction("Index", "SAProcess");
-        }
+        //        NextStep_Transaction(main_id, 1, lv, org_id, 0);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //    return RedirectToAction("Index", "SAProcess");
+        //}
 
         public ActionResult UpdateSA(IEnumerable<HttpPostedFileBase> files)
         {
@@ -1406,22 +1407,22 @@ namespace MvcSA.Controllers
 
                 byte temp_act = (act_id == 15 || act_id == 16) ? (byte)11 : act_id;
 
-                if (status == 8 && org == 11 && lv_id == 4)
-                {
-                    UpdateTransaction(id, status, 3, 49, true, approver, temp_act, comment);
-                }
-                else
-                {
+                //if (status == 8 && org == 11 && lv_id == 4)
+                //{
+                //    UpdateTransaction(id, status, 3, 49, true, approver, temp_act, comment);
+                //}
+                //else
+                //{
                     UpdateTransaction(id, status, lv_id, org, true, approver, temp_act, comment, plant);
-                }
+                //}
 
                 if (act_id == 15)
                 {
-                    InsertEndTransaction(id, 8, lv_id, org, 5, approver, comment);
+                    InsertEndTransaction(id, 8, lv_id, org, 5, approver, comment);//5 = Approve
                 }
                 else if (act_id == 16)
                 {
-                    InsertEndTransaction(id, 8, lv_id, org, 6, approver, comment);
+                    InsertEndTransaction(id, 8, lv_id, org, 6, approver, comment);//6 = Reject
                 }
 
                 NextStep_Transaction(id, status, lv_id, org, act_id, comment);
@@ -1553,7 +1554,18 @@ namespace MvcSA.Controllers
 
         private void Update_Critical(int id, string p)
         {
-            throw new NotImplementedException();
+            if (p == "1")
+            {
+                using (var localdb = new SAEntities())
+                {
+                    var query = localdb.TD_Main.Find(id);
+                    if (query != null)
+                    {
+                        query.critical_problem = true;
+                        localdb.SaveChanges();
+                    }
+                }
+            }
         }
 
         private byte GetUserSysPlant(string approver)
@@ -2501,6 +2513,7 @@ namespace MvcSA.Controllers
         private void NextStep_Transaction(int id, byte status, byte lv, int org_id, byte act_id, string other = null)
         {
             TNCOrganization tnc_org = new TNCOrganization();
+
             if (Session["SA_Auth"] != null)
             {
                 string user = Session["SA_Auth"].ToString();
@@ -2694,25 +2707,43 @@ namespace MvcSA.Controllers
                         {
                             if (Check_All_Approve(id, status))
                             {
-                                var get_group_qc = (from a in dbSA.TD_Transaction
-                                                    where a.id == id && a.status_id == 3 && a.lv_id < 3
-                                                    select a.org_id).ToList();
-
-                                var get_dept_qc = (from a in dbTNC.View_Organization
-                                                   where get_group_qc.Contains(a.group_id.Value)
-                                                   select new { a.dept_id, a.DeptMgr_email, a.plant_id, a.PlantMgr_email }).Distinct();
-
-                                foreach (var item in get_dept_qc)
+                                if (dbSA.TD_Main.Find(id).critical_problem.Value && lv < 4)//Engineering Plant
                                 {
-                                    if (item.DeptMgr_email != null)
+                                    var get_dept_en = (from a in dbSA.TD_Transaction
+                                                       where a.id == id && a.status_id == 5 && a.lv_id == 3
+                                                       select a.org_id).Distinct().ToList();
+                                    var get_plant_en = (from a in dbTNC.View_Organization
+                                                        where get_dept_en.Contains(a.dept_id.Value)
+                                                        select new { a.plant_id, a.PlantMgr_email, a.PlantMgr }).Distinct();
+
+                                    foreach (var item in get_plant_en)
                                     {
-                                        Insert_Transaction(id, 6, 3, item.dept_id.Value, true);
-                                        SendEmailCenter(item.DeptMgr_email, id);
-                                    }
-                                    else
-                                    {
-                                        Insert_Transaction(id, 6, 4, item.plant_id.Value, true);
+                                        Insert_Transaction(id, 5, 4, item.plant_id.Value, true, actor:item.PlantMgr);
                                         SendEmailCenter(item.PlantMgr_email, id);
+                                    }
+                                }
+                                else//QC
+                                {
+                                    var get_group_qc = (from a in dbSA.TD_Transaction
+                                                        where a.id == id && a.status_id == 3 && a.lv_id < 3
+                                                        select a.org_id).ToList();
+
+                                    var get_dept_qc = (from a in dbTNC.View_Organization
+                                                       where get_group_qc.Contains(a.group_id.Value)
+                                                       select new { a.dept_id, a.DeptMgr_email, a.DeptMgr, a.plant_id, a.PlantMgr_email, a.PlantMgr }).Distinct();
+
+                                    foreach (var item in get_dept_qc)
+                                    {
+                                        if (item.DeptMgr_email != null)
+                                        {
+                                            Insert_Transaction(id, 6, 3, item.dept_id.Value, true, actor: item.DeptMgr);
+                                            SendEmailCenter(item.DeptMgr_email, id);
+                                        }
+                                        else
+                                        {
+                                            Insert_Transaction(id, 6, 4, item.plant_id.Value, true, actor: item.PlantMgr);
+                                            SendEmailCenter(item.PlantMgr_email, id);
+                                        }
                                     }
                                 }
                                 //Insert_Transaction(id, 6, 3, 49, true);//49 = QS Department
@@ -2758,6 +2789,7 @@ namespace MvcSA.Controllers
                         if (dbSA.TD_Transaction.Any(w => w.id == id && act_id == 10))//Issue SA
                         {
                             //GetQAResponse
+                            AddQATransaction(id, 7, 1);//2 = QA, 3 = QC
                             //Insert_Transaction(id, 7, 1, get_qa_group.org_id, true);
                             //SendEmailCenter(GetQAEngEmail(id), id);
                         }
@@ -3623,11 +3655,11 @@ namespace MvcSA.Controllers
 
             var get_group = (from q in dbSA.TM_SysGroup
                              where q.del_flag == false && q.Sys_Plant_id == get_plant
-                             && q.Sys_GroupType_id == new_status
+                             && q.Sys_GroupType_id == 2
                              select q.group_id).FirstOrDefault();
 
             Insert_Transaction(id, new_status, min_lv, get_group, true, get_plant);
-            SendEmailCenter(GetSysEmail(new_status, get_plant, min_lv), id);
+            SendEmailCenter(GetSysEmail(2, get_plant, min_lv), id);
         }
 
         private bool AddQCTransaction(int id, byte new_status, byte min_lv)
