@@ -112,7 +112,8 @@
     }*@
     else if (ViewBag.ShowForm == 13)//Form Issue SA Cust/NOK
     {
-        <button type="button" class="btn btn-info" id="btnIssueSA" name="btnIssueSA" data-id="@ViewBag.SAID">Approve</button>
+        <a href="@Url.Action("IssueSA", "SAProcess", new { sid = ViewBag.SAID })"
+        @*<button type="button" class="btn btn-info" id="btnIssueSA" name="btnIssueSA" data-id="@ViewBag.SAID">Approve</button>*@
         <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
     }
     </div><br />
