@@ -112,7 +112,7 @@
     }*@
     else if (ViewBag.ShowForm == 13)//Form Issue SA Cust/NOK
     {
-        <a href="@Url.Action("IssueSA", "SAProcess", new { sid = ViewBag.SAID })"
+        <a href="@Url.Action("IssueSA", "SAProcess", new { sid = ViewBag.SAID })" target="_blank" class="btn btn-info">Issue SA Cust/NOK</a>
         @*<button type="button" class="btn btn-info" id="btnIssueSA" name="btnIssueSA" data-id="@ViewBag.SAID">Approve</button>*@
         <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
     }

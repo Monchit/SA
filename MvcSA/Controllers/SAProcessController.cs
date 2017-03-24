@@ -403,10 +403,10 @@ namespace MvcSA.Controllers
                     ViewBag.ShowForm = 10;//Form ApproveS2
                     ViewBag.CarPar = Check_CarPar(id);
                 }
-                //else if (status_id == 6)
-                //{
-                //    ViewBag.ShowForm = 12;
-                //}
+                else if (status_id == 7)
+                {
+                    ViewBag.ShowForm = 13;
+                }
                 else
                 {
                     ViewBag.ShowForm = user_lv;
@@ -2703,11 +2703,11 @@ namespace MvcSA.Controllers
                                 }
                             }
                         }
-                        else if (status == 5)//status EN go to QS Review
+                        else if (status == 5)//status EN go to QC Review
                         {
                             if (Check_All_Approve(id, status))
                             {
-                                if (dbSA.TD_Main.Find(id).critical_problem.Value && lv < 4)//Engineering Plant
+                                if (dbSA.TD_Main.Find(id).critical_problem.Value && lv < 4)//Critical problem -> Engineering Plant
                                 {
                                     var get_dept_en = (from a in dbSA.TD_Transaction
                                                        where a.id == id && a.status_id == 5 && a.lv_id == 3
@@ -3342,7 +3342,7 @@ namespace MvcSA.Controllers
 
             foreach (var item in query)
             {
-                Insert_Transaction(id, 8, item.lv_id, item.org_id, true);
+                Insert_Transaction(id, 8, item.lv_id, item.org_id, true, actor: item.actor);
                 SendEmailCenter(GetEmailByEmpcode(item.actor), id);
             }
 
@@ -3658,7 +3658,7 @@ namespace MvcSA.Controllers
                              && q.Sys_GroupType_id == 2
                              select q.group_id).FirstOrDefault();
 
-            Insert_Transaction(id, new_status, min_lv, get_group, true, get_plant);
+            Insert_Transaction(id, new_status, min_lv, get_group, true);//get_plant
             SendEmailCenter(GetSysEmail(2, get_plant, min_lv), id);
         }
 
