@@ -89,12 +89,12 @@
     }
     else if (ViewBag.ShowForm < 5)//Form Approve for Mgr. Up
     {
-        <button type="button" class="btn btn-info" id="btnApprove" name="btnApprove" data-id="@ViewBag.SAID">Approve</button>
+        <button type="button" class="btn btn-info" id="btnApprove" name="btnApprove" data-id="@ViewBag.SAID">Approve</button>@*
         if (ViewBag.CarPar != null && ViewBag.CarPar == false)
         {
             <button type="button" class="btn btn-inverse" id="btnPcr" name="btnPcr" data-id="@ViewBag.SAID">CAR/PAR</button>
         }
-        <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
+        *@<button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
     }
     else if (ViewBag.ShowForm == 11)//Form Issuer
     {
@@ -103,6 +103,10 @@
     else if (ViewBag.ShowForm == 10)//Form QC Add 2017-03-14
     {
         <button type="button" class="btn btn-info" id="btnApproveS2" name="btnApproveS2" data-id="@ViewBag.SAID">Approve</button>
+        if (ViewBag.CarPar != null && ViewBag.CarPar == false)
+        {
+            <button type="button" class="btn btn-inverse" id="btnPcr" name="btnPcr" data-id="@ViewBag.SAID">CAR/PAR</button>
+        }
         <button type="button" class="btn btn-warning" id="btnTell" name="btnTell" data-id="@ViewBag.SAID">Tell Issuer</button>
     }
     @*else if (ViewBag.ShowForm == 12)//Form QA

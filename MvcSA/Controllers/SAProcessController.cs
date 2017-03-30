@@ -2993,7 +2993,7 @@ namespace MvcSA.Controllers
                 {
                     TNCUtility tnc_util = new TNCUtility();
                     string subject = "";
-                    string body = mailto + "<br />";
+                    string body = "";// mailto + "<br />";
                     string int_link = "http://webExternal";//web02,webExternal
                     string ext_link = "http://webExternal.nok.co.th";//web02,webExternal
                     //short flag = 0;//0=Send, 1=Not Send
@@ -3093,8 +3093,8 @@ namespace MvcSA.Controllers
                             "<br />Best Regard,<br />From SA Online";
                     }
 
-                    //tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, null, flag: flag);//Real
-                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", "monchit@nok.co.th", subject, body);//Test
+                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, null, flag: flag);//Real
+                    //tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", "monchit@nok.co.th", subject, body);//Test
                 }
             }
         }
