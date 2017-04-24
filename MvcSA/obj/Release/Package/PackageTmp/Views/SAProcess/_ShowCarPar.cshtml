@@ -1,0 +1,26 @@
+﻿@model MvcSA.Models.TD_CarPar
+<style type="text/css">
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+        width:180px;
+    }
+</style>
+<table class="table table-bordered table-striped table-condensed">
+    <tr>
+        <td class="td_title">PAR No. :</td>
+        <td>@Model.par_no</td>
+    </tr>
+    <tr>
+        <td class="td_title">CAR No. :</td>
+        <td>@Model.car_no</td>
+    </tr>
+    <tr>
+        <td class="td_title">Root Cause Section :</td>
+        <td>@Model.root_cause_section</td>
+    </tr>
+    <tr>
+        <td class="td_title">Date-Time :</td>
+        <td>@Model.create_dt</td>
+    </tr>
+</table>

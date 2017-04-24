@@ -1,0 +1,122 @@
+﻿@{
+    Layout = null;
+    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    Response.AddHeader("content-disposition", "attachment;filename=SAReport.xls");
+}
+@model MvcSA.Models.TD_Main
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>
+    @*<meta name="viewport" content="width=device-width" />*@
+    <title>SA Report</title>
+    <style>
+        td {
+            text-align: left;
+            vertical-align: top !important;
+        }
+        .td_title {
+            text-align: right !important;
+            /*font-size: 1.1em;*/
+            font-weight: bold;
+        }
+        .tdHead {
+            /*text-align:center !important;*/
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+    <table id="TReport">
+        <tr>
+            <td class="td_title">Control No.</td>
+            <td>@Model.control_no</td>
+            <td class="td_title">Type of Nonconformities</td>
+            <td>@Model.title</td>
+        </tr>
+        <tr>
+            <td class="td_title">Item Code</td>
+            <td>@Model.item_code</td>
+            <td class="td_title">Customer</td>
+            <td>@Model.customer</td>
+        </tr>
+        <tr>
+            <td class="td_title">Material</td>
+            <td>@Model.material</td>
+            <td class="td_title">Job No./Lot No.</td>
+            <td>@Model.job_no</td>
+        </tr>
+        <tr>
+            <td class="td_title">Batch No.</td>
+            <td>@Model.batch_no</td>
+            <td class="td_title">Defective Q'ty</td>
+            <td>@Model.defective_qty</td>
+        </tr>
+        <tr>
+            <td class="td_title">Plant</td>
+            <td>@Model.TM_SysPlant.Sys_Plant_name</td>
+            <td class="td_title">Expected Date</td>
+            <td>@Model.expect_date.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <td class="td_title">Issued Date</td>
+            <td>@Model.issue_dt.ToString("dd/MM/yyyy")</td>
+            <td class="td_title">Effective Date</td>
+            <td>@Model.effective_dt.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <td class="td_title">Problem</td>
+            <td>@foreach (var item in Model.TD_Problem)
+            {
+                @item.TM_Problem.prob_name
+                if (item.TM_Problem.text_flag)
+                {
+                    <text> : </text>@item.prob_text
+                }
+                <br />
+            }</td>
+            <td class="td_title">Disposition of Defectives</td>
+            <td>@foreach (var item in Model.TD_Disposition)
+            {
+                @item.TM_Disposition.dispos_name
+                if(item.TM_Disposition.text_flag){
+                    <text> : </text>@item.dispos_text
+                }
+                <br />
+            }</td>
+        </tr>
+        <tr>
+            <td class="td_title">Reason</td>
+            <td colspan="3">@Model.reason</td>
+        </tr>
+        <tr>
+            <td class="td_title">Preventive action</td>
+            <td colspan="3">@Model.preventive</td>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        <tr>
+            <td class="td_title">QA Dept. Review</td>
+            <td colspan="3">@ViewBag.QADept.comment</td>
+        </tr>
+        <tr>
+            <td style="text-align: right;">Date</td>
+            <td>@ViewBag.QADept.act_dt.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <td class="td_title">Final Dicision</td>
+            <td colspan="3">@ViewBag.Final.comment</td>
+        </tr>
+        <tr>
+            <td style="text-align: right;">Date</td>
+            <td>@ViewBag.Final.act_dt.ToString("dd/MM/yyyy")</td>
+        </tr>
+    </table>
+    <div>
+        
+    </div>
+</body>
+</html>

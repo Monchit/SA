@@ -1,0 +1,220 @@
+﻿
+<style type="text/css">
+    /*fix jTable*/
+    span.jtable-goto-page select, span.jtable-page-size-change select {
+        height: 25px;
+        width: 60px;
+        padding: 2px 2px;
+        margin-bottom:auto;
+    }
+    div.jtable-main-container table.jtable thead th {
+        text-align: center;
+    }
+    div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td {
+        text-align: center;
+    }
+    div.accordion-heading {
+        font-weight:600;
+    }
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+    }
+    .ui-dialog-title {
+        color:white;
+    }
+    .rowComp {
+        background-color:#d6fbca !important;
+        color:#4b803b !important;
+    }
+    .rowCanc {
+        background-color: #f0dcdc !important;
+        color: #b45454 !important;
+    }
+    .rowRej {
+        background-color: #fd7878 !important;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#divJTable').jtable({
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            selecting: true, //Enable selecting
+            defaultSorting: 'status', //Set default sorting
+            actions: {
+                listAction: '@Url.Action("GridSAClosed","SAProcess")'
+            },
+            recordsLoaded: function (event, data) {
+                $("table.jtable").children().eq(1).children().each(function () {
+                    if ($(this).children().eq(5).text() == "Completed.") {
+                        $(this).addClass("rowComp");
+                    }
+                    else if ($(this).children().eq(5).text() == "Canceled.") {
+                        $(this).addClass("rowCanc");
+                    }
+                    else if ($(this).children().eq(5).text() == "Rejected.") {
+                        $(this).addClass("rowRej");
+                    }
+                });
+            },
+            fields: {
+                control_no: {
+                    title: 'Control No.', width: '15%',
+                    visibility: 'fixed', //This column always will be shown
+                    display: function (data) {
+                        return $('<a href="#" class="linkControlNo" rel="' + data.record.id + '">' + data.record.control_no + '</a>');
+                    }
+                },
+                title: { title: 'Type of Nonconformities', width: '20%' },
+                issuer: { title: 'Issued by', width: '15%' },
+                group_name: { title: 'Issued group', width: '15%' },
+                issue_dt: {
+                    title: 'Issued date', width: '12%',
+                    display: function (data) {
+                        return moment(data.record.issue_dt).format('DD/MM/YYYY HH:mm');
+                    }
+                },
+                status: { title: 'Status', width: '15%' },
+                files: {
+                    title: 'Files', width: '4%', visibility: 'fixed',
+                    display: function (data) {
+                        return $('<a href="#fileModal" class="viewfiles" data-toggle="modal" rel="' + data.record.id + '"><i class="icon-folder-open"></i></a>');
+                    }
+                },
+                tell: {
+                    title: 'Tell', width: '4%', visibility: 'fixed',
+                    display: function (data) {
+                        return $('<a href="#" class="viewtell" rel="' + data.record.id + '"><i class="icon-comment"></i></a>');
+                    }
+                }
+            }
+        });
+
+        //$('#divJTable').jtable('load');
+
+        //Re-load records when user click 'load records' button.
+        $('#btSearch').click(function (e) {
+            e.preventDefault();
+            $('#divJTable').jtable('load', {
+                control_no: $('#txt_controlno').val(),
+                title: $('#txt_title').val(),
+                issuer: $('#txt_issuer').val(),
+                group: $('#txt_group').val(),
+                status: $('#txt_status').val(),
+                item: $('#txt_item').val()
+            });
+        });
+
+        //Load all records when page is first shown
+        $('#btSearch').click(); //Comment -> 2014-10-13 by Monchit W.
+
+        $('#btMySA').click(function (e) {
+            e.preventDefault();
+            $('#divJTable').jtable('load', { user: 1 });
+        });
+
+        $('#divMainDetail').dialog({
+            autoOpen: false,
+            width: 900,//'auto',
+            height: 'auto',
+            modal: true
+        });
+
+        $(document).on("click", ".linkControlNo", function (event) {
+            var id = $(this).attr('rel');
+            var remote = "@Url.Action("_ShowDetail")?id=" + id;
+            $.get(remote, function (data) {
+                $("#divMainDetail").html(data);
+                $("#divMainDetail").dialog("open");
+                return false;
+            });
+        });
+
+        $('#divAttachFiles').dialog({
+            autoOpen: false,
+            width: 800,
+            height: 'auto',
+            resizable: false,
+            modal: true
+        });
+
+        $(document).on("click", ".viewfiles", function (event) {
+            var id = $(this).attr('rel');
+            var remote = "@Url.Action("_ShowFiles")?id=" + id;
+            $.get(remote, function (data) {
+                $("#divAttachFiles").html(data);
+                $("#divAttachFiles").dialog("open");
+            });
+        });
+
+        $('#divTellIssuer').dialog({
+            autoOpen: false,
+            width: 800,//'auto',
+            height: 'auto',
+            modal: true
+        });
+
+        $(document).on("click", ".viewtell", function (event) {
+            var id = $(this).attr('rel');
+            var remote = "@Url.Action("_ShowTellIssuer")?id=" + id;
+            $.get(remote, function (data) {
+                $("#divTellIssuer").html(data);
+                $("#divTellIssuer").dialog("open");
+            });
+        });
+    });
+</script>
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<div class="filtering">
+    <form>
+        <table class="table table-condensed" style="width:auto;">
+            <thead>
+                <tr>
+                    <th>Control No.</th>
+                    <th>Type of Nonconformities</th>
+                    <th>Issued by</th>
+                    <th>Issued group</th>
+                    <th>Item Code</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="txt_controlno" id="txt_controlno" class="span2" placeholder="Control No." /></td>
+                    <td><input type="text" name="txt_title" id="txt_title" class="span3" placeholder="Type of Nonconformities" /></td>
+                    <td><input type="text" name="txt_issuer" id="txt_issuer" class="input-small" placeholder="Issued by" /></td>
+                    <td>
+                        <select id="txt_group" name="txt_group">
+                            <option selected="selected" value="">All Group</option>
+                            @foreach (var item in ViewBag.IssueGroup)
+                            {
+                                <option value="@item.group_name">@item.group_name</option>
+                            }
+                        </select>
+                    </td>
+                    <td><input type="text" name="txt_item" id="txt_item" class="input-small" placeholder="Item Code" /></td>
+                    <td><input type="text" name="txt_status" id="txt_status" class="span2" placeholder="Status" /></td>
+                    <td><button type="submit" id="btSearch" class="btn btn-primary"><i class="icon-search icon-white"></i> Search</button>
+                        <button type="submit" id="btMySA" class="btn btn-warning"><i class="icon-user icon-white"></i> My SA</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<div id="divJTable"></div>
+
+<div id="divMainDetail" title="Detail"></div>
+
+<div id="divTellIssuer" title="Tell Issuer List"></div>
+
+<div id="divAttachFiles" title="Attach Files"></div>

@@ -1,0 +1,340 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="SAModelStoreContainer" CdmEntityContainer="SAEntities">
+    <EntitySetMapping Name="TD_CarPar">
+      <EntityTypeMapping TypeName="SAModel.TD_CarPar">
+        <MappingFragment StoreEntitySet="TD_CarPar">
+          <ScalarProperty Name="create_dt" ColumnName="create_dt" />
+          <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+          <ScalarProperty Name="root_cause_section" ColumnName="root_cause_section" />
+          <ScalarProperty Name="car_no" ColumnName="car_no" />
+          <ScalarProperty Name="par_no" ColumnName="par_no" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_ConcernEN">
+      <EntityTypeMapping TypeName="SAModel.TD_ConcernEN">
+        <MappingFragment StoreEntitySet="TD_ConcernEN">
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_ConcernOther">
+      <EntityTypeMapping TypeName="SAModel.TD_ConcernOther">
+        <MappingFragment StoreEntitySet="TD_ConcernOther">
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_ConcernQC">
+      <EntityTypeMapping TypeName="SAModel.TD_ConcernQC">
+        <MappingFragment StoreEntitySet="TD_ConcernQC">
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Disposition">
+      <EntityTypeMapping TypeName="SAModel.TD_Disposition">
+        <MappingFragment StoreEntitySet="TD_Disposition">
+          <ScalarProperty Name="dispos_text" ColumnName="dispos_text" />
+          <ScalarProperty Name="dispos_id" ColumnName="dispos_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_File">
+      <EntityTypeMapping TypeName="SAModel.TD_File">
+        <MappingFragment StoreEntitySet="TD_File">
+          <ScalarProperty Name="upload_by" ColumnName="upload_by" />
+          <ScalarProperty Name="upload_dt" ColumnName="upload_dt" />
+          <ScalarProperty Name="file_path" ColumnName="file_path" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="file_id" ColumnName="file_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Main">
+      <EntityTypeMapping TypeName="SAModel.TD_Main">
+        <MappingFragment StoreEntitySet="TD_Main">
+          <ScalarProperty Name="critical_problem" ColumnName="critical_problem" />
+          <ScalarProperty Name="preventive" ColumnName="preventive" />
+          <ScalarProperty Name="effective_dt" ColumnName="effective_dt" />
+          <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+          <ScalarProperty Name="expect_date" ColumnName="expect_date" />
+          <ScalarProperty Name="reason" ColumnName="reason" />
+          <ScalarProperty Name="defective_qty" ColumnName="defective_qty" />
+          <ScalarProperty Name="job_no" ColumnName="job_no" />
+          <ScalarProperty Name="batch_no" ColumnName="batch_no" />
+          <ScalarProperty Name="material" ColumnName="material" />
+          <ScalarProperty Name="customer" ColumnName="customer" />
+          <ScalarProperty Name="item_code" ColumnName="item_code" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+          <ScalarProperty Name="issue_dt" ColumnName="issue_dt" />
+          <ScalarProperty Name="control_no" ColumnName="control_no" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Problem">
+      <EntityTypeMapping TypeName="SAModel.TD_Problem">
+        <MappingFragment StoreEntitySet="TD_Problem">
+          <ScalarProperty Name="prob_text" ColumnName="prob_text" />
+          <ScalarProperty Name="prob_id" ColumnName="prob_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Tell">
+      <EntityTypeMapping TypeName="SAModel.TD_Tell">
+        <MappingFragment StoreEntitySet="TD_Tell">
+          <ScalarProperty Name="reply_dt" ColumnName="reply_dt" />
+          <ScalarProperty Name="tell_dt" ColumnName="tell_dt" />
+          <ScalarProperty Name="tell_content" ColumnName="tell_content" />
+          <ScalarProperty Name="tell_user" ColumnName="tell_user" />
+          <ScalarProperty Name="tell_id" ColumnName="tell_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Transaction">
+      <EntityTypeMapping TypeName="SAModel.TD_Transaction">
+        <MappingFragment StoreEntitySet="TD_Transaction">
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="comment" ColumnName="comment" />
+          <ScalarProperty Name="act_dt" ColumnName="act_dt" />
+          <ScalarProperty Name="actor" ColumnName="actor" />
+          <ScalarProperty Name="act_id" ColumnName="act_id" />
+          <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+          <ScalarProperty Name="org_id" ColumnName="org_id" />
+          <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+          <ScalarProperty Name="status_id" ColumnName="status_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Transaction_Log">
+      <EntityTypeMapping TypeName="SAModel.TD_Transaction_Log">
+        <MappingFragment StoreEntitySet="TD_Transaction_Log">
+          <ScalarProperty Name="comment" ColumnName="comment" />
+          <ScalarProperty Name="act_dt" ColumnName="act_dt" />
+          <ScalarProperty Name="actor" ColumnName="actor" />
+          <ScalarProperty Name="act_id" ColumnName="act_id" />
+          <ScalarProperty Name="rev" ColumnName="rev" />
+          <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+          <ScalarProperty Name="org_id" ColumnName="org_id" />
+          <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+          <ScalarProperty Name="status_id" ColumnName="status_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Action">
+      <EntityTypeMapping TypeName="SAModel.TM_Action">
+        <MappingFragment StoreEntitySet="TM_Action">
+          <ScalarProperty Name="act_name" ColumnName="act_name" />
+          <ScalarProperty Name="act_id" ColumnName="act_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_ActionMapping">
+      <EntityTypeMapping TypeName="SAModel.TM_ActionMapping">
+        <MappingFragment StoreEntitySet="TM_ActionMapping">
+          <ScalarProperty Name="action_list" ColumnName="action_list" />
+          <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+          <ScalarProperty Name="status_id" ColumnName="status_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Admin">
+      <EntityTypeMapping TypeName="SAModel.TM_Admin">
+        <MappingFragment StoreEntitySet="TM_Admin">
+          <ScalarProperty Name="utype_id" ColumnName="utype_id" />
+          <ScalarProperty Name="emp_code" ColumnName="emp_code" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Disposition">
+      <EntityTypeMapping TypeName="SAModel.TM_Disposition">
+        <MappingFragment StoreEntitySet="TM_Disposition">
+          <ScalarProperty Name="text_flag" ColumnName="text_flag" />
+          <ScalarProperty Name="dispos_name" ColumnName="dispos_name" />
+          <ScalarProperty Name="dispos_id" ColumnName="dispos_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Level">
+      <EntityTypeMapping TypeName="SAModel.TM_Level">
+        <MappingFragment StoreEntitySet="TM_Level">
+          <ScalarProperty Name="position_max" ColumnName="position_max" />
+          <ScalarProperty Name="position_min" ColumnName="position_min" />
+          <ScalarProperty Name="lv_name" ColumnName="lv_name" />
+          <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Problem">
+      <EntityTypeMapping TypeName="SAModel.TM_Problem">
+        <MappingFragment StoreEntitySet="TM_Problem">
+          <ScalarProperty Name="text_flag" ColumnName="text_flag" />
+          <ScalarProperty Name="prob_name" ColumnName="prob_name" />
+          <ScalarProperty Name="prob_id" ColumnName="prob_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Status">
+      <EntityTypeMapping TypeName="SAModel.TM_Status">
+        <MappingFragment StoreEntitySet="TM_Status">
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="lv_max" ColumnName="lv_max" />
+          <ScalarProperty Name="lv_min" ColumnName="lv_min" />
+          <ScalarProperty Name="status_name" ColumnName="status_name" />
+          <ScalarProperty Name="status_id" ColumnName="status_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_SysGroup">
+      <EntityTypeMapping TypeName="SAModel.TM_SysGroup">
+        <MappingFragment StoreEntitySet="TM_SysGroup">
+          <ScalarProperty Name="update_by" ColumnName="update_by" />
+          <ScalarProperty Name="update_dt" ColumnName="update_dt" />
+          <ScalarProperty Name="del_flag" ColumnName="del_flag" />
+          <ScalarProperty Name="Sys_Group_name" ColumnName="Sys_Group_name" />
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="Sys_GroupType_id" ColumnName="Sys_GroupType_id" />
+          <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_SysGroupCode">
+      <EntityTypeMapping TypeName="SAModel.TM_SysGroupCode">
+        <MappingFragment StoreEntitySet="TM_SysGroupCode">
+          <ScalarProperty Name="g_code" ColumnName="g_code" />
+          <ScalarProperty Name="g_id" ColumnName="g_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_SysGroupType">
+      <EntityTypeMapping TypeName="SAModel.TM_SysGroupType">
+        <MappingFragment StoreEntitySet="TM_SysGroupType">
+          <ScalarProperty Name="update_by" ColumnName="update_by" />
+          <ScalarProperty Name="update_dt" ColumnName="update_dt" />
+          <ScalarProperty Name="del_flag" ColumnName="del_flag" />
+          <ScalarProperty Name="Sys_GroupType_name" ColumnName="Sys_GroupType_name" />
+          <ScalarProperty Name="Sys_GroupType_id" ColumnName="Sys_GroupType_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_SysPlant">
+      <EntityTypeMapping TypeName="SAModel.TM_SysPlant">
+        <MappingFragment StoreEntitySet="TM_SysPlant">
+          <ScalarProperty Name="update_by" ColumnName="update_by" />
+          <ScalarProperty Name="update_dt" ColumnName="update_dt" />
+          <ScalarProperty Name="del_flag" ColumnName="del_flag" />
+          <ScalarProperty Name="Sys_Plant_name" ColumnName="Sys_Plant_name" />
+          <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_SysUser">
+      <EntityTypeMapping TypeName="SAModel.TM_SysUser">
+        <MappingFragment StoreEntitySet="TM_SysUser">
+          <ScalarProperty Name="user_active" ColumnName="user_active" />
+          <ScalarProperty Name="lv_id" ColumnName="lv_id" />
+          <ScalarProperty Name="Sys_User_id" ColumnName="Sys_User_id" />
+          <ScalarProperty Name="Sys_GroupType_id" ColumnName="Sys_GroupType_id" />
+          <ScalarProperty Name="Sys_Plant_id" ColumnName="Sys_Plant_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_SA">
+      <EntityTypeMapping TypeName="SAModel.TD_SA">
+        <MappingFragment StoreEntitySet="TD_SA">
+          <ScalarProperty Name="update_by" ColumnName="update_by" />
+          <ScalarProperty Name="file_evidence" ColumnName="file_evidence" />
+          <ScalarProperty Name="reason" ColumnName="reason" />
+          <ScalarProperty Name="issue_date" ColumnName="issue_date" />
+          <ScalarProperty Name="result" ColumnName="result" />
+          <ScalarProperty Name="cust_name" ColumnName="cust_name" />
+          <ScalarProperty Name="sa_no" ColumnName="sa_no" />
+          <ScalarProperty Name="sa_id" ColumnName="sa_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Result">
+      <EntityTypeMapping TypeName="SAModel.TM_Result">
+        <MappingFragment StoreEntitySet="TM_Result">
+          <ScalarProperty Name="result_name" ColumnName="result_name" />
+          <ScalarProperty Name="result_id" ColumnName="result_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Inform">
+      <EntityTypeMapping TypeName="SAModel.TD_Inform">
+        <MappingFragment StoreEntitySet="TD_Inform">
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="V_OnProcess">
+      <EntityTypeMapping TypeName="SAModel.V_OnProcess">
+        <MappingFragment StoreEntitySet="V_OnProcess">
+          <ScalarProperty Name="status_id" ColumnName="status_id" />
+          <ScalarProperty Name="org_id" ColumnName="org_id" />
+          <ScalarProperty Name="emp_lname" ColumnName="emp_lname" />
+          <ScalarProperty Name="emp_fname" ColumnName="emp_fname" />
+          <ScalarProperty Name="group_name" ColumnName="group_name" />
+          <ScalarProperty Name="item_code" ColumnName="item_code" />
+          <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+          <ScalarProperty Name="issue_dt" ColumnName="issue_dt" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="control_no" ColumnName="control_no" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="v_sa">
+      <EntityTypeMapping TypeName="SAModel.v_sa">
+        <MappingFragment StoreEntitySet="v_sa">
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="item_code" ColumnName="item_code" />
+          <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+          <ScalarProperty Name="issue_dt" ColumnName="issue_dt" />
+          <ScalarProperty Name="group_name" ColumnName="group_name" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="control_no" ColumnName="control_no" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="v_sa_issuer">
+      <EntityTypeMapping TypeName="SAModel.v_sa_issuer">
+        <MappingFragment StoreEntitySet="v_sa_issuer">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="group_name" ColumnName="group_name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="v_sa_onprocess">
+      <EntityTypeMapping TypeName="SAModel.v_sa_onprocess">
+        <MappingFragment StoreEntitySet="v_sa_onprocess">
+          <ScalarProperty Name="item_code" ColumnName="item_code" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="issue_by" ColumnName="issue_by" />
+          <ScalarProperty Name="issue_dt" ColumnName="issue_dt" />
+          <ScalarProperty Name="control_no" ColumnName="control_no" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

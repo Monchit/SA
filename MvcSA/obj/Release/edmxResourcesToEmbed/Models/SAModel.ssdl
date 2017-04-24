@@ -1,0 +1,948 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SAModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="SAModelStoreContainer">
+    <EntitySet Name="TD_CarPar" EntityType="SAModel.Store.TD_CarPar" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_ConcernEN" EntityType="SAModel.Store.TD_ConcernEN" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_ConcernOther" EntityType="SAModel.Store.TD_ConcernOther" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_ConcernQC" EntityType="SAModel.Store.TD_ConcernQC" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Disposition" EntityType="SAModel.Store.TD_Disposition" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_File" EntityType="SAModel.Store.TD_File" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Inform" EntityType="SAModel.Store.TD_Inform" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Main" EntityType="SAModel.Store.TD_Main" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Problem" EntityType="SAModel.Store.TD_Problem" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_SA" EntityType="SAModel.Store.TD_SA" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Tell" EntityType="SAModel.Store.TD_Tell" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Transaction" EntityType="SAModel.Store.TD_Transaction" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Transaction_Log" EntityType="SAModel.Store.TD_Transaction_Log" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Action" EntityType="SAModel.Store.TM_Action" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_ActionMapping" EntityType="SAModel.Store.TM_ActionMapping" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Admin" EntityType="SAModel.Store.TM_Admin" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Disposition" EntityType="SAModel.Store.TM_Disposition" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Level" EntityType="SAModel.Store.TM_Level" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Problem" EntityType="SAModel.Store.TM_Problem" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Result" EntityType="SAModel.Store.TM_Result" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Status" EntityType="SAModel.Store.TM_Status" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_SysGroup" EntityType="SAModel.Store.TM_SysGroup" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_SysGroupCode" EntityType="SAModel.Store.TM_SysGroupCode" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_SysGroupType" EntityType="SAModel.Store.TM_SysGroupType" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_SysPlant" EntityType="SAModel.Store.TM_SysPlant" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_SysUser" EntityType="SAModel.Store.TM_SysUser" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="V_OnProcess" EntityType="SAModel.Store.V_OnProcess" store:Type="Views" store:Schema="dbo" store:Name="V_OnProcess">
+      <DefiningQuery>SELECT 
+      [V_OnProcess].[id] AS [id], 
+      [V_OnProcess].[control_no] AS [control_no], 
+      [V_OnProcess].[title] AS [title], 
+      [V_OnProcess].[issue_dt] AS [issue_dt], 
+      [V_OnProcess].[issue_by] AS [issue_by], 
+      [V_OnProcess].[item_code] AS [item_code], 
+      [V_OnProcess].[group_name] AS [group_name], 
+      [V_OnProcess].[emp_fname] AS [emp_fname], 
+      [V_OnProcess].[emp_lname] AS [emp_lname], 
+      [V_OnProcess].[org_id] AS [org_id], 
+      [V_OnProcess].[status_id] AS [status_id]
+      FROM [dbo].[V_OnProcess] AS [V_OnProcess]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v_sa" EntityType="SAModel.Store.v_sa" store:Type="Views" store:Schema="dbo" store:Name="v_sa">
+      <DefiningQuery>SELECT 
+      [v_sa].[id] AS [id], 
+      [v_sa].[control_no] AS [control_no], 
+      [v_sa].[title] AS [title], 
+      [v_sa].[name] AS [name], 
+      [v_sa].[group_name] AS [group_name], 
+      [v_sa].[issue_dt] AS [issue_dt], 
+      [v_sa].[issue_by] AS [issue_by], 
+      [v_sa].[item_code] AS [item_code], 
+      [v_sa].[status] AS [status]
+      FROM [dbo].[v_sa] AS [v_sa]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v_sa_issuer" EntityType="SAModel.Store.v_sa_issuer" store:Type="Views" store:Schema="dbo" store:Name="v_sa_issuer">
+      <DefiningQuery>SELECT 
+      [v_sa_issuer].[id] AS [id], 
+      [v_sa_issuer].[group_name] AS [group_name], 
+      [v_sa_issuer].[name] AS [name]
+      FROM [dbo].[v_sa_issuer] AS [v_sa_issuer]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v_sa_onprocess" EntityType="SAModel.Store.v_sa_onprocess" store:Type="Views" store:Schema="dbo" store:Name="v_sa_onprocess">
+      <DefiningQuery>SELECT 
+      [v_sa_onprocess].[id] AS [id], 
+      [v_sa_onprocess].[status] AS [status], 
+      [v_sa_onprocess].[control_no] AS [control_no], 
+      [v_sa_onprocess].[issue_dt] AS [issue_dt], 
+      [v_sa_onprocess].[issue_by] AS [issue_by], 
+      [v_sa_onprocess].[title] AS [title], 
+      [v_sa_onprocess].[item_code] AS [item_code]
+      FROM [dbo].[v_sa_onprocess] AS [v_sa_onprocess]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_TD_ConcernEN_TD_Main" Association="SAModel.Store.FK_TD_ConcernEN_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_ConcernEN" EntitySet="TD_ConcernEN" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_ConcernOther_TD_Main" Association="SAModel.Store.FK_TD_ConcernOther_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_ConcernOther" EntitySet="TD_ConcernOther" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_ConcernQC_TD_Main1" Association="SAModel.Store.FK_TD_ConcernQC_TD_Main1">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_ConcernQC" EntitySet="TD_ConcernQC" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Disposition_TD_Main" Association="SAModel.Store.FK_TD_Disposition_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_Disposition" EntitySet="TD_Disposition" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Disposition_TM_Disposition" Association="SAModel.Store.FK_TD_Disposition_TM_Disposition">
+      <End Role="TM_Disposition" EntitySet="TM_Disposition" />
+      <End Role="TD_Disposition" EntitySet="TD_Disposition" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_File_TD_Main" Association="SAModel.Store.FK_TD_File_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_File" EntitySet="TD_File" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Inform_TD_Main" Association="SAModel.Store.FK_TD_Inform_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_Inform" EntitySet="TD_Inform" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Main_TM_SysPlant" Association="SAModel.Store.FK_TD_Main_TM_SysPlant">
+      <End Role="TM_SysPlant" EntitySet="TM_SysPlant" />
+      <End Role="TD_Main" EntitySet="TD_Main" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_PcrCar_TD_Main" Association="SAModel.Store.FK_TD_PcrCar_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_CarPar" EntitySet="TD_CarPar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Problem_TD_Main" Association="SAModel.Store.FK_TD_Problem_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_Problem" EntitySet="TD_Problem" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Problem_TM_Problem" Association="SAModel.Store.FK_TD_Problem_TM_Problem">
+      <End Role="TM_Problem" EntitySet="TM_Problem" />
+      <End Role="TD_Problem" EntitySet="TD_Problem" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_SA_TD_Main" Association="SAModel.Store.FK_TD_SA_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_SA" EntitySet="TD_SA" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_SA_TM_Result1" Association="SAModel.Store.FK_TD_SA_TM_Result1">
+      <End Role="TM_Result" EntitySet="TM_Result" />
+      <End Role="TD_SA" EntitySet="TD_SA" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Tell_TD_Main" Association="SAModel.Store.FK_TD_Tell_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_Tell" EntitySet="TD_Tell" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_Log_TD_Main" Association="SAModel.Store.FK_TD_Transaction_Log_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_Transaction_Log" EntitySet="TD_Transaction_Log" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_Log_TM_Action" Association="SAModel.Store.FK_TD_Transaction_Log_TM_Action">
+      <End Role="TM_Action" EntitySet="TM_Action" />
+      <End Role="TD_Transaction_Log" EntitySet="TD_Transaction_Log" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_Log_TM_Level" Association="SAModel.Store.FK_TD_Transaction_Log_TM_Level">
+      <End Role="TM_Level" EntitySet="TM_Level" />
+      <End Role="TD_Transaction_Log" EntitySet="TD_Transaction_Log" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_Log_TM_Status" Association="SAModel.Store.FK_TD_Transaction_Log_TM_Status">
+      <End Role="TM_Status" EntitySet="TM_Status" />
+      <End Role="TD_Transaction_Log" EntitySet="TD_Transaction_Log" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_Log_TM_SysPlant" Association="SAModel.Store.FK_TD_Transaction_Log_TM_SysPlant">
+      <End Role="TM_SysPlant" EntitySet="TM_SysPlant" />
+      <End Role="TD_Transaction_Log" EntitySet="TD_Transaction_Log" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_TD_Main" Association="SAModel.Store.FK_TD_Transaction_TD_Main">
+      <End Role="TD_Main" EntitySet="TD_Main" />
+      <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_TM_Action" Association="SAModel.Store.FK_TD_Transaction_TM_Action">
+      <End Role="TM_Action" EntitySet="TM_Action" />
+      <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_TM_Level" Association="SAModel.Store.FK_TD_Transaction_TM_Level">
+      <End Role="TM_Level" EntitySet="TM_Level" />
+      <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_TM_Status" Association="SAModel.Store.FK_TD_Transaction_TM_Status">
+      <End Role="TM_Status" EntitySet="TM_Status" />
+      <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Transaction_TM_SysPlant" Association="SAModel.Store.FK_TD_Transaction_TM_SysPlant">
+      <End Role="TM_SysPlant" EntitySet="TM_SysPlant" />
+      <End Role="TD_Transaction" EntitySet="TD_Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TM_ActionMapping_TM_Level" Association="SAModel.Store.FK_TM_ActionMapping_TM_Level">
+      <End Role="TM_Level" EntitySet="TM_Level" />
+      <End Role="TM_ActionMapping" EntitySet="TM_ActionMapping" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TM_ActionMapping_TM_Status" Association="SAModel.Store.FK_TM_ActionMapping_TM_Status">
+      <End Role="TM_Status" EntitySet="TM_Status" />
+      <End Role="TM_ActionMapping" EntitySet="TM_ActionMapping" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TM_SysGroup_TM_SysGroupType" Association="SAModel.Store.FK_TM_SysGroup_TM_SysGroupType">
+      <End Role="TM_SysGroupType" EntitySet="TM_SysGroupType" />
+      <End Role="TM_SysGroup" EntitySet="TM_SysGroup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TM_SysGroup_TM_SysPlant" Association="SAModel.Store.FK_TM_SysGroup_TM_SysPlant">
+      <End Role="TM_SysPlant" EntitySet="TM_SysPlant" />
+      <End Role="TM_SysGroup" EntitySet="TM_SysGroup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TM_SysUser_TM_SysGroup" Association="SAModel.Store.FK_TM_SysUser_TM_SysGroup">
+      <End Role="TM_SysGroup" EntitySet="TM_SysGroup" />
+      <End Role="TM_SysUser" EntitySet="TM_SysUser" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="TD_CarPar">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="par_no" Type="nvarchar" MaxLength="50" />
+    <Property Name="car_no" Type="nvarchar" MaxLength="50" />
+    <Property Name="root_cause_section" Type="nvarchar" MaxLength="50" />
+    <Property Name="issue_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="create_dt" Type="datetime" />
+  </EntityType>
+  <EntityType Name="TD_ConcernEN">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="group_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="group_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TD_ConcernOther">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="group_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="group_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TD_ConcernQC">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="group_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="group_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TD_Disposition">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="dispos_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="dispos_id" Type="tinyint" Nullable="false" />
+    <Property Name="dispos_text" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="TD_File">
+    <Key>
+      <PropertyRef Name="file_id" />
+    </Key>
+    <Property Name="file_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="id" Type="int" />
+    <Property Name="file_path" Type="nvarchar" MaxLength="255" />
+    <Property Name="upload_dt" Type="datetime" />
+    <Property Name="upload_by" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="TD_Inform">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="group_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="group_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TD_Main">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="control_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="issue_dt" Type="datetime" Nullable="false" />
+    <Property Name="issue_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="item_code" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="customer" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="material" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="batch_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="job_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="defective_qty" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="reason" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="expect_date" Type="date" Nullable="false" />
+    <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
+    <Property Name="effective_dt" Type="date" Nullable="false" />
+    <Property Name="preventive" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="critical_problem" Type="bit" />
+  </EntityType>
+  <EntityType Name="TD_Problem">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="prob_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="prob_id" Type="tinyint" Nullable="false" />
+    <Property Name="prob_text" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="TD_SA">
+    <Key>
+      <PropertyRef Name="sa_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="sa_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="sa_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="cust_name" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="result" Type="tinyint" Nullable="false" />
+    <Property Name="issue_date" Type="date" Nullable="false" />
+    <Property Name="reason" Type="nvarchar(max)" />
+    <Property Name="file_evidence" Type="nvarchar" MaxLength="255" />
+    <Property Name="update_by" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="TD_Tell">
+    <Key>
+      <PropertyRef Name="tell_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="tell_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="tell_user" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="tell_content" Type="nvarchar(max)" />
+    <Property Name="tell_dt" Type="datetime" Nullable="false" />
+    <Property Name="reply_dt" Type="datetime" />
+  </EntityType>
+  <EntityType Name="TD_Transaction">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="status_id" />
+      <PropertyRef Name="lv_id" />
+      <PropertyRef Name="org_id" />
+      <PropertyRef Name="Sys_Plant_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="status_id" Type="tinyint" Nullable="false" />
+    <Property Name="lv_id" Type="tinyint" Nullable="false" />
+    <Property Name="org_id" Type="int" Nullable="false" />
+    <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
+    <Property Name="act_id" Type="tinyint" />
+    <Property Name="actor" Type="nvarchar" MaxLength="25" />
+    <Property Name="act_dt" Type="datetime" />
+    <Property Name="comment" Type="nvarchar(max)" />
+    <Property Name="active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TD_Transaction_Log">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="status_id" />
+      <PropertyRef Name="lv_id" />
+      <PropertyRef Name="org_id" />
+      <PropertyRef Name="Sys_Plant_id" />
+      <PropertyRef Name="rev" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="status_id" Type="tinyint" Nullable="false" />
+    <Property Name="lv_id" Type="tinyint" Nullable="false" />
+    <Property Name="org_id" Type="int" Nullable="false" />
+    <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
+    <Property Name="rev" Type="tinyint" Nullable="false" />
+    <Property Name="act_id" Type="tinyint" />
+    <Property Name="actor" Type="nvarchar" MaxLength="25" />
+    <Property Name="act_dt" Type="datetime" />
+    <Property Name="comment" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="TM_Action">
+    <Key>
+      <PropertyRef Name="act_id" />
+    </Key>
+    <Property Name="act_id" Type="tinyint" Nullable="false" />
+    <Property Name="act_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="TM_ActionMapping">
+    <Key>
+      <PropertyRef Name="status_id" />
+      <PropertyRef Name="lv_id" />
+    </Key>
+    <Property Name="status_id" Type="tinyint" Nullable="false" />
+    <Property Name="lv_id" Type="tinyint" Nullable="false" />
+    <Property Name="action_list" Type="nvarchar" Nullable="false" MaxLength="15" />
+  </EntityType>
+  <EntityType Name="TM_Admin">
+    <Key>
+      <PropertyRef Name="emp_code" />
+    </Key>
+    <Property Name="emp_code" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="utype_id" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TM_Disposition">
+    <Key>
+      <PropertyRef Name="dispos_id" />
+    </Key>
+    <Property Name="dispos_id" Type="tinyint" Nullable="false" />
+    <Property Name="dispos_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="text_flag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TM_Level">
+    <Key>
+      <PropertyRef Name="lv_id" />
+    </Key>
+    <Property Name="lv_id" Type="tinyint" Nullable="false" />
+    <Property Name="lv_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="position_min" Type="tinyint" Nullable="false" />
+    <Property Name="position_max" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TM_Problem">
+    <Key>
+      <PropertyRef Name="prob_id" />
+    </Key>
+    <Property Name="prob_id" Type="tinyint" Nullable="false" />
+    <Property Name="prob_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="text_flag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TM_Result">
+    <Key>
+      <PropertyRef Name="result_id" />
+    </Key>
+    <Property Name="result_id" Type="tinyint" Nullable="false" />
+    <Property Name="result_name" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="TM_Status">
+    <Key>
+      <PropertyRef Name="status_id" />
+    </Key>
+    <Property Name="status_id" Type="tinyint" Nullable="false" />
+    <Property Name="status_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="lv_min" Type="tinyint" Nullable="false" />
+    <Property Name="lv_max" Type="tinyint" Nullable="false" />
+    <Property Name="active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TM_SysGroup">
+    <Key>
+      <PropertyRef Name="Sys_Plant_id" />
+      <PropertyRef Name="Sys_GroupType_id" />
+    </Key>
+    <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
+    <Property Name="Sys_GroupType_id" Type="tinyint" Nullable="false" />
+    <Property Name="group_id" Type="int" Nullable="false" />
+    <Property Name="Sys_Group_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="del_flag" Type="bit" Nullable="false" />
+    <Property Name="update_dt" Type="datetime" Nullable="false" />
+    <Property Name="update_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="TM_SysGroupCode">
+    <Key>
+      <PropertyRef Name="g_id" />
+    </Key>
+    <Property Name="g_id" Type="int" Nullable="false" />
+    <Property Name="g_code" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="TM_SysGroupType">
+    <Key>
+      <PropertyRef Name="Sys_GroupType_id" />
+    </Key>
+    <Property Name="Sys_GroupType_id" Type="tinyint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Sys_GroupType_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="del_flag" Type="bit" Nullable="false" />
+    <Property Name="update_dt" Type="datetime" Nullable="false" />
+    <Property Name="update_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="TM_SysPlant">
+    <Key>
+      <PropertyRef Name="Sys_Plant_id" />
+    </Key>
+    <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Sys_Plant_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="del_flag" Type="bit" Nullable="false" />
+    <Property Name="update_dt" Type="datetime" Nullable="false" />
+    <Property Name="update_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="TM_SysUser">
+    <Key>
+      <PropertyRef Name="Sys_Plant_id" />
+      <PropertyRef Name="Sys_GroupType_id" />
+      <PropertyRef Name="Sys_User_id" />
+    </Key>
+    <Property Name="Sys_Plant_id" Type="tinyint" Nullable="false" />
+    <Property Name="Sys_GroupType_id" Type="tinyint" Nullable="false" />
+    <Property Name="Sys_User_id" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="lv_id" Type="tinyint" Nullable="false" />
+    <Property Name="user_active" Type="bit" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'SpecialAcceptance.dbo.V_OnProcess' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="V_OnProcess">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="control_no" />
+      <PropertyRef Name="title" />
+      <PropertyRef Name="issue_dt" />
+      <PropertyRef Name="issue_by" />
+      <PropertyRef Name="item_code" />
+      <PropertyRef Name="org_id" />
+      <PropertyRef Name="status_id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="control_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="issue_dt" Type="datetime" Nullable="false" />
+    <Property Name="issue_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="item_code" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="group_name" Type="nvarchar" MaxLength="255" />
+    <Property Name="emp_fname" Type="nvarchar" MaxLength="255" />
+    <Property Name="emp_lname" Type="nvarchar" MaxLength="255" />
+    <Property Name="org_id" Type="int" Nullable="false" />
+    <Property Name="status_id" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'SpecialAcceptance.dbo.v_sa' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="v_sa">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="control_no" />
+      <PropertyRef Name="title" />
+      <PropertyRef Name="issue_dt" />
+      <PropertyRef Name="issue_by" />
+      <PropertyRef Name="item_code" />
+      <PropertyRef Name="status" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="control_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="511" />
+    <Property Name="group_name" Type="nvarchar" MaxLength="255" />
+    <Property Name="issue_dt" Type="datetime" Nullable="false" />
+    <Property Name="issue_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="item_code" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="status" Type="nvarchar" Nullable="false" MaxLength="108" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'SpecialAcceptance.dbo.v_sa_issuer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="v_sa_issuer">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="group_name" Type="nvarchar" MaxLength="255" />
+    <Property Name="name" Type="nvarchar" MaxLength="511" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'SpecialAcceptance.dbo.v_sa_onprocess' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="v_sa_onprocess">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="status" />
+      <PropertyRef Name="control_no" />
+      <PropertyRef Name="issue_dt" />
+      <PropertyRef Name="issue_by" />
+      <PropertyRef Name="title" />
+      <PropertyRef Name="item_code" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="status" Type="nvarchar" Nullable="false" MaxLength="108" />
+    <Property Name="control_no" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="issue_dt" Type="datetime" Nullable="false" />
+    <Property Name="issue_by" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="item_code" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_TD_ConcernEN_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_ConcernEN" Type="SAModel.Store.TD_ConcernEN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_ConcernEN">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_ConcernOther_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_ConcernOther" Type="SAModel.Store.TD_ConcernOther" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_ConcernOther">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_ConcernQC_TD_Main1">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_ConcernQC" Type="SAModel.Store.TD_ConcernQC" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_ConcernQC">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Disposition_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Disposition" Type="SAModel.Store.TD_Disposition" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_Disposition">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Disposition_TM_Disposition">
+    <End Role="TM_Disposition" Type="SAModel.Store.TM_Disposition" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Disposition" Type="SAModel.Store.TD_Disposition" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Disposition">
+        <PropertyRef Name="dispos_id" />
+      </Principal>
+      <Dependent Role="TD_Disposition">
+        <PropertyRef Name="dispos_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_File_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_File" Type="SAModel.Store.TD_File" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_File">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Inform_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Inform" Type="SAModel.Store.TD_Inform" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_Inform">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Main_TM_SysPlant">
+    <End Role="TM_SysPlant" Type="SAModel.Store.TM_SysPlant" Multiplicity="1" />
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_SysPlant">
+        <PropertyRef Name="Sys_Plant_id" />
+      </Principal>
+      <Dependent Role="TD_Main">
+        <PropertyRef Name="Sys_Plant_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_PcrCar_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1" />
+    <End Role="TD_CarPar" Type="SAModel.Store.TD_CarPar" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_CarPar">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Problem_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Problem" Type="SAModel.Store.TD_Problem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_Problem">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Problem_TM_Problem">
+    <End Role="TM_Problem" Type="SAModel.Store.TM_Problem" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Problem" Type="SAModel.Store.TD_Problem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Problem">
+        <PropertyRef Name="prob_id" />
+      </Principal>
+      <Dependent Role="TD_Problem">
+        <PropertyRef Name="prob_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_SA_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_SA" Type="SAModel.Store.TD_SA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_SA">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_SA_TM_Result1">
+    <End Role="TM_Result" Type="SAModel.Store.TM_Result" Multiplicity="1" />
+    <End Role="TD_SA" Type="SAModel.Store.TD_SA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Result">
+        <PropertyRef Name="result_id" />
+      </Principal>
+      <Dependent Role="TD_SA">
+        <PropertyRef Name="result" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Tell_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Tell" Type="SAModel.Store.TD_Tell" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_Tell">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_Log_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction_Log" Type="SAModel.Store.TD_Transaction_Log" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_Transaction_Log">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_Log_TM_Action">
+    <End Role="TM_Action" Type="SAModel.Store.TM_Action" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction_Log" Type="SAModel.Store.TD_Transaction_Log" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Action">
+        <PropertyRef Name="act_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction_Log">
+        <PropertyRef Name="act_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_Log_TM_Level">
+    <End Role="TM_Level" Type="SAModel.Store.TM_Level" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction_Log" Type="SAModel.Store.TD_Transaction_Log" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Level">
+        <PropertyRef Name="lv_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction_Log">
+        <PropertyRef Name="lv_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_Log_TM_Status">
+    <End Role="TM_Status" Type="SAModel.Store.TM_Status" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction_Log" Type="SAModel.Store.TD_Transaction_Log" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Status">
+        <PropertyRef Name="status_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction_Log">
+        <PropertyRef Name="status_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_Log_TM_SysPlant">
+    <End Role="TM_SysPlant" Type="SAModel.Store.TM_SysPlant" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction_Log" Type="SAModel.Store.TD_Transaction_Log" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_SysPlant">
+        <PropertyRef Name="Sys_Plant_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction_Log">
+        <PropertyRef Name="Sys_Plant_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_TD_Main">
+    <End Role="TD_Main" Type="SAModel.Store.TD_Main" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction" Type="SAModel.Store.TD_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Main">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TD_Transaction">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_TM_Action">
+    <End Role="TM_Action" Type="SAModel.Store.TM_Action" Multiplicity="0..1" />
+    <End Role="TD_Transaction" Type="SAModel.Store.TD_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Action">
+        <PropertyRef Name="act_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction">
+        <PropertyRef Name="act_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_TM_Level">
+    <End Role="TM_Level" Type="SAModel.Store.TM_Level" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction" Type="SAModel.Store.TD_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Level">
+        <PropertyRef Name="lv_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction">
+        <PropertyRef Name="lv_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_TM_Status">
+    <End Role="TM_Status" Type="SAModel.Store.TM_Status" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction" Type="SAModel.Store.TD_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Status">
+        <PropertyRef Name="status_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction">
+        <PropertyRef Name="status_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Transaction_TM_SysPlant">
+    <End Role="TM_SysPlant" Type="SAModel.Store.TM_SysPlant" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Transaction" Type="SAModel.Store.TD_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_SysPlant">
+        <PropertyRef Name="Sys_Plant_id" />
+      </Principal>
+      <Dependent Role="TD_Transaction">
+        <PropertyRef Name="Sys_Plant_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TM_ActionMapping_TM_Level">
+    <End Role="TM_Level" Type="SAModel.Store.TM_Level" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TM_ActionMapping" Type="SAModel.Store.TM_ActionMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Level">
+        <PropertyRef Name="lv_id" />
+      </Principal>
+      <Dependent Role="TM_ActionMapping">
+        <PropertyRef Name="lv_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TM_ActionMapping_TM_Status">
+    <End Role="TM_Status" Type="SAModel.Store.TM_Status" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TM_ActionMapping" Type="SAModel.Store.TM_ActionMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Status">
+        <PropertyRef Name="status_id" />
+      </Principal>
+      <Dependent Role="TM_ActionMapping">
+        <PropertyRef Name="status_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TM_SysGroup_TM_SysGroupType">
+    <End Role="TM_SysGroupType" Type="SAModel.Store.TM_SysGroupType" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TM_SysGroup" Type="SAModel.Store.TM_SysGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_SysGroupType">
+        <PropertyRef Name="Sys_GroupType_id" />
+      </Principal>
+      <Dependent Role="TM_SysGroup">
+        <PropertyRef Name="Sys_GroupType_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TM_SysGroup_TM_SysPlant">
+    <End Role="TM_SysPlant" Type="SAModel.Store.TM_SysPlant" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TM_SysGroup" Type="SAModel.Store.TM_SysGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_SysPlant">
+        <PropertyRef Name="Sys_Plant_id" />
+      </Principal>
+      <Dependent Role="TM_SysGroup">
+        <PropertyRef Name="Sys_Plant_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TM_SysUser_TM_SysGroup">
+    <End Role="TM_SysGroup" Type="SAModel.Store.TM_SysGroup" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TM_SysUser" Type="SAModel.Store.TM_SysUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_SysGroup">
+        <PropertyRef Name="Sys_Plant_id" />
+        <PropertyRef Name="Sys_GroupType_id" />
+      </Principal>
+      <Dependent Role="TM_SysUser">
+        <PropertyRef Name="Sys_Plant_id" />
+        <PropertyRef Name="Sys_GroupType_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

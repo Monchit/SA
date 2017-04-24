@@ -109,9 +109,13 @@ namespace MvcSA.Controllers
             {
                 ViewBag.Title = "Special Acceptance Requisition Form";
 
-                var plant = from a in dbSA.TM_SysGroup
-                            where a.Sys_GroupType_id == 2
+                //var plant = from a in dbSA.TM_SysGroup
+                //            where a.Sys_GroupType_id == 2
+                //            select a;
+                var plant = from a in dbSA.TM_SysPlant
+                            where a.del_flag == false
                             select a;
+
                 ViewBag.SysPlant = plant;
 
                 if (Session["SA_Org"] != null)
@@ -2571,17 +2575,17 @@ namespace MvcSA.Controllers
                     }
                     else //lv >= lv_max //Next Status
                     {
-                        byte new_status = (byte)(status + 1);//Next Status
+                        //byte new_status = (byte)(status + 1);//Next Status
 
-                        var get_min_lv = (from m in dbSA.TM_Status
-                                          where m.status_id == new_status && m.lv_min != 0
-                                          select m.lv_min).FirstOrDefault();
+                        //var get_min_lv = (from m in dbSA.TM_Status
+                        //                  where m.status_id == new_status && m.lv_min != 0
+                        //                  select m.lv_min).FirstOrDefault();
 
                         if (status == 1)//status issuer go to QC
                         {
                             if (Check_All_Approve(id, status))
                             {
-                                AddQCTransaction(id, 3, 2);//3 = QC
+                                AddQCTransaction(id, 3, 2);//3 = QC, 2 = Mgr.
                             }
                         }
                         //else if (status == 2)//status QA go to QC
@@ -2622,8 +2626,8 @@ namespace MvcSA.Controllers
                             if (Check_All_Approve(id, status))
                             {
                                 //Update Date 2016-09-29 by Monchit W.
-                                if (AddOtherTransaction(id, new_status, get_min_lv)) { }//Add Other Transaction
-                                else if (AddENTransaction(id, (byte)(new_status + 1), 1)) { }//Add Engineer Transaction
+                                if (AddOtherTransaction(id, 4, 2)) { }//Add Concern Transaction (Mgr.)
+                                else if (AddENTransaction(id, 5, 1)) { }//Add Engineering Transaction
                                 else
                                 {
                                     var get_group_qc = (from a in dbSA.TD_Transaction
@@ -2632,18 +2636,18 @@ namespace MvcSA.Controllers
 
                                     var get_dept_qc = (from a in dbTNC.View_Organization
                                                        where get_group_qc.Contains(a.group_id.Value)
-                                                       select new { a.dept_id, a.DeptMgr_email, a.plant_id, a.PlantMgr_email }).Distinct();
+                                                       select new { a.dept_id, a.DeptMgr_email, a.DeptMgr, a.plant_id, a.PlantMgr_email, a.PlantMgr }).Distinct();
 
                                     foreach (var item in get_dept_qc)
                                     {
                                         if (item.DeptMgr_email != null)
                                         {
-                                            Insert_Transaction(id, 6, 3, item.dept_id.Value, true);
+                                            Insert_Transaction(id, 6, 3, item.dept_id.Value, true, actor: item.DeptMgr);
                                             SendEmailCenter(item.DeptMgr_email, id);
                                         }
                                         else
                                         {
-                                            Insert_Transaction(id, 6, 4, item.plant_id.Value, true);
+                                            Insert_Transaction(id, 6, 4, item.plant_id.Value, true, actor: item.PlantMgr);
                                             SendEmailCenter(item.PlantMgr_email, id);
                                         }
                                     }
@@ -2666,7 +2670,7 @@ namespace MvcSA.Controllers
                             if (Check_All_Approve(id, status))
                             {
                                 //Update Date 2016-09-29 by Monchit W.
-                                if (AddENTransaction(id, new_status, get_min_lv)) { }
+                                if (AddENTransaction(id, 5, 1)) { }
                                 else
                                 {
                                     var get_group_qc = (from a in dbSA.TD_Transaction
@@ -2996,7 +3000,7 @@ namespace MvcSA.Controllers
                     string body = "";// mailto + "<br />";
                     string int_link = "http://webExternal";//web02,webExternal
                     string ext_link = "http://webExternal.nok.co.th";//web02,webExternal
-                    //short flag = 0;//0=Send, 1=Not Send
+                    short flag = 0;//0=Send, 1=Not Send
                     if (type == 0)//Default
                     {
                         subject = "You have SA Online waiting for Operate.";

@@ -1,0 +1,7 @@
+﻿
+<form action="@Url.Action("IssuerUpload")" method="post" enctype="multipart/form-data">
+    @Html.Partial("_SectionUploadFiles")
+    <input type="hidden" value="@ViewBag.SAID" id="hdID" name="hdID" />
+    <hr />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

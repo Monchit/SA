@@ -1,0 +1,59 @@
+﻿<style type="text/css">
+    /* fix the size of the pager */
+    input.ui-pg-input { width: auto; padding: 0px; margin: 0px; line-height: normal; }
+    select.ui-pg-selbox { width: auto; padding: 0px; margin: 0px; line-height: normal }
+    .ui-jqgrid .ui-state-highlight { background: #7AC0DA; }
+    .ui-jqgrid tr.jqgrow td { white-space: normal !important; }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        jQuery("#grid_user").jqGrid({
+            url: "@Url.Action("GridUserMaster","Admin")",
+            datatype: 'json',
+            mtype: 'POST',
+            colNames: ['Emp Code', 'Name', 'Group', 'Plant', 'Group Type'],
+            colModel: [
+              { name: 'emp_code', index: 'emp_code', key: true, width: 70, align: 'center', sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("UserSelectList","Admin")" }, editrules: { required: true } },
+              { name: 'emp_name', index: 'emp_name', sortable: true },
+              { name: 'group_name', index: 'group_name', width: 70, align: 'center', sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("GroupInSelectList","Admin")" }, editrules: { required: true } },
+              { name: 'plant_name', index: 'plant_name', width: 70, align: 'center' },
+              { name: 'group_type', index: 'group_type', width: 70, align: 'center' }
+            ],
+            pager: jQuery('#pager_user'),
+            rowNum: 10,
+            rowList: [5, 10, 20, 50],
+            //autowidth: true,
+            width: 700,
+            height: 'auto',
+            sortname: 'emp_code',
+            sortorder: "asc",
+            viewrecords: true,
+            caption: 'Master User',
+            ajaxSelectOptions: { cache: false },
+            //loadonce: false,
+            scrollOffset: 0
+        });
+
+        jQuery("#grid_user").jqGrid('navGrid', '#pager_user',
+            { edit: true, add: true, del: true, search: false },
+            { url: "@Url.Action("EditUser","Admin")", closeAfterEdit: true, width: 450, beforeShowForm: function (formid) { $("#tr_emp_code", formid).hide(); } },
+            { url: "@Url.Action("AddUser","Admin")", addCaption: 'Create New User', closeAfterAdd: true, width: 450, beforeShowForm: function (formid) { $("#tr_emp_code", formid).show(); } },
+            {
+                url: "@Url.Action("DelUser","Admin")", width: 400,
+                beforeShowForm: function (formid) {
+                    var selRowId = $(this).jqGrid('getGridParam', 'selrow');
+                    $("td.delmsg", formid[0]).html("Do you really want delete <br /><b>User : " +
+                         $(this).jqGrid('getCell', selRowId, 'emp_name') + "</b>?");
+                }
+            }, {}, {});
+    });
+</script>
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<table id="grid_user">
+</table>
+<div id="pager_user"></div>

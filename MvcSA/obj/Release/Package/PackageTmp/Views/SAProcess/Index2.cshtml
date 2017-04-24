@@ -1,0 +1,273 @@
+﻿
+<style type="text/css">
+    /* fix the size of the pager */
+    input.ui-pg-input { width: auto; padding: 0px; margin: 0px; line-height: normal; }
+    select.ui-pg-selbox { width: auto; padding: 0px; margin: 0px; line-height: normal }
+    .ui-jqgrid .ui-state-highlight { background: #7AC0DA; }
+    .ui-jqgrid tr.jqgrow td { white-space: normal !important; }
+
+    /*fix jTable*/
+    span.jtable-goto-page select, span.jtable-page-size-change select {
+        height: 25px;
+        width: 60px;
+        padding: 2px 2px;
+        margin-bottom:auto;
+    }
+    div.jtable-main-container table.jtable thead th {
+        text-align: center;
+    }
+    div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td {
+        text-align: center;
+    }
+    div.accordion-heading {
+        font-weight:600;
+    }
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#divJTable').jtable({
+            //title: 'Test',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            selecting: true, //Enable selecting
+            //multiselect: true, //Allow multiple selecting
+            //selectingCheckboxes: true, //Show checkboxes on first column
+            //selectOnRowClick: false, //Enable this to only select using checkboxes
+            defaultSorting: 'issuedate DESC', //Set default sorting
+            actions: {
+                listAction: '@Url.Action("GridSAOnProcess","SAProcess")'
+            },
+            fields: {
+                control_no: {
+                    title: 'Control No.', width: '15%',
+                    display: function (data) {
+                        return $('<a href="#mainModal" class="linkControlNo" data-toggle="modal" rel="' + data.record.id + '">' + data.record.control_no + '</a>');
+                    }
+                },
+                title: { title: 'Type of Nonconformities', width: '15%' },
+                issuer: { title: 'Issued by', width: '17%' },
+                group: { title: 'Issued group', width: '18%' },
+                //issuedate: { title: 'Issued date', type: 'date', displayFormat: 'dd-mm-yy' },
+                issuedate: {
+                    title: 'Issued date', width: '15%',
+                    display: function (data) {
+                        return moment(data.record.issuedate).format('DD/MM/YYYY HH:mm:ss');//.fromNow();//.calendar();
+                    }
+                },
+                status: { title: 'Status', width: '15%' },
+                files: { title: 'Files', width: '5%',
+                    display: function (data) {
+                        return $('<a href="#fileModal" class="viewfiles" data-toggle="modal" rel="' + data.record.id + '"><i class="icon-folder-open"></i></a>');
+                    }
+                }
+            }
+        });
+
+        //$('#divJTable').jtable('load');
+
+        //Re-load records when user click 'load records' button.
+        $('#btSearch').click(function (e) {
+            e.preventDefault();
+            $('#divJTable').jtable('load', {
+                control_no: $('#txt_controlno').val(),
+                title: $('#txt_title').val(),
+                issuer: $('#txt_issuer').val(),
+                group: $('#txt_group').val(),
+                status: $('#txt_status').val()//$('#ddl_status').val()
+            });
+        });
+
+        $('#btMySA').click(function (e) {
+            e.preventDefault();
+            $('#divJTable').jtable('load', {
+                user: 1
+            });
+        });
+
+        //Load all records when page is first shown
+        $('#btSearch').click();
+
+        $('#divMainDetail').dialog({
+            autoOpen: false,
+            width: 800,
+            height: 600,
+            //resizable: false,
+            //title: 'hi there',
+            modal: true,
+            @*open: function (event, ui) {
+                //Load the CreateDetailPartial action which will return 
+                // the partial view CreateDetailPartial
+                $(this).load("@Url.Action("CreateDetailPartial")");
+            },*@
+            buttons: {
+                "Close": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(document).on("click", ".linkControlNo", function (event) {
+            var id = $(this).attr('rel');
+            var remote = "@Url.Action("_Detail")?id=" + id;
+            //$('#mainModal').modal().css({
+            //    'width': function () { 
+            //        return ($(document).width() * .9) + 'px';// make width 90% of screen
+            //    },
+            //    'margin-left': function () { 
+            //        return -($(this).width() / 2);// center model
+            //    }
+            //});
+            $('.modal-body').load(remote, function (response, status, xhr) {
+                //$('#mainModal').modal('show')
+                //    .css({
+                //    'width': function () {
+                //        //alert(($(document).width() * .9) + 'px');
+                //        return ($(document).width() * .9) + 'px';// make width 90% of screen
+                //    },
+                //    'margin-left': function () {
+                //        //alert(-($(this).width() / 2));
+                //        return -($(this).width() / 2);// center model
+                //    }
+                //});
+            });
+            
+            @*$('#divMainDetail').load("@Url.Action("_Detail")?id=" + $(this).attr("data-id"),
+                function (response, status, xhr) {
+                    $('#divMainDetail').dialog('open');
+            });
+            $('#divSADetail').children().remove();
+            $.get("@Url.Action("RenderStatus")", "id=" + $(this).attr("data-id"), function (data) {
+                $('#divSADetail').append(data);
+            });
+            $('#divSADetail').css("display", "inline");
+            event.preventDefault();*@
+        });
+
+        @*$(document).on("click", "a.accordion-toggle.collapsed", function () {
+            var status = $(this).attr("href");
+            $.get("@Url.Action("GetComment")", "id=" + $(this).attr("data-id") + "&statusid=" + status.substring(9), function (data) {
+                $("#" + status.substring(1)).children().children().remove();
+                $("#" + status.substring(1)).children().first().append(data);
+            });
+        });*@
+
+        //$("#divAttachFiles").dialog({
+        //    autoOpen: false,
+        //    height: 500,
+        //    width: 600,
+        //    modal: true,
+        //    buttons: {
+        //        "Close": function () {
+        //            $(this).dialog("close");
+        //        }
+        //    }
+        //});
+
+        $(document).on("click", ".viewfiles", function () {
+            @*$('#divAttachFiles').children().remove();
+            $.get("@Url.Action("GetAttachFiles")", "id=" + $(this).attr("data-id"), function (data) {
+                $('#divAttachFiles').append(data);
+            });
+            $("#divAttachFiles").dialog("open");*@
+
+            var id = $(this).attr('rel');
+            $('#fileModal').modal();
+            //$('#fileModal>.modal-body').html('<span><i class="icon-spin"></i> Loading comments....</span>');
+            $.get("@Url.Action("GetAttachFiles")", "id=" + id, function (data) {
+                $('#fileModal>.modal-body').html(data);
+            });
+
+            @*var id = $(this).attr('rel');
+            var datasource = "@Url.Action("GetAttachFiles")?" + id;
+            var options = { 'remote': datasource };
+            $('#fileModal').modal(options);*@
+        });
+
+        //$('#fileModal').on('show', function () {
+        //    $(this).find('.modal-body').css({
+        //        width: 'auto',
+        //        height: 'auto',
+        //        'max-height': '100%'
+        //    });
+        //});
+    });
+</script>
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<div class="filtering">
+    <form>
+        <table class="table table-condensed" style="width:auto;">
+            <thead>
+                <tr>
+                    <th>Control No.</th>
+                    <th>Type of Nonconformities</th>
+                    <th>Issued by</th>
+                    <th>Issued group</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="txt_controlno" id="txt_controlno" class="span2" placeholder="Control No." /></td>
+                    <td><input type="text" name="txt_title" id="txt_title" class="span3" placeholder="Type of Nonconformities" /></td>
+                    <td><input type="text" name="txt_issuer" id="txt_issuer" class="span2" placeholder="Issued by" /></td>
+                    <td><input type="text" name="txt_group" id="txt_group" class="span2" placeholder="Issued group" /></td>
+                    @*<td>@Html.DropDownList("ddl_status",new SelectList(ViewBag.Status, "status_id", "status_name"), new{ @class = "span2"})</td>*@
+                    <td><input type="text" name="txt_status" id="txt_status" class="span2" placeholder="Status" /></td>
+                    <td><button type="submit" id="btSearch" class="btn btn-primary"><i class="icon-search icon-white"></i> Search</button>
+                        <button type="submit" id="btMySA" class="btn btn-warning"><i class="icon-user icon-white"></i> My SA</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<div id="divJTable"></div>
+
+<div id="divMainDetail" title="Detail"></div>
+
+@*<div id="divAttachFiles" title="Attach Files"></div>*@
+
+@*<div class="accordion" id="divSADetail" style="display:none;"></div>*@
+
+
+<!-- Modal Files-->
+<div id="fileModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="fileModalLabel">Attach Files</h3>
+  </div>
+  <div class="modal-body">
+    
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+<!-- End Modal Files-->
+
+<!-- Modal Detail-->
+<!--<div id="mainModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="mainModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="mainModalLabel">Detail</h3>
+  </div>
+  <div class="modal-body">
+    
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>-->
+<!-- End Modal Detail-->

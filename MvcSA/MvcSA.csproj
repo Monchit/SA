@@ -727,9 +727,11 @@
       <LastGenOutput>MailCenterModel.cs</LastGenOutput>
     </Content>
     <Content Include="App_Browsers\qt.browser" />
-    <Content Include="Manual\Eng.pdf" />
-    <Content Include="Manual\Thai.pdf" />
+    <Content Include="Manual\WI-QA1-0001 Rev.03.pdf" />
+    <Content Include="Manual\WI-QA2-0003 Rev.01.pdf" />
+    <Content Include="Manual\WP-RV-0056 Rev.00.pdf" />
     <None Include="Properties\PublishProfiles\webExternal.pubxml" />
+    <None Include="Properties\PublishProfiles\webex_sao.pubxml" />
     <None Include="Properties\PublishProfiles\WebInternal.pubxml" />
     <None Include="Properties\PublishProfiles\webtest.pubxml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />

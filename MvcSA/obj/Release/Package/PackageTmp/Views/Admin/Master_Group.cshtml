@@ -1,0 +1,58 @@
+﻿<style type="text/css">
+    /* fix the size of the pager */
+    input.ui-pg-input { width: auto; padding: 0px; margin: 0px; line-height: normal; }
+    select.ui-pg-selbox { width: auto; padding: 0px; margin: 0px; line-height: normal }
+    .ui-jqgrid .ui-state-highlight { background: #7AC0DA; }
+    .ui-jqgrid tr.jqgrow td { white-space: normal !important; }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        jQuery("#grid_group").jqGrid({
+            url: "@Url.Action("GridGroupMaster","Admin")",
+            datatype: 'json',
+            mtype: 'POST',
+            colNames: ['Group', 'Group Name', 'Group Type', 'Plant'],
+            colModel: [
+              { name: 'group_id', index: 'group_id', key: true, align: 'center', sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("GroupSelectList","Admin")" }, editrules: { required: true } },
+              { name: 'group_name', index: 'group_name', align: 'center', width: 80, sortable: true, editable: true, edittype: 'text', editrules: { required: true } },
+              { name: 'group_type', index: 'group_type', align: 'center', width: 80, sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("GroupTypeSelectList","Admin")" }, editrules: { required: true } },
+              { name: 'plant', index: 'plant', align: 'center', width: 80, sortable: true, editable: true, edittype: 'select', editoptions: { dataUrl: "@Url.Action("PlantSelectList","Admin")" }, editrules: { required: true } }
+            ],
+            pager: jQuery('#pager_group'),
+            rowNum: 10,
+            rowList: [5, 10, 20, 50],
+            //autowidth: true,
+            width: 700,
+            height: 'auto',
+            sortname: 'group_name',
+            sortorder: "asc",
+            viewrecords: true,
+            caption: 'Master Group',
+            ajaxSelectOptions: { cache: false },
+            //loadonce: false,
+            scrollOffset: 0
+        });
+
+        jQuery("#grid_group").jqGrid('navGrid', '#pager_group',
+            { edit: true, add: true, del: true, search: false },
+            { url: "@Url.Action("EditGroup","Admin")", closeAfterEdit: true, width: 450, beforeShowForm: function (formid) { $("#tr_group_id", formid).hide(); } },
+            { url: "@Url.Action("AddGroup","Admin")", addCaption: 'Create New Group', closeAfterAdd: true, width: 450, beforeShowForm: function (formid) { $("#tr_group_id", formid).show(); } },
+            {
+                url: "@Url.Action("DelGroup","Admin")", width: 400,
+                beforeShowForm: function (formid) {
+                    var selRowId = $(this).jqGrid('getGridParam', 'selrow');
+                    $("td.delmsg", formid[0]).html("Do you really want delete <br /><b>Group : " +
+                         $(this).jqGrid('getCell', selRowId, 'Sys_Group_name') + "</b>?");
+                }
+            }, {}, {});
+    });
+</script>
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<table id="grid_group">
+</table>
+<div id="pager_group"></div>

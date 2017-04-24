@@ -1,0 +1,113 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $("#selQC").select2({
+            multiple: true,
+            placeholder: "-",
+            ajax: {
+                url: '@Url.Action("SelectQC", "SAProcess")',
+                dataType: 'json',
+                data: function (term, page) {
+                    return {
+                        searchTerm: term
+                    };
+                },
+                results: function (data, page) {
+                    return { results: data };
+                }
+            },
+            formatResult: function (item) { return item.text; },
+            formatSelection: function (item) { return item.text; }
+        });
+
+        $("#selEN").select2({
+            multiple: true,
+            placeholder: "-",
+            ajax: {
+                url: '@Url.Action("SelectEN", "SAProcess")',
+                dataType: 'json',
+                data: function (term, page) {
+                    return {
+                        searchTerm: term
+                    };
+                },
+                results: function (data, page) {
+                    return { results: data };
+                }
+            },
+            formatResult: function (item) { return item.text; },
+            formatSelection: function (item) { return item.text; }
+        });
+
+        $("#selOT").select2({
+            multiple: true,
+            placeholder: "-",
+            ajax: {
+                url: '@Url.Action("SelectOther", "SAProcess")',
+                dataType: 'json',
+                data: function (term, page) {
+                    return {
+                        searchTerm: term
+                    };
+                },
+                results: function (data, page) {
+                    return { results: data };
+                }
+            },
+            formatResult: function (item) { return item.text; },
+            formatSelection: function (item) { return item.text; }
+        });
+
+        $('#selInf').select2({
+            multiple: true,
+            ajax: {
+                url: '@Url.Action("SelectAll", "SAProcess")',
+                dataType: 'json',
+                data: function (term, page) {
+                    return {
+                        searchTerm: term
+                    };
+                },
+                results: function (data, page) {
+                    return { results: data };
+                }
+            },
+            formatResult: function (item) { return item.text; },
+            formatSelection: function (item) { return item.text; }
+        });
+
+        $.get('@Url.Action("GetSelectedQC","SAProcess")', 'id=@ViewBag.ConcernID', function (data) {
+            $("#selQC").select2("data", data).select2("enable", false);
+        });
+
+        $.get('@Url.Action("GetSelectedEN","SAProcess")', 'id=@ViewBag.ConcernID', function (data) {
+            $("#selEN").select2("data", data).select2("enable", false);
+        });
+
+        $.get('@Url.Action("GetSelectedOther","SAProcess")', 'id=@ViewBag.ConcernID', function (data) {
+            $("#selOT").select2("data", data).select2("enable", false);
+        });
+
+        $.get('@Url.Action("GetSelectedInform","SAProcess")', 'id=@ViewBag.ConcernID', function (data) {
+            $("#selInf").select2("data", data).select2("enable", false);
+        });
+    });
+</script>
+<table class="table table-striped table-condensed">
+    <tr>
+        <td>QC :</td>
+        <td><input type="text" id="selQC" name="selQC" class="span5" disabled="disabled" /></td>
+    </tr>
+    <tr>
+        <td>Engineering :</td>
+        <td><input type="text" id="selEN" name="selEN" class="span5" disabled="disabled" /></td>
+    </tr>
+    <tr>
+        <td>Other :</td>
+        <td><input type="text" id="selOT" name="selOT" class="span5" disabled="disabled" /></td>
+    </tr>
+    <tr>
+        <td>Inform :</td>
+        <td><input type="text" id="selInf" name="selInf" class="span5" disabled="disabled" /></td>
+    </tr>
+</table>
+        

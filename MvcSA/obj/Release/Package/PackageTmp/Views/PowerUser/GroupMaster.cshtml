@@ -1,0 +1,89 @@
+﻿
+<style type="text/css">
+    /* fix the size of the pager */
+    /*input.ui-pg-input { width: auto; padding: 0px; margin: 0px; line-height: normal; }
+    select.ui-pg-selbox { width: auto; padding: 0px; margin: 0px; line-height: normal }
+    .ui-jqgrid .ui-state-highlight { background: #7AC0DA; }
+    .ui-jqgrid tr.jqgrow td { white-space: normal !important; }*/
+
+    /*fix jTable*/
+    span.jtable-goto-page select, span.jtable-page-size-change select {
+        height: 25px;
+        width: 60px;
+        padding: 2px 2px;
+        margin-bottom:auto;
+    }
+    div.jtable-main-container table.jtable thead th {
+        text-align: center;
+    }
+    div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td {
+        text-align: center;
+    }
+    div.accordion-heading {
+        font-weight:600;
+    }
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+    }
+    .ui-dialog-title {
+        color:white;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#jTableGroup').jtable({
+            title: 'Group Master',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            selecting: true, //Enable selecting
+            defaultSorting: 'Sys_GroupType_id', //Set default sorting
+            actions: {
+                listAction: '@Url.Action("GroupList","PowerUser")',
+                updateAction: '@Url.Action("UpdateGroup","PowerUser")',
+                createAction: '@Url.Action("CreateGroup","PowerUser")'
+            },
+            fields: {
+                Sys_GroupType_id: { title: 'Group Type', key: true, width: '10%', create: true, edit: false, options: '@Url.Action("GetGroupTypeList","PowerUser")' },
+                //hdGroupType: { title: 'gtype', list: true, type: 'hidden', create: false, edit: false },
+                Sys_Plant_id: { title: 'Plant Name', key: true, width: '10%', create: true, edit: false, options: '@Url.Action("GetPlantList","PowerUser")' },
+                group_id: { title: 'Group', options: '@Url.Action("GetTNCGroupList","PowerUser")' },
+                Sys_Group_name: { title: 'Group Name', width: '10%' },
+                update_dt: { title: 'Update Date', width: '10%', type: 'date', displayFormat: 'dd-mm-yy', create: false, edit: false },
+                update_by: { title: 'Update By', list: false, create: false, edit: false },
+                del_flag: { title: 'Delete', list: false, create: false, edit: false },
+                DeleteIcon: {
+                    title: '',
+                    width: '1%',
+                    create: false,
+                    edit: false,
+                    display: function(data){
+                        var $img = $('<img src="../Scripts/jtable/themes/metro/delete.png" title="Delete Record"/>');
+                        $img.click(function(){
+                            $('#jTableGroup').jtable('deleteRecord' ,{
+                                key: data.record.Sys_Plant_id,
+                                url: '@Url.Action("DeleteGroup", "PowerUser")?group_type=' + data.record.Sys_GroupType_id + '&plant=' + data.record.Sys_Plant_id
+                            });
+                        });
+                        return $img;
+                    }
+                }
+            }
+        });
+        //Load student list from server
+        $('#jTableGroup').jtable('load');
+
+        //Delete selected row
+        //$('.jtable-delete-command-button').click(function () {
+        //    var $selectedRows = $('#jTableGroup').jtable('selectedRows');
+        //    $('#jTableGroup').jtable('deleteRows', $selectedRows);
+        //});
+
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div id="jTableGroup"></div>

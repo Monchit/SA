@@ -1,0 +1,25 @@
+﻿@model IEnumerable<MvcSA.Models.TD_Transaction>
+
+<h2>Report</h2>
+
+@*<form class="form-inline" id="formSAExcel" action="@Url.Action("ReportExcel","SAProcess")" method="POST">
+    Select SA No.
+    <select id="slSA" name="slSA" class="span2">
+    @foreach (var item in Model)
+    {
+        <option value="@item.TD_Main.id">@item.TD_Main.control_no</option>
+    }
+    </select>
+    <input type="submit" class="btn btn-success" value="Excel" />
+</form>*@
+
+<form class="form-inline" id="formSAPDF" action="@Url.Action("PrintPDF","SAProcess")" method="POST">
+    Select SA No.
+    <select id="slSA" name="slSA" class="span2">
+    @foreach (var item in Model)
+    {
+        <option value="@item.TD_Main.id">@item.TD_Main.control_no</option>
+    }
+    </select>
+    <input type="submit" class="btn btn-danger" value="PDF" />
+</form>
