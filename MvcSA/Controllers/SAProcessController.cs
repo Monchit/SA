@@ -2006,6 +2006,16 @@ namespace MvcSA.Controllers
                             email += "," + item;
                     }
                 }
+                else
+                {
+                    var get_email_dept = (from a in dbTNC.View_Organization
+                                         where a.group_id == group_id && a.DeptMgr_email != null && a.DeptMgr_email != ""
+                                         select a.DeptMgr_email).FirstOrDefault();
+                    if (get_email_dept != null)
+                    {
+                        email += "," + get_email_dept;
+                    }
+                }
 
                 email = email.Substring(1);
             }
