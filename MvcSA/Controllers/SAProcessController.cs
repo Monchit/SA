@@ -109,9 +109,13 @@ namespace MvcSA.Controllers
             {
                 ViewBag.Title = "Special Acceptance Requisition Form";
 
-                var plant = from a in dbSA.TM_SysGroup
-                            where a.Sys_GroupType_id == 2
+                //var plant = from a in dbSA.TM_SysGroup
+                //            where a.Sys_GroupType_id == 2
+                //            select a;
+                var plant = from a in dbSA.TM_SysPlant
+                            where a.del_flag == false
                             select a;
+
                 ViewBag.SysPlant = plant;
 
                 if (Session["SA_Org"] != null)
@@ -403,17 +407,10 @@ namespace MvcSA.Controllers
                     ViewBag.ShowForm = 10;//Form ApproveS2
                     ViewBag.CarPar = Check_CarPar(id);
                 }
-                else if (status_id == 7 && user_lv == 1)//Issue SA
+                else if (status_id == 7)
                 {
-                    if (Check_SysUser(user, status_id, user_lv, query.Sys_Plant_id))
-                    {
-                        ViewBag.ShowForm = 13;//user_lv;
-                    }
+                    ViewBag.ShowForm = 13;
                 }
-                //else if (status_id == 6)
-                //{
-                //    ViewBag.ShowForm = 12;
-                //}
                 else
                 {
                     ViewBag.ShowForm = user_lv;
@@ -492,8 +489,8 @@ namespace MvcSA.Controllers
             if (query.Any()) return true;
             else return false;
         }
-
-        //[OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
+        
+        [OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
         public ActionResult _ShowFiles(int id)
         {
             List<VM_AttachFiles> vobj = new List<VM_AttachFiles>();
@@ -959,7 +956,7 @@ namespace MvcSA.Controllers
                         {
                             if (file.ContentType == "application/pdf")//Check accept file type.
                             {
-                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName.Replace('#', ' ').Replace('%', ' '));
                                 var path = Path.Combine(Server.MapPath(subPath), fileName);
                                 file.SaveAs(path);
                                 SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
@@ -1223,7 +1220,7 @@ namespace MvcSA.Controllers
                         {
                             if (file.ContentType == "application/pdf")//Check accept file type.
                             {
-                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName.Replace('#', ' ').Replace('%', ' '));
                                 var path = Path.Combine(Server.MapPath(subPath), fileName);
                                 file.SaveAs(path);
                                 SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
@@ -1350,7 +1347,7 @@ namespace MvcSA.Controllers
                         {
                             if (file.ContentType == "application/pdf")//Check accept file type.
                             {
-                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName.Replace('#', ' ').Replace('%', ' '));
                                 var path = Path.Combine(Server.MapPath(subPath), fileName);
                                 file.SaveAs(path);
                                 SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
@@ -1745,7 +1742,7 @@ namespace MvcSA.Controllers
                     {
                         if (file.ContentType == "application/pdf")//Check accept file type.
                         {
-                            var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                            var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName.Replace('#',' ').Replace('%',' '));
                             var path = Path.Combine(Server.MapPath(subPath), fileName);
                             file.SaveAs(path);
                             SaveFiletoDB(id, subPath + fileName, uploader);
@@ -2007,6 +2004,16 @@ namespace MvcSA.Controllers
                     {
                         if (!string.IsNullOrEmpty(item))
                             email += "," + item;
+                    }
+                }
+                else
+                {
+                    var get_email_dept = (from a in dbTNC.View_Organization
+                                         where a.group_id == group_id && a.DeptMgr_email != null && a.DeptMgr_email != ""
+                                         select a.DeptMgr_email).FirstOrDefault();
+                    if (get_email_dept != null)
+                    {
+                        email += "," + get_email_dept;
                     }
                 }
 
@@ -2578,17 +2585,17 @@ namespace MvcSA.Controllers
                     }
                     else //lv >= lv_max //Next Status
                     {
-                        byte new_status = (byte)(status + 1);//Next Status
+                        //byte new_status = (byte)(status + 1);//Next Status
 
-                        var get_min_lv = (from m in dbSA.TM_Status
-                                          where m.status_id == new_status && m.lv_min != 0
-                                          select m.lv_min).FirstOrDefault();
+                        //var get_min_lv = (from m in dbSA.TM_Status
+                        //                  where m.status_id == new_status && m.lv_min != 0
+                        //                  select m.lv_min).FirstOrDefault();
 
                         if (status == 1)//status issuer go to QC
                         {
                             if (Check_All_Approve(id, status))
                             {
-                                AddQCTransaction(id, 3, 2);//3 = QC
+                                AddQCTransaction(id, 3, 2);//3 = QC, 2 = Mgr.
                             }
                         }
                         //else if (status == 2)//status QA go to QC
@@ -2629,8 +2636,8 @@ namespace MvcSA.Controllers
                             if (Check_All_Approve(id, status))
                             {
                                 //Update Date 2016-09-29 by Monchit W.
-                                if (AddOtherTransaction(id, new_status, get_min_lv)) { }//Add Other Transaction
-                                else if (AddENTransaction(id, (byte)(new_status + 1), 1)) { }//Add Engineer Transaction
+                                if (AddOtherTransaction(id, 4, 2)) { }//Add Concern Transaction (Mgr.)
+                                else if (AddENTransaction(id, 5, 1)) { }//Add Engineering Transaction
                                 else
                                 {
                                     var get_group_qc = (from a in dbSA.TD_Transaction
@@ -2639,18 +2646,18 @@ namespace MvcSA.Controllers
 
                                     var get_dept_qc = (from a in dbTNC.View_Organization
                                                        where get_group_qc.Contains(a.group_id.Value)
-                                                       select new { a.dept_id, a.DeptMgr_email, a.plant_id, a.PlantMgr_email }).Distinct();
+                                                       select new { a.dept_id, a.DeptMgr_email, a.DeptMgr, a.plant_id, a.PlantMgr_email, a.PlantMgr }).Distinct();
 
                                     foreach (var item in get_dept_qc)
                                     {
                                         if (item.DeptMgr_email != null)
                                         {
-                                            Insert_Transaction(id, 6, 3, item.dept_id.Value, true);
+                                            Insert_Transaction(id, 6, 3, item.dept_id.Value, true, actor: item.DeptMgr);
                                             SendEmailCenter(item.DeptMgr_email, id);
                                         }
                                         else
                                         {
-                                            Insert_Transaction(id, 6, 4, item.plant_id.Value, true);
+                                            Insert_Transaction(id, 6, 4, item.plant_id.Value, true, actor: item.PlantMgr);
                                             SendEmailCenter(item.PlantMgr_email, id);
                                         }
                                     }
@@ -2673,7 +2680,7 @@ namespace MvcSA.Controllers
                             if (Check_All_Approve(id, status))
                             {
                                 //Update Date 2016-09-29 by Monchit W.
-                                if (AddENTransaction(id, new_status, get_min_lv)) { }
+                                if (AddENTransaction(id, 5, 1)) { }
                                 else
                                 {
                                     var get_group_qc = (from a in dbSA.TD_Transaction
@@ -2710,11 +2717,11 @@ namespace MvcSA.Controllers
                                 }
                             }
                         }
-                        else if (status == 5)//status EN go to QS Review
+                        else if (status == 5)//status EN go to QC Review
                         {
                             if (Check_All_Approve(id, status))
                             {
-                                if (dbSA.TD_Main.Find(id).critical_problem.Value && lv < 4)//Engineering Plant
+                                if (dbSA.TD_Main.Find(id).critical_problem.Value && lv < 4)//Critical problem -> Engineering Plant
                                 {
                                     var get_dept_en = (from a in dbSA.TD_Transaction
                                                        where a.id == id && a.status_id == 5 && a.lv_id == 3
@@ -3000,10 +3007,10 @@ namespace MvcSA.Controllers
                 {
                     TNCUtility tnc_util = new TNCUtility();
                     string subject = "";
-                    string body = mailto + "<br />";
+                    string body = "";// mailto + "<br />";
                     string int_link = "http://webExternal";//web02,webExternal
                     string ext_link = "http://webExternal.nok.co.th";//web02,webExternal
-                    //short flag = 0;//0=Send, 1=Not Send
+                    short flag = 0;//0=Send, 1=Not Send
                     if (type == 0)//Default
                     {
                         subject = "You have SA Online waiting for Operate.";
@@ -3100,8 +3107,8 @@ namespace MvcSA.Controllers
                             "<br />Best Regard,<br />From SA Online";
                     }
 
-                    //tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, null, flag: flag);//Real
-                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", "monchit@nok.co.th", subject, body);//Test
+                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, null, flag: flag);//Real
+                    //tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", "monchit@nok.co.th", subject, body);//Test
                 }
             }
         }
@@ -3317,7 +3324,7 @@ namespace MvcSA.Controllers
                 {
                     if (files.ContentType == "application/pdf")//Check accept file type.
                     {
-                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(files.FileName);
+                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(files.FileName.Replace('#',' ').Replace('%',' '));
                         var path = Path.Combine(Server.MapPath(subPath), fileName);
                         files.SaveAs(path);
                         sa.file_evidence = subPath + fileName;
@@ -3349,7 +3356,7 @@ namespace MvcSA.Controllers
 
             foreach (var item in query)
             {
-                Insert_Transaction(id, 8, item.lv_id, item.org_id, true);
+                Insert_Transaction(id, 8, item.lv_id, item.org_id, true, actor: item.actor);
                 SendEmailCenter(GetEmailByEmpcode(item.actor), id);
             }
 
@@ -3425,7 +3432,7 @@ namespace MvcSA.Controllers
                     //string subPath = "~/UploadFiles/" + dt.Year + "/" + dt.Month + "/" + sid + "/";
                     if (files_e.ContentType == "application/pdf")//Check accept file type.
                     {
-                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(files_e.FileName);
+                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(files_e.FileName.Replace('#',' ').Replace('%',' '));
                         var path = Path.Combine(Server.MapPath(subPath), fileName);
                         files_e.SaveAs(path);
                         sa.file_evidence = subPath + fileName;
@@ -3665,7 +3672,7 @@ namespace MvcSA.Controllers
                              && q.Sys_GroupType_id == 2
                              select q.group_id).FirstOrDefault();
 
-            Insert_Transaction(id, new_status, min_lv, get_group, true, get_plant);
+            Insert_Transaction(id, new_status, min_lv, get_group, true);//get_plant
             SendEmailCenter(GetSysEmail(2, get_plant, min_lv), id);
         }
 
@@ -3679,8 +3686,18 @@ namespace MvcSA.Controllers
             {
                 foreach (var item in get_qc)
                 {
-                    Insert_Transaction(id, new_status, min_lv, item.group_id, true);
-                    SendEmailCenter(GetTNCEmailbyGroup(item.group_id, 2), id);
+                    TNCOrganization qc_org = new TNCOrganization();
+                    qc_org.GetApprover(item.group_id, 1);
+                    Insert_Transaction(id, new_status, min_lv, item.group_id, true, actor: qc_org.ManagerId);
+                    var get_email_qc = dbTNC.View_Organization.Where(w => w.group_id == item.group_id).FirstOrDefault();
+                    string email_qc = "";
+                    if (get_email_qc != null)
+                    {
+                        email_qc += !string.IsNullOrEmpty(get_email_qc.GroupMgr_email) ? "," + get_email_qc.GroupMgr_email : "";
+                        email_qc += !string.IsNullOrEmpty(get_email_qc.DeptMgr_email) ? "," + get_email_qc.DeptMgr_email : "";
+                        email_qc += !string.IsNullOrEmpty(get_email_qc.PlantMgr_email) ? "," + get_email_qc.PlantMgr_email : "";
+                        SendEmailCenter(email_qc.Substring(1), id);
+                    }
                 }
                 return true;
             }
@@ -3724,7 +3741,7 @@ namespace MvcSA.Controllers
                     TNCOrganization ot_org = new TNCOrganization();
                     ot_org.GetApprover(item.group_id, 1);
 
-                    Insert_Transaction(id, new_status, (byte)(ot_org.OrgLevel + 1), ot_org.OrgId, true);
+                    Insert_Transaction(id, new_status, (byte)(ot_org.OrgLevel + 1), ot_org.OrgId, true, actor:ot_org.ManagerId);
                     SendEmailCenter(ot_org.ManagerEMail, id);
                 }
                 return true;
