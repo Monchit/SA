@@ -956,7 +956,7 @@ namespace MvcSA.Controllers
                         {
                             if (file.ContentType == "application/pdf")//Check accept file type.
                             {
-                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName.Replace('#', ' ').Replace('%', ' '));
                                 var path = Path.Combine(Server.MapPath(subPath), fileName);
                                 file.SaveAs(path);
                                 SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
@@ -1220,7 +1220,7 @@ namespace MvcSA.Controllers
                         {
                             if (file.ContentType == "application/pdf")//Check accept file type.
                             {
-                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName.Replace('#', ' ').Replace('%', ' '));
                                 var path = Path.Combine(Server.MapPath(subPath), fileName);
                                 file.SaveAs(path);
                                 SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
@@ -1347,7 +1347,7 @@ namespace MvcSA.Controllers
                         {
                             if (file.ContentType == "application/pdf")//Check accept file type.
                             {
-                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                                var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName.Replace('#', ' ').Replace('%', ' '));
                                 var path = Path.Combine(Server.MapPath(subPath), fileName);
                                 file.SaveAs(path);
                                 SaveFiletoDB(main_id, subPath + fileName, Session["SA_Auth"].ToString());
@@ -1742,7 +1742,7 @@ namespace MvcSA.Controllers
                     {
                         if (file.ContentType == "application/pdf")//Check accept file type.
                         {
-                            var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName);
+                            var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(file.FileName.Replace('#',' ').Replace('%',' '));
                             var path = Path.Combine(Server.MapPath(subPath), fileName);
                             file.SaveAs(path);
                             SaveFiletoDB(id, subPath + fileName, uploader);
@@ -3324,7 +3324,7 @@ namespace MvcSA.Controllers
                 {
                     if (files.ContentType == "application/pdf")//Check accept file type.
                     {
-                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(files.FileName);
+                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(files.FileName.Replace('#',' ').Replace('%',' '));
                         var path = Path.Combine(Server.MapPath(subPath), fileName);
                         files.SaveAs(path);
                         sa.file_evidence = subPath + fileName;
@@ -3432,7 +3432,7 @@ namespace MvcSA.Controllers
                     //string subPath = "~/UploadFiles/" + dt.Year + "/" + dt.Month + "/" + sid + "/";
                     if (files_e.ContentType == "application/pdf")//Check accept file type.
                     {
-                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(files_e.FileName);
+                        var fileName = DateTime.Now.Millisecond + "_" + Path.GetFileName(files_e.FileName.Replace('#',' ').Replace('%',' '));
                         var path = Path.Combine(Server.MapPath(subPath), fileName);
                         files_e.SaveAs(path);
                         sa.file_evidence = subPath + fileName;
@@ -3686,8 +3686,18 @@ namespace MvcSA.Controllers
             {
                 foreach (var item in get_qc)
                 {
-                    Insert_Transaction(id, new_status, min_lv, item.group_id, true);
-                    SendEmailCenter(GetTNCEmailbyGroup(item.group_id, 2), id);
+                    TNCOrganization qc_org = new TNCOrganization();
+                    qc_org.GetApprover(item.group_id, 1);
+                    Insert_Transaction(id, new_status, min_lv, item.group_id, true, actor: qc_org.ManagerId);
+                    var get_email_qc = dbTNC.View_Organization.Where(w => w.group_id == item.group_id).FirstOrDefault();
+                    string email_qc = "";
+                    if (get_email_qc != null)
+                    {
+                        email_qc += !string.IsNullOrEmpty(get_email_qc.GroupMgr_email) ? "," + get_email_qc.GroupMgr_email : "";
+                        email_qc += !string.IsNullOrEmpty(get_email_qc.DeptMgr_email) ? "," + get_email_qc.DeptMgr_email : "";
+                        email_qc += !string.IsNullOrEmpty(get_email_qc.PlantMgr_email) ? "," + get_email_qc.PlantMgr_email : "";
+                        SendEmailCenter(email_qc.Substring(1), id);
+                    }
                 }
                 return true;
             }
@@ -3731,7 +3741,7 @@ namespace MvcSA.Controllers
                     TNCOrganization ot_org = new TNCOrganization();
                     ot_org.GetApprover(item.group_id, 1);
 
-                    Insert_Transaction(id, new_status, (byte)(ot_org.OrgLevel + 1), ot_org.OrgId, true);
+                    Insert_Transaction(id, new_status, (byte)(ot_org.OrgLevel + 1), ot_org.OrgId, true, actor:ot_org.ManagerId);
                     SendEmailCenter(ot_org.ManagerEMail, id);
                 }
                 return true;
