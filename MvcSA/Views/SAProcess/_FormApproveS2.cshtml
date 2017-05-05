@@ -1,0 +1,146 @@
+﻿<script src="~/Scripts/jqValidate.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+
+    $("#formApproveS2").submit(function () {
+        if (!$.validate({ form: "formApproveS2" })) {
+            return false;
+        }
+    });
+
+    @*$.get('@Url.Action("GetSelectedQA","SAProcess")', 'id=@ViewBag.SAID', function (data) {
+        $("#selectQA").select2("data", data);
+    });
+    $.get('@Url.Action("GetSelectedQC","SAProcess")', 'id=@ViewBag.SAID', function (data) {
+        $("#selectQC").select2("data", data);
+    });*@
+    $.get('@Url.Action("GetSelectedOther","SAProcess")', 'id=@ViewBag.SAID', function (data) {
+        $("#selectOther").select2("data", data);
+    });
+    $.get('@Url.Action("GetSelectedEN","SAProcess")', 'id=@ViewBag.SAID', function (data) {
+        $("#selectEN").select2("data", data);
+    });
+    $.get('@Url.Action("GetSelectedInform","SAProcess")', 'id=@ViewBag.SAID', function (data) {
+        $("#selectInform").select2("data", data);
+    });
+
+    //$("#slAction").change(function () {
+    //    //$("#divRjReason").css("display", "none");
+    //    $("#divSelQA").css("display", "none");
+    //    $("#divSelConcern").css("display", "none");
+            
+    //    //if ($(this).val() == 6) {
+    //    //    $("#divRjReason").css("display", "inline");
+    //    //    //$("#txaReason").attr("data-validation", "required");
+    //    //}
+    //    if ($(this).val() == 8) {
+    //        $("#divSelQA").css("display", "inline");
+    //    }
+    //    else {
+    //        $("#divSelConcern").css("display", "inline");
+    //    }
+    //});
+
+    $('#selectEN').select2({
+        multiple: true,
+        ajax: {
+            url: '@Url.Action("SelectEN", "SAProcess")',
+            dataType: 'json',
+            data: function (term, page) {
+                return {
+                    searchTerm: term
+                };
+            },
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+        formatResult: function (item) { return item.text; },
+        formatSelection: function (item) { return item.text; }
+    });
+
+    $('#selectOther').select2({
+        multiple: true,
+        ajax: {
+            url: '@Url.Action("SelectOther", "SAProcess")',
+            dataType: 'json',
+            data: function (term, page) {
+                return {
+                    searchTerm: term
+                };
+            },
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+        formatResult: function (item) { return item.text; },
+        formatSelection: function (item) { return item.text; }
+    });
+
+    $('#selectInform').select2({
+        multiple: true,
+        ajax: {
+            url: '@Url.Action("SelectAll", "SAProcess")',
+            dataType: 'json',
+            data: function (term, page) {
+                return {
+                    searchTerm: term
+                };
+            },
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+        formatResult: function (item) { return item.text; },
+        formatSelection: function (item) { return item.text; }
+    });
+});
+</script>
+<form id="formApproveS2" name="formApproveS2" action="@Url.Action("AddApproveS2")" method="post" enctype="multipart/form-data">
+    <table class="table table-striped table-condensed">
+        <tr>
+            <td>Comment<span class="text-error">**</span> : </td>
+            <td><textarea rows="4" id="txaComment" name="txaComment" data-validate="required"></textarea></td>
+        </tr>
+        <tr>
+            <td>Action : </td>
+            <td><select id="slAction" name="slAction">
+                @foreach (var item in ViewBag.Action)
+                {
+                    <option value="@item.act_id">@item.act_name</option>
+                }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Critical problem : </td>
+            <td>
+                <select id="critical_problem" name="critical_problem">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Concern : </td>
+            <td><input type="text" id="selectOther" name="selectOther" data-placeholder="Select Other" class="span5" /></td>
+        </tr>
+        <tr>
+            <td>Engineering : </td>
+            <td><input type="text" id="selectEN" name="selectEN" data-placeholder="Select Engineering" class="span5" /></td>
+        </tr>
+        <tr>
+            <td>Inform : </td>
+            <td><input type="text" id="selectInform" name="selectInform" data-placeholder="Inform Group" class="span5" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">@Html.Partial("_SectionUploadFiles")</td>
+        </tr>
+        <tr>
+            <td><input type="hidden" value="@ViewBag.SAID" id="hdID" name="hdID" />
+                <input type="hidden" value="@ViewBag.STID" id="hdSTID" name="hdSTID" />
+            </td>
+            <td style="text-align:right;"><button class="btn btn-primary" type="submit">Submit</button></td>
+        </tr>
+    </table>
+</form>

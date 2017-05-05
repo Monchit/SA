@@ -25,6 +25,7 @@ namespace MvcSA.Models
         public string status_name { get; set; }
         public byte lv_min { get; set; }
         public byte lv_max { get; set; }
+        public bool active { get; set; }
     
         public virtual ICollection<TD_Transaction> TD_Transaction { get; set; }
         public virtual ICollection<TD_Transaction_Log> TD_Transaction_Log { get; set; }

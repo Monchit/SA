@@ -1,0 +1,89 @@
+﻿
+<style type="text/css">
+    /*fix jTable*/
+    span.jtable-goto-page select, span.jtable-page-size-change select {
+        height: 25px;
+        width: 60px;
+        padding: 2px 2px;
+        margin-bottom:auto;
+    }
+    div.jtable-main-container table.jtable thead th {
+        text-align: center;
+    }
+    div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td {
+        text-align: center;
+    }
+    div.accordion-heading {
+        font-weight:600;
+    }
+    .td_title {
+        text-align:right !important;
+        font-weight:600;
+    }
+    .ui-dialog-title {
+        color:white;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#jTableComment').jtable({
+            //title: 'Plant Master',
+            paging: true, //Enable paging
+            pageSize: 10, //Set page size (default: 10)
+            sorting: true, //Enable sorting
+            selecting: true, //Enable selecting
+            defaultSorting: 'status_id', //Set default sorting
+            actions: {
+                listAction: '@Url.Action("CommentList","PowerUser")',
+                updateAction: '@Url.Action("UpdateComment","PowerUser")',
+                @*deleteAction: '@Url.Action("DeletePlant","PowerUser")'*@
+            },
+            fields: {
+                id: { title: 'ID', list: false, edit: false },
+                actor: { title: 'Name', width: '15%', edit: false, options: '@Url.Action("GetTNCUserList","PowerUser")' },
+                status_id: { title: 'Status', width: '10%', edit: false, options: '@Url.Action("GetStatusList","PowerUser")' },
+                lv_id: { title: 'Level', width: '6%', edit: false, options: '@Url.Action("GetLevelList","PowerUser")' },
+                org_id: { title: 'Organize', list: false, edit: false },
+                Sys_Plant_id: { title: 'Plant', list: false, edit: false, options: '@Url.Action("GetPlantList","PowerUser")' },
+                act_id: { title: 'Judgement', width: '10%', edit: false, options: '@Url.Action("GetActionList","PowerUser")' },
+                act_dt: { title: 'Date', width: '8%', type: 'date', displayFormat: 'dd-mm-yy', create: false, edit: false },
+                comment: { title: 'Comment', width: '56%', edit: true, type: 'textarea' }
+            }
+        });
+
+        $('#btSearch').click(function (e) {
+            e.preventDefault();
+            $('#jTableComment').jtable('load', {
+                id: $('#selectSA').select2("val")
+            });
+        });
+
+        $('#selectSA').select2({
+            //minimumInputLength: 1,
+            //multiple: true,
+            ajax: {
+                url: '@Url.Action("SelectSA", "PowerUser")',
+            dataType: 'json',
+            data: function (term, page) {
+                return {
+                    searchTerm: term
+                };
+            },
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+            formatResult: function (item) { return item.text; },
+            formatSelection: function (item) { return item.text; }
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<form class="form-inline">
+    Select Control No. : <input type="text" id="selectSA" name="selectSA" data-placeholder="Select Control No." />
+    <button type="submit" id="btSearch" class="btn">Submit</button>
+</form>
+
+<div id="jTableComment"></div>

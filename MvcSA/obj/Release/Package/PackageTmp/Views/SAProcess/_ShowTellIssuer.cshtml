@@ -1,0 +1,33 @@
+﻿@using MvcSA.ViewModels
+@model IEnumerable<VM_TellIssuer>
+<table class="table table-bordered table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>From</th>
+            <th>Message</th>
+            <th>Date-Time</th>
+            <th>Reply</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.tell_user</td>
+            <td>@item.tell_content</td>
+            <td>@item.tell_dt.ToString("dd/MM/yyyy")</td>
+            @if (ViewBag.IsIssuer)
+            {
+                if (item.reply_dt != null)
+                {
+                    <td>@item.reply_dt</td>
+                } else {
+                    <td><a href="@Url.Action("ReplyTellIssuer")?tid=@item.tell_id" >Reply <i class="icon-share-alt"></i></a></td>
+                }
+            } else {
+                <td>@item.reply_dt</td>
+            }
+        </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,11 @@
+﻿<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+@using (Html.BeginForm("AdmissionUpload", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+ {
+ <table>
+ <tr><td>Excel file</td><td><input  type="file"  id="FileUpload" name="FileUpload"/></td></tr>
+ <tr><td></td><td><input type="submit" id="Submit" name="Submit" value="Submit" class="btn" /></td></tr>
+ </table>
+ }

@@ -1,0 +1,23 @@
+﻿
+<form id="formCarPar" method="POST" action="@Url.Action("AddCarPar","SAProcess")">
+    <table class="table table-bordered table-striped table-condensed">
+        <tr>
+            <td>PAR No. :</td>
+            <td><input type="text" id="txtPAR" name="txtPAR" /></td>
+        </tr>
+        <tr>
+            <td>CAR No. :</td>
+            <td><input type="text" id="txtCAR" name="txtCAR" /></td>
+        </tr>
+        <tr>
+            <td>Root Cause Section :</td>
+            <td><textarea rows="4" id="txaRoot" name="txaRoot"></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align:right;">
+                <input type="hidden" value="@ViewBag.SAID" id="hdID" name="hdID" />
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </td>
+        </tr>
+    </table>
+</form>

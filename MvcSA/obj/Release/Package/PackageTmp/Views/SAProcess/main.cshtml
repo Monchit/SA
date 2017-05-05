@@ -1,0 +1,10 @@
+﻿@model IEnumerable<MvcSA.Models.tnc_default_permission>
+@{
+    ViewBag.Title = "main";
+}
+
+<h2>main</h2>
+
+@foreach(var item in Model){
+    @item.emp_code @item.level @item.approve <br />
+}

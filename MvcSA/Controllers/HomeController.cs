@@ -15,24 +15,19 @@ namespace MvcSA.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Menu = 1;
             ViewBag.Title = "Home";
             return View();
         }
 
         public ActionResult About()
         {
-            ViewBag.Menu = 9;
             ViewBag.Title = "About";
-
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Menu = 9;
             ViewBag.Title = "Contact";
-
             return View();
         }
 

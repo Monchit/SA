@@ -468,6 +468,6 @@ C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\MvcSA\bin\k
 C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\MvcSA\bin\ru\System.Spatial.resources.dll
 C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\MvcSA\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\MvcSA\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\MvcSA\obj\Debug\MvcSA.csprojResolveAssemblyReference.cache
 C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\MvcSA\obj\Debug\MvcSA.dll
 C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\MvcSA\obj\Debug\MvcSA.pdb
+C:\Users\monchit\Documents\Visual Studio 2012\Projects\MvcSA20141013\MvcSA\obj\Debug\MvcSA.csprojResolveAssemblyReference.cache

@@ -1,0 +1,109 @@
+﻿@using MvcSA.Models
+@{
+    ViewBag.Title = "Add Route";
+
+    SAEntities dbSA = new SAEntities();
+    TNC_ADMINEntities dbTNC = new TNC_ADMINEntities();
+
+    var get_controlno = dbSA.TD_Transaction.Where(w => w.active == true);
+    var get_ulv = dbSA.TM_Level.Where(w => w.lv_id < 3);
+    var get_status = dbSA.TM_Status.Where(w => w.status_id > 2 && w.status_id < 6);
+    var get_org = dbTNC.View_Organization
+                    .Where(w => w.active == true && w.group_id != 0)
+                    .GroupBy(g => new{ g.group_id, g.group_name })
+                    .Select(s => new{ s.Key.group_id, s.Key.group_name })
+                    .OrderBy(o => o.group_name);
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+<div class="alert alert-error">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <h4>Error</h4>
+    @TempData["ErrorMessage"]
+</div>
+}
+
+<form class="form-horizontal" method="post" action="@Url.Action("InsertRoute", "PowerUser")">
+    <fieldset>
+
+        <!-- Form Name -->
+        <legend>@ViewBag.Title</legend>
+
+        <!-- Select Basic -->
+        <div class="control-group">
+            <label class="control-label" for="control_no">Control No. :</label>
+            <div class="controls">
+                <select id="control_no" name="control_no" class="input-xlarge">
+                    <option value="">--Select--</option>
+                @foreach (var item in get_controlno)
+                {
+                    <option value="@item.id">@item.TD_Main.control_no</option>
+                }
+                </select>
+            </div>
+        </div>
+
+        <!-- Select Basic -->
+        <div class="control-group">
+            <label class="control-label" for="ulv">User Level :</label>
+            <div class="controls">
+                <select id="ulv" name="ulv" class="input-medium">
+                    <option value="">--Select--</option>
+                    @foreach (var item in get_ulv)
+                    {
+                        <option value="@item.lv_id">@item.lv_name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- Select Basic -->
+        <div class="control-group">
+            <label class="control-label" for="status">Status :</label>
+            <div class="controls">
+                <select id="status" name="status" class="input-large">
+                    <option value="">--Select--</option>
+                    @foreach (var item in get_status)
+                    {
+                        <option value="@item.status_id">@item.status_name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- Select Basic -->
+        @*<div class="control-group">
+            <label class="control-label" for="plant">Plant :</label>
+            <div class="controls">
+                <select id="plant" name="plant" class="input-medium">
+                    <option value="-">--Select--</option>
+                    
+                </select>
+            </div>
+        </div>*@
+
+        <!-- Select Basic -->
+        <div class="control-group">
+            <label class="control-label" for="org">Organization :</label>
+            <div class="controls">
+                <select id="org" name="org" class="input-xlarge">
+                    <option value="">--Select--</option>
+                @foreach (var item in get_org)
+                {
+                    <option value="@item.group_id">@item.group_name</option>
+                }
+                </select>
+            </div>
+        </div>
+
+        <!-- Button (Double) -->
+        <div class="control-group">
+            <label class="control-label" for="btAdd"></label>
+            <div class="controls">
+                <button id="btAdd" name="btAdd" type="submit" class="btn btn-success"><i class="icon-plus icon-white"></i> Add</button>
+                <button id="btClear" name="btClear" type="reset" class="btn btn-danger"><i class="icon-trash icon-white"></i> Clear</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
