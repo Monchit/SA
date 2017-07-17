@@ -6,7 +6,8 @@
     <edmx:Diagrams>
       <Diagram DiagramId="d365b8842e404ca5943b8792e6cde8d6" Name="Diagram1">
         <EntityTypeShape EntityType="TNC_ADMINModel.V_Employee_Info" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="TNC_ADMINModel.tnc_user" Width="1.5" PointX="2.75" PointY="0.5" />
+        <EntityTypeShape EntityType="TNC_ADMINModel.tnc_user" Width="1.5" PointX="2.375" PointY="0.5" />
+        <EntityTypeShape EntityType="TNC_ADMINModel.View_Organization" Width="1.5" PointX="4.25" PointY="0.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

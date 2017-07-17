@@ -35,5 +35,8 @@ namespace SAEmailReminder
         public Nullable<int> LeafOrgGroupId { get; set; }
         public string LeafOrgGroup { get; set; }
         public Nullable<byte> position_level { get; set; }
+        public int LeafOrgLevel { get; set; }
+        public string ext { get; set; }
+        public Nullable<byte> level { get; set; }
     }
 }

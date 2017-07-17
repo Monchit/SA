@@ -27,5 +27,6 @@ namespace SAEmailReminder
     
         public DbSet<V_Employee_Info> V_Employee_Info { get; set; }
         public DbSet<tnc_user> tnc_user { get; set; }
+        public DbSet<View_Organization> View_Organization { get; set; }
     }
 }

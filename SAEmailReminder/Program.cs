@@ -19,7 +19,7 @@ namespace SAEmailReminder
                 TNC_ADMINEntities dbTNC = new TNC_ADMINEntities();
 
                 var query = from a in dbSA.TD_Transaction
-                            where a.active == true && a.comment != "Tell"
+                            where a.active == true && (a.comment == null || a.comment == "Tell") && a.org_id != 0 //&& a.id == 1684
                             select a;
 
                 foreach (var g in query)//each transaction
@@ -41,6 +41,7 @@ namespace SAEmailReminder
                                             && (a.emp_position != 19 && a.emp_position != 20 && a.emp_position != 21 
                                             && a.emp_position != 11 && a.emp_position != 12 && a.emp_position != 27)// Discard Assist, Deputy, Project
                                             select a.email;
+
                             if (get_email.Any())
                             {
                                 foreach (var item in get_email)
@@ -49,6 +50,24 @@ namespace SAEmailReminder
                                         email += "," + item;
                                 }
                                 email = email.Substring(1);
+                            }
+                            else 
+                            {
+                                var get_mail_org = (from a in dbTNC.View_Organization
+                                                    where a.LeafId == g.org_id && a.LeafLevel == (g.lv_id - 1)
+                                                    select a).FirstOrDefault();
+                                if (!string.IsNullOrEmpty(get_mail_org.GroupMgr_email))
+                                {
+                                    email = get_mail_org.GroupMgr_email;
+                                }
+                                else if (!string.IsNullOrEmpty(get_mail_org.DeptMgr_email))
+                                {
+                                    email = get_mail_org.DeptMgr_email;
+                                }
+                                else
+                                {
+                                    email = get_mail_org.PlantMgr_email;
+                                }
                             }
                         }
                     }
@@ -86,7 +105,7 @@ namespace SAEmailReminder
                             ttMail.CreateDate = DateTime.Now;
                             ttMail.Sender = "TNCAutoMail-SA@nok.co.th";
                             ttMail.Receiver = email;
-                            //ttMail.BCC = "patcharee_ji@nok.co.th,monchit@nok.co.th";
+                            //ttMail.BCC = "monchit@nok.co.th";//Open when test
                             ttMail.Title = "[Remind] You have SA Online waiting for Operate.";
                             ttMail.HTMLBody =
                                 "Dear. All Concern,<br /><br />" +
@@ -103,7 +122,7 @@ namespace SAEmailReminder
                         }
                         Console.WriteLine(g.id + " -> OK org:" + g.org_id);
                     }
-                    else
+                    else//Error Mail
                     {
                         TT_MAIL_WIP ttMail = new TT_MAIL_WIP();
                         ttMail.ProgramID = 8;

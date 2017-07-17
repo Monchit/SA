@@ -116,6 +116,9 @@
     <Compile Include="TT_MAIL_WIP.cs">
       <DependentUpon>EmailCenter.tt</DependentUpon>
     </Compile>
+    <Compile Include="View_Organization.cs">
+      <DependentUpon>TNCAdmin.tt</DependentUpon>
+    </Compile>
     <Compile Include="V_Employee_Info.cs">
       <DependentUpon>TNCAdmin.tt</DependentUpon>
     </Compile>

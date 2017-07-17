@@ -431,7 +431,14 @@ namespace MvcSA.Controllers
                                            select c).FirstOrDefault();
                         if (check_group != null)
                         {
-                            ViewBag.ShowForm = status_id != 2 ? user_lv : 12;//Update 2014-08-25 by Monchit // 12 is Form S1
+                            if (status_id == 3)
+                            {
+                                ViewBag.ShowForm = 10;//QC Form S2
+                            }
+                            else
+                            {
+                                ViewBag.ShowForm = status_id != 2 ? user_lv : 12;//Update 2014-08-25 by Monchit // 12 is Form S1
+                            }
                             break;
                         }
                     }
@@ -492,6 +499,30 @@ namespace MvcSA.Controllers
         
         [OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
         public ActionResult _ShowFiles(int id)
+        {
+            List<VM_AttachFiles> vobj = new List<VM_AttachFiles>();
+            VM_AttachFiles vm;
+            var files = from t in dbSA.TD_File
+                        where t.id == id
+                        select t;
+
+            foreach (var item in files)
+            {
+                vm = new VM_AttachFiles();
+                vm.id = item.id;
+                vm.file_id = item.file_id;
+                vm.file_path = item.file_path;
+                vm.upload_by = GetUserName(item.upload_by);
+                vm.upload_dt = item.upload_dt;
+
+                vobj.Add(vm);
+            }
+            ViewBag.IsIssuer = CheckIsIssuer(id);
+            ViewBag.SAID = id;
+            return PartialView(vobj);
+        }
+
+        public ActionResult _ShowFiles1(int id)
         {
             List<VM_AttachFiles> vobj = new List<VM_AttachFiles>();
             VM_AttachFiles vm;
@@ -631,6 +662,8 @@ namespace MvcSA.Controllers
             }
             ViewBag.SAID = id;
             ViewBag.STID = status;
+            //ViewBag.SALV = status;
+            //ViewBag.SAORG = status;
 
             //var get_plant = (from p in dbSA.TD_Main
             //                 where p.id == id
@@ -896,7 +929,7 @@ namespace MvcSA.Controllers
                     main.preventive = Request.Form["txaPreventive"] != null ? Request.Form["txaPreventive"].ToString() : "";
                     main.effective_dt = Request.Form["dtpEffectiveDate"] != null ? ParseToDate(Request.Form["dtpEffectiveDate"].ToString()) : dt;
                     main.issue_by = Session["SA_Auth"].ToString();
-                    main.Sys_Plant_id = 0;//byte.Parse(Request.Form["slPlant"].ToString());
+                    main.Sys_Plant_id = byte.Parse(Request.Form["slPlant"].ToString());
                     main.critical_problem = false;
 
                     dbSA.TD_Main.Add(main);
@@ -1530,6 +1563,8 @@ namespace MvcSA.Controllers
             byte lv_id = byte.Parse(Session["SA_UserLv"].ToString());
             byte act_id = byte.Parse(Request.Form["slAction"].ToString());
             byte status = byte.Parse(Request.Form["hdSTID"].ToString());
+            //byte tran_lv = byte.Parse(Request.Form["hdLV"].ToString());
+            //int tran_org = int.Parse(Request.Form["hdORG"].ToString());
             string approver = Session["SA_Auth"].ToString();
             var comment = Request.Form["txaComment"];
 
@@ -2461,7 +2496,8 @@ namespace MvcSA.Controllers
         public void Update_Transaction(int id, byte chk_lv, int chk_org, bool chk_active, string set_actor, byte? set_act, string comment, byte chk_status = 0, byte chk_plant = 0, bool set_active = false)
         {
             var query = from t in dbSA.TD_Transaction
-                        where t.id == id && t.lv_id == chk_lv && t.org_id == chk_org && t.active == chk_active && t.Sys_Plant_id == chk_plant
+                        where t.id == id && t.lv_id == chk_lv && t.org_id == chk_org 
+                            && t.active == chk_active && t.Sys_Plant_id == chk_plant
                         select t;
             if (chk_status != 0)
             {
@@ -2478,6 +2514,22 @@ namespace MvcSA.Controllers
                 update.comment = string.IsNullOrEmpty(comment) ? null : comment;
                 update.active = set_active;
                 dbSA.SaveChanges();
+            }
+            else
+            {
+                var query1 = (from a in dbSA.TD_Transaction
+                              where a.id == id && a.active == chk_active && a.Sys_Plant_id == chk_plant
+                              select a).FirstOrDefault();
+
+                if (query1 != null)
+                {
+                    query1.act_id = set_act;
+                    query1.actor = set_actor;
+                    query1.act_dt = DateTime.Now;
+                    query1.comment = string.IsNullOrEmpty(comment) ? null : comment;
+                    query1.active = set_active;
+                    dbSA.SaveChanges();
+                }
             }
         }
 
@@ -2751,7 +2803,7 @@ namespace MvcSA.Controllers
                                         if (item.DeptMgr_email != null)
                                         {
                                             Insert_Transaction(id, 6, 3, item.dept_id.Value, true, actor: item.DeptMgr);
-                                            SendEmailCenter(item.DeptMgr_email, id);
+                                            SendEmailCenter(item.DeptMgr_email, id, cc:"thaworn@nok.co.th");
                                         }
                                         else
                                         {
@@ -2919,7 +2971,7 @@ namespace MvcSA.Controllers
                             email += "," + get_email;
                     }
                 }
-                email += ",thaworn@nok.co.th,thudthong@nok.co.th";
+                email += ",thaworn@nok.co.th";
                 email = email.Substring(1);
             }
             return email;
@@ -2978,7 +3030,7 @@ namespace MvcSA.Controllers
         /// <param name="receiver"></param>
         /// <param name="id"></param>
         /// <param name="type">0:Default, 1:Revise, 2:Tell Issuer, 3:Complete, 4:Close</param>
-        public void SendEmailCenter(string receiver, int id, int type = 0, string content = "")
+        public void SendEmailCenter(string receiver, int id, int type = 0, string content = "", string cc = "")
         {
             if (!string.IsNullOrEmpty(receiver))
             {
@@ -3107,7 +3159,7 @@ namespace MvcSA.Controllers
                             "<br />Best Regard,<br />From SA Online";
                     }
 
-                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, null, flag: flag);//Real
+                    tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", mailto, subject, body, cc, flag: flag);//Real
                     //tnc_util.SendMail(8, "TNCAutoMail-SA@nok.co.th", "monchit@nok.co.th", subject, body);//Test
                 }
             }
